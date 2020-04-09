@@ -13,7 +13,7 @@ flaskr/*
 *.pdf
 *.zip
 *.mp4
-*test/*
+*test*.py
 model/*
 *echart*
 *.pyc
