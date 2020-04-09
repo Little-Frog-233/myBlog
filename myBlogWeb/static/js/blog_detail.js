@@ -89,11 +89,12 @@ function toToc(data) {
     let result = ''
     // const addStartUL = () => { result += '<ul class="catalog-list">'; }
     // const addEndUL = () => { result += '</ul>\n'; }
-    const addLI = (index, itemText) => { result += '<li><a name="link" class=""' + 'href="#' + index + '">' + itemText + "</a></li><li class='separator'></li>\n"; }
+    const addLI = (index, itemText) => { result += '<li><a name="link" class=""' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
     data.forEach(function (item, index) {
                  let h = item.match(/[hH][1-6]/g)[0];
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
-        itemText = itemText.replace(/<[hH][1-6].*?>/, '');
+        // itemText = itemText.replace(/<[hH][1-6].*?>/, '');
+        itemText = item
         console.log(itemText);
 
         let itemLabel = item.match('<\w+?.*?>')  // 匹配h?标签<h?>

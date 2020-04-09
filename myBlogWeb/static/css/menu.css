@@ -1,0 +1,40 @@
+.my_menu h1 {
+    line-height: 25px;
+    font-size: 18px;
+    color: black;
+}
+
+.my_menu h2 {
+    margin-left: 4px;
+    line-height: 25px;
+    font-size: 16px;
+    color: black;
+}
+
+.my_menu h3 {
+    margin-left: 8px;
+    line-height: 25px;
+    font-size: 14px;
+    color: black;
+}
+
+.my_menu h4 {
+    margin-left: 12px;
+    line-height: 25px;
+    font-size: 12px;
+    color: black;
+}
+
+.my_menu h5 {
+    margin-left: 16px;
+    line-height: 25px;
+    font-size: 10px;
+    color: black;
+}
+
+.my_menu h6 {
+    margin-left: 20px;
+    line-height: 25px;
+    font-size: 8px;
+    color: black;
+}
