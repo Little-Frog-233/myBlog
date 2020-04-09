@@ -383,6 +383,7 @@ input:focus {
     }
 
     header {
+        height: 60px;
         padding: 2em 0 2em 0;
     }
 

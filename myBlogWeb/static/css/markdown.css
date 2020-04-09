@@ -19,6 +19,7 @@
 
     
 } */
+
 .markdown h1, .markdown h2, .markdown h3, .markdown h4 {
     color: #111111;
     font-weight: 400;
@@ -38,6 +39,7 @@
     margin-bottom: 3px;
 }
 .markdown h1 {
+    margin-top: 10px;
     font-size: 48px;
     line-height: 54px;
 }
