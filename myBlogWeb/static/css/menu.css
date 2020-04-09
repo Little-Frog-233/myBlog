@@ -39,3 +39,10 @@
     font-size: 8px;
     color: black;
 }
+
+.my_title {
+    font-family: Georgia, Palatino, serif;
+    color: black;
+    font-weight: normal;
+    font-size: 45px;
+}

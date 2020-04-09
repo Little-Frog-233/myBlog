@@ -8,16 +8,17 @@
     <title>zndex-blog</title>
     <link rel="stylesheet" href="/static/api_documment_css/style.css">
     <link rel="stylesheet" href="/static/css/markdown.css">
-    <link rel="stylesheet" href="/static/api_documment_css/prettify.css">
+    <!-- <link rel="stylesheet" href="/static/api_documment_css/prettify.css"> -->
     <link rel="stylesheet" href="/static/css/menu.css">
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" style="background-color: #f4f5f5;">
         <nav>
             <div class="container">
                 <a href="">
-                    <h1>ZNDEX-Blog</h1>
+
+                    <h1 style="color: #007fff;">ZNDEX-Blog</h1>
                 </a>
                 <!-- <div id="menu">
                 <ul class="toplinks">
@@ -28,38 +29,28 @@
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
         </nav>
-        <header>
+        <center>
+        <header style="width: 70%;">
             <div class="container">
                 <center>
-                    <h2 class="docs-header" id="title">
+                    <div class="docs-header" id="title">
                         <!-- 这里是标题 -->
-                    </h2>
+                    </div>
                 </center>
                 <span style="float: right;color: grey;" id="update_time">---------------发表于</span>
             </div>
         </header>
-        <section>
+        <section style="width: 70%; background-color: white;">
             <div class="container">
                 <div class="docs-content markdown markdown-body editormd-preview-container" id="result">
                     <!-- 此处插入内容 -->
                 </div>
-                <ul class="docs-nav my_menu" id="menu-left">
+                <ul class="docs-nav my_menu" id="menu-left" style="background-color: #f4f5f5;">
                     <li><strong>目录</strong></li>
-                    <!-- <li class="separator"></li> -->
-                    <!-- <li><strong>API参考</strong></li>
-                <li><a href="#welcome" class=" ">简介</a></li>
-                <li><a href="#requires" class=" ">Requires</a></li>
-                <li><a href="#power" class=" ">接口能力</a></li>
-                {#      <li><a href="#features" class=" ">Features</a></li>#}
-                {#      <li><a href="#license" class=" ">License</a></li>#}
-                <li class="separator"></li>
-                <li><strong>sentimentAPI</strong></li>
-                <li><a href="#sentimentapi_describe" class=" ">接口描述</a></li>
-                <li><a href="#sentimentapi_example" class=" ">接口示例</a></li>
-                <li><a href="#sentimentapi_explain" class=" ">接口说明</a></li> -->
                 </ul>
             </div>
         </section>
+        </center>
         <section class="vibrant centered">
             <div class="container">
                 <h4> Designed By rui.cheng@zndex.com</h4>

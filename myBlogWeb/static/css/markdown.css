@@ -40,7 +40,7 @@
 }
 .markdown h1 {
     margin-top: 10px;
-    font-size: 48px;
+    font-size: 40px;
     line-height: 54px;
 }
 .markdown h2 {
@@ -85,7 +85,7 @@
 }
 .markdown p, .markdown ul, .markdown ol {
     font-size: 16px;
-    line-height: 24px;
+    line-height: 30px;
 }
 
 .markdown ol ol, .markdown ul ol {

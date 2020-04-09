@@ -146,7 +146,7 @@ function compile() {
     html = makeToc(html);
     $('#update_time').append(update_time);
     document.getElementById("result").innerHTML = html;
-    document.getElementById("title").innerHTML = '<h1>' + title + '</h1>';
+    document.getElementById("title").innerHTML = '<h1 class="my_title">' + title + '</h1>';
     $('#cover_img').attr('src', cover_img_url)
 }
 
