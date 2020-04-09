@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+    <style type="text/css">
+        body .demo-class .layui-layer-btn .layui-layer-btn1 {
+            background: #d43f3a;
+            color: white;
+            width: auto
+        }
+    </style>
+</head>
+<body id="iframePage">
+<div class="layui-row layui-col-space15" id="blog_list">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <h2>博客列表</h2>
+            <div class="layui-card-header">
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-normal blog_list_refresh"
+                        style="float: right">
+                    <i class="layui-icon layui-icon-refresh"></i>刷新
+                </button>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+                        style="float: right; margin-right: 5px; margin-left: auto" onclick="openFilter()">
+                    筛选
+                </button>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+                        style="float: right; margin-right: 5px" onclick="swapCheck()">
+                    全选
+                </button>
+            </div>
+            <div class="layui-card-body">
+                <div id="after-all-chosed" style="display: none;float: right">
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-danger"
+                            style="float: right; margin-right: 5px;" onclick="deleteAllNoticeV2()">
+                        <i class='layui-icon'></i>删除
+                    </button>
+                </div>
+                <div id="after_filter" style="display: none;float: right">
+                    <input type="text" style="display: none" id="blog_sort_by" value="id">
+                    <label>分类: </label>
+                    <select name="blog_category" id="blog_category"
+                            style="margin-right: 10px;line-height: 44px;height: 24px;">
+                        <option value="">无</option>
+                        <option v-for="item in categories" :value="item">{[item]}</option>
+                    </select>
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-normal task_list_filter"
+                            style="float: right; margin-right: 5px;">进行筛选
+                    </button>
+                </div>
+                <table class="layui-table">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>id <button onclick="sortById()" title="按id大小排序"><i class='layui-icon layui-icon-triangle-d'></i></button></th>
+                        <th>title</th>
+                        <th>cover_img_url</th>
+                        <th>category</th>
+                        <th>tag</th>
+                        <th>read_count</th>
+                        <th>comment_count</th>
+                        <th>update_time <button onclick="sortByUpdateTime()" title="按更新日期排序"><i class='layui-icon layui-icon-triangle-d'></i></button></th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="biuuu_city_list">
+                    </tbody>
+                </table>
+                <center>
+                    <div id="demo20"></div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+<script>
+    layui.use('layer', function () {
+        var $ = layui.jquery
+                , layer = layui.layer;
+
+        if ($(window).width() <= 750) return
+    });
+</script>
+<script src="/static/js/list_tools.js"></script>
+<script src="{{ url_for('static', filename='js/blog_list.js') }}"></script>
+</body>
+</html>

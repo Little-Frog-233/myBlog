@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>myBlog-CMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+    <style>
+        #user-info span {
+            border-top-color: black;
+        }
+
+        .icon_style {
+            margin-right: 10px;
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div id="url_app" v-cloak>
+        <div class="layui-header"
+             style="background-color: white;box-shadow: 1px 1px 1px 1px #f9f5f5, -2px 1px 1px 1px grey">
+            <!--<div class="layui-logo" style="color: #0aafe6">ZNDEX-TASK</div>-->
+            <div class="layui-logo" style="color: black"><a href="/">myBlog-CMS</a></div>
+            <div class="layui-layout-left" style="line-height: 60px;position: fixed;z-index: 99999;"><a
+                    id="animation-left-nav"><i class="layui-icon" :class="getNavigationClass()"
+                                               style="font-size: 30px;color: grey"
+                                               @click="changeNavigationClass"></i></a></div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" style="color: black;" id="user-info">
+                        <img src="{{ url_for('app_front.showLogouser', username=session.username) }}"
+                             class="layui-nav-img"
+                             alt="parson-img">
+                        {{ session.nickname }}
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="{{ url_for('app_front.logout') }}">退出登陆</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;"><i class="layui-icon layui-icon-home icon_style"></i>首页</a>
+                        <dl class="layui-nav-child">
+                            <dd class="main_left" :class="getLayuiThisClass('概览')"><a data-src="/overview/"
+                                                                                      target="_top"
+                                                                                      @click="addUrl('概览', '/overview/')">概览</a>
+                            </dd>
+                            <dd class="main_left" :class="getLayuiThisClass('参考文档')"><a
+                                    data-src="/show/logo/welcome_myBlog_CMS.png" target="_top"
+                                    @click="addUrl('参考文档', '/show/logo/welcome_myBlog_CMS.png')">参考文档</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;"><i class="layui-icon layui-icon-edit icon_style"></i>编辑</a>
+                        <dl class="layui-nav-child">
+                            <dd class="main_left" :class="getLayuiThisClass('提交博客')"><a data-src="/blog_edit/"
+                                                                                        target="_top"
+                                                                                        @click="addUrl('提交博客', '/blog_edit/')">提交博客</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;"><i class="layui-icon layui-icon-app icon_style"></i>管理</a>
+                        <dl class="layui-nav-child">
+                            <dd class="main_left" :class="getLayuiThisClass('博客列表')"><a data-src="/blog_list/"
+                                                                                        target="_top"
+                                                                                        @click="addUrl('博客列表', '/blog_list/')">博客列表</a></dd>
+                            <dd class="main_left" :class="getLayuiThisClass('分类列表')"><a data-src="/category_list/" target="_top"
+                                                                                        @click="addUrl('分类列表', '/category_list/')">分类列表</a>
+                            </dd>
+                            <dd class="main_left" :class="getLayuiThisClass('评论列表')"><a data-src="/comment_list/" target="_top"
+                                                                                        @click="addUrl('评论列表', '/comment_list/')">评论列表</a>
+                            </dd>
+                            <dd class="main_left" :class="getLayuiThisClass('回复列表')"><a data-src="/reply_list/" target="_top"
+                                                                                        @click="addUrl('回复列表', '/reply_list/')">回复列表</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <!-- <li class="layui-nav-item">
+                        <a class="" href="javascript:;"><i class="layui-icon layui-icon-util icon_style"></i>工具</a>
+                        <dl class="layui-nav-child">
+                            <dd class="main_left" :class="getLayuiThisClass('工具列表')"><a data-src="/tool_list/"
+                                                                                        target="_top"
+                                                                                        @click="addUrl('工具列表', '/tool_list/')">工具列表</a>
+                            </dd>
+                        </dl>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="layui-body" style="height: 1200px">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;">
+                <div style="margin-bottom: 10px">
+            <span class="main_top layui-breadcrumb">
+                <a v-for="(item, index) in url_list" v-bind:data-src="item.url" style="margin-right: 5px"
+                   @click="changePage(item.url, index)">{[item.name]} /</a>
+            </span>
+                    <button style="float: right;" type="button" class="layui-btn layui-btn-primary layui-btn-sm"
+                            @click="cleanUrl" v-if="url_list.length>=2">清除标签
+                    </button>
+                </div>
+                <div class="main_right">
+                    <iframe frameborder="0" style="width: 100%;height: 700px;overflow-y: scroll" src="/overview/" id="aa" name="aa">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-footer" style="float: right">
+        <!-- 底部固定区域 -->
+        © myBlog.com
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+<script src="{{ url_for('static', filename='js/url_tools.js') }}"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+
+    });
+    $(function () {
+        //一下代码是根据窗口高度在设置iframe的高度
+// {#        const frame = $("#aa");#}
+// {#        const frameheight = $(window).height();#}
+// {#        console.log(frameheight);#}
+// {#        frame.css("height", frameheight);#}
+        //获取src值
+        $(".main_left a").on("click", function () {
+            var address = $(this).attr("data-src");
+            $("iframe").attr("src", address);
+        });
+    });
+</script>
+<script>
+    //    $('#animation-left').focus(function(){
+    //        $('span.layui-nav-bar').style.add('display:none');
+    //        $('#animation-left').removeClass('layui-this')
+    //    });
+    var i = 0;
+    $('#animation-left-nav').click(function () {
+        //这里定义一个全局变量来方便判断动画收缩的效果,也就是放在最外面
+        if (i == 0) {
+            $(".layui-side").animate({width: 'toggle'});
+            $(".layui-body").animate({left: '0px'});
+            $(".layui-footer").animate({left: '0px'});
+            i++;
+        } else {
+            $(".layui-side").animate({width: 'toggle'});
+            $(".layui-body").animate({left: '200px'});
+            $(".layui-footer").animate({left: '200px'});
+            i--;
+        }
+
+    });
+    //左侧导航栏收缩提示
+    //	$('#animation-left-nav').hover(function(){
+    //		layer.tips('收缩左侧导航栏', '#animation-left-nav', {tips:[4,'#FF8000'],time:0});
+    //	},function(){
+    //		layer.closeAll('tips');
+    //	});
+</script>
+<!--
+/**
+ *                             _ooOoo_
+ *                            o8888888o
+ *                            88" . "88
+ *                            (| -_- |)
+ *                            O\  =  /O
+ *                         ____/`---'\____
+ *                       .'  \\|     |//  `.
+ *                      /  \\|||  :  |||//  \
+ *                     /  _||||| -:- |||||-  \
+ *                     |   | \\\  -  /// |   |
+ *                     | \_|  ''\---/''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'  /--.--\  `. . __
+ *                ."" '<  `.___\_<|>_/___.'  >'"".
+ *               | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *          ======`-.____`-.___\_____/___.-`____.-'======
+ *                             `=---='
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+*/
+-->
+</body>
+</html>

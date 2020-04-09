@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+    <style type="text/css">
+        body .demo-class .layui-layer-btn .layui-layer-btn1 {
+            background: #d43f3a;
+            color: white;
+            width: auto
+        }
+    </style>
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div class="layui-row layui-col-space12" v-cloak>
+        <h2>用户</h2>
+        <div class="layui-col-md3">
+            <!--<div style="margin-bottom: 10px">-->
+            <div class="layui-card-header">更新用户数据</div>
+            <div class="layui-card-body" style="font-size: 20px">
+                <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateManager)" title="更新用户的博客数、阅读数和评论数">立即更新</button>
+            </div>
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="layui-row layui-col-space12" v-cloak>
+        <h2>分类与标签</h2>
+        <div class="layui-col-md4">
+            <!--<div style="margin-bottom: 10px">-->
+            <div class="layui-card-header">更新分类数据</div>
+            <div class="layui-card-body" style="font-size: 20px">
+                <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateCategory)">立即更新</button>
+            </div>
+            <!--</div>-->
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card-header">更新标签数据</div>
+            <div class="layui-card-body" style="font-size: 20px">
+                <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateTag)">立即更新</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space12" v-cloak>
+        <h2>评论</h2>
+        <div class="layui-col-md4">
+            <!--<div style="margin-bottom: 10px">-->
+            <div class="layui-card-header">更新博客评论数</div>
+            <div class="layui-card-body" style="font-size: 20px">
+                <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateBlogCommentCount)">立即更新</button>
+            </div>
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script>
+    layui.use('layer', function () {
+        var $ = layui.jquery
+                , layer = layui.layer;
+
+        if ($(window).width() <= 750) return
+    });
+</script>
+<script src="{{ url_for('static', filename='js/tool_list.js') }}"></script>
+</body>
+</html>

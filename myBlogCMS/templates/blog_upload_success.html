@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12" style="color: deepskyblue">
+        <center>
+            {% if data %}
+            {{ data.method }}成功
+            {% endif %}
+        </center>
+    </div>
+</div>
+</body>
+</html>

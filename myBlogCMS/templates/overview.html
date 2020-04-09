@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    {% raw %}
+    <div id="app" class="layui-fluid" v-cloak>
+        <div class="layui-row layui-col-space12" style="margin-top: 10px;" v-cloak>
+            <!--<div class="layui-col-md8">-->
+            <!--<div class="layui-card">-->
+            <!--<div class="layui-card-header">应用</div>-->
+            <!--<div class="layui-card-body" style="font-size: 20px">-->
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="font-size: 16px;">用户</div>
+                    <div class="layui-card-body" style="font-size: 20px">
+                        <ul class="layui-row layui-col-space10">
+                            <li class=layui-col-xs3>
+                                <cite style="font-size: 14px;">总博客数</cite><br>
+                                <center>
+                                <span style="color: black">{{manager.blog_count}}</span>
+                            </center>
+                            </li>
+                            <li class=layui-col-xs3>
+                                <cite style="font-size: 14px;">总阅读数</cite><br>
+                                <center>
+                                <span style="color: #0aafe6">{{manager.read_count}}</span>
+                            </center>
+                            </li>
+                            <li class=layui-col-xs3>
+                                <cite style="font-size: 14px;">总评论数</cite><br>
+                                <center>
+                                <span style="color: green">{{manager.comment_count}}</span>
+                            </center>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="font-size: 16px;">博客</div>
+                    <div class="layui-card-body" style="font-size: 20px">
+                        <ul class="layui-row layui-col-space10">
+                            <li class=layui-col-xs3>
+                                <cite style="font-size: 14px;">总分类数</cite><br>
+                                <center>
+                                <span style="color: black">{{category.category_count}}</span>
+                            </center>
+                            </li>
+                            <li class=layui-col-xs3>
+                                <cite style="font-size: 14px;">总标签数</cite><br>
+                                <center>
+                                <span style="color: #0aafe6">{{tag.tag_count}}</span>
+                            </center>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="font-size: 16px;">工具</div>
+                    <div class="layui-card-body" style="font-size: 20px">
+                        <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateManager)" style="margin-bottom: 5px;" title="更新用户的博客数、阅读数和评论数">更新用户</button><i class='layui-icon layui-icon-triangle-d' @click="showMoreTools()" title="显示更多工具"></i><br>
+                        <div v-show="more_tools_show">
+                        <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateCategory)" style="margin-bottom: 5px;" title="更新分类的文章数">更新分类</button><br>
+                        <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateTag)" style="margin-bottom: 5px;" title="更新标签的文章数">更新标签</button><br>
+                        <button class="layui-btn layui-btn-lg layui-btn-normal" onclick="updateNotice(updateBlogCommentCount)" title="更新每篇文章的评论数">更新评论</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endraw %}
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="/static/layui/layui.js"></script>
+    <script>
+        layui.use('layer', function () {
+        var $ = layui.jquery
+                , layer = layui.layer;
+
+        if ($(window).width() <= 750) return
+    });
+    </script>
+    <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/overview.js') }}"></script>
+</body>
+
+</html>

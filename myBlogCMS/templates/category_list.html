@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Category List</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <style type="text/css">
+        body .demo-class .layui-layer-btn .layui-layer-btn1 {
+            background: #d43f3a;
+            color: white;
+            width: auto
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-row layui-col-space15" id="blog_list">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <h2>分类列表</h2>
+                <div class="layui-card-header">
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-normal category_list_refresh"
+                            style="float: right">
+                        <i class="layui-icon layui-icon-refresh"></i>刷新
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+                            style="float: right; margin-right: 5px" onclick="addCategoryInput()">
+                        新增
+                    </button>
+                </div>
+                <div class="layui-card-body">
+                    <div id="after-all-chosed" style="display: none;float: right">
+                        <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+                                style="float: right; margin-right: 5px;" onclick="deleteAllNoticeV2()">
+                            <i class='layui-icon'></i>删除
+                        </button>
+                    </div>
+                    <table class="layui-table">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>category</th>
+                            <th>blog_count</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="biuuu_city_list">
+                        </tbody>
+                    </table>
+                    <center>
+                        <div id="demo20"></div>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src='/static/js/jquery.min.js'></script>   
+<script src='/static/layui/layui.js'></script> 
+<script>
+    layui.use('layer', function () {
+        var $ = layui.jquery
+                , layer = layui.layer;
+
+        if ($(window).width() <= 750) return
+    });
+</script>
+<script src='/static/js/list_tools.js'></script>
+<script src='/static/js/category_list.js'></script>
+</body>
+</html>
