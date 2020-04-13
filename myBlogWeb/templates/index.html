@@ -7,11 +7,9 @@
     <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>zndex-blog</title>
     <link rel="stylesheet" href="/static/api_documment_css/style.css">
-    <link rel="stylesheet" href="/static/css/markdown.css">
-    <!-- <link rel="stylesheet" href="/static/api_documment_css/prettify.css"> -->
-    <link rel="stylesheet" href="/static/css/menu.css">
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <link rel="stylesheet" href="/static/css/myblog.css">
+    <link rel="stylesheet" href="/static/css/menu.css">
     <link rel="stylesheet" href="/static/css/iconfont.css">
     <style>
         [v-cloak] {
@@ -22,14 +20,14 @@
 
 <body>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
-        <nav>
+        <nav style="border-bottom: 1px solid #f1f1f1;">
             <div class="container">
                 <a href="">
                     <img src="/show/logo/zndex_logo.png" alt="">
                     <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
                 </a>
                 <div id="menu">
-                    <ul class="layui-nav" lay-filter="">
+                    <ul class="layui-nav" lay-filter="" style="background-color: white;">
                         <li class="layui-nav-item"><a href="" style="color: grey;">首页</a></li>
                     </ul>
                     <ul class="layui-nav layui-layout-right" style="background-color: white; margin-top: 10px;">
@@ -46,49 +44,49 @@
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
         </nav>
-        <div class="my-blog" style="margin-top: 2px;">
-            <div class="div-inline article-utils" id='article-utils'>
-                <ul>
-                    <li class="icon-li">
-                        <a href="javascript:void(0)">
-                            <i class="iconfont icon-item" title="点赞">&#xe8ad;</i>
-                        </a>
-                    </li>
-                    <li class="icon-li">
-                        <a href="javascript:void(0)">
-                            <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
-                        </a>
-                    </li>
+        <div style="background-color: white;">
+            <div class="layui-header my-header" style="width: 70%;">
+                <ul class="layui-nav" lay-filter="" style="background-color: white;">
+                    <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"
+                            href="javascript:void(0)">全部</a></li>
+                    <li v-for="item in categories" class="layui-nav-item"><a href="javascript:void(0)"
+                            @click="changeNowCategory(item)">{[item]}</a></li>
                 </ul>
             </div>
-            <div class='div-inline div-left' style="margin-left: 60px;">
-                <header>
+        </div>
+        <div v-show="now_category != ''" class="my-tag">
+            <ul>
+                <li>
+                    全部
+                </li>
+                <li v-for="item in getTags()">{[item]}</li>
+            </ul>
+        </div>
+        <div class="my-blog">
+            <div class='div-inline div-left'>
+                <section class='my-blog-main'>
                     <div class="container">
-                        <div style="margin-top: 10px;">
-                            <center><img id="cover_img" src="" alt=""></center>
-                        </div>
-                        <center>
-                            <div class="docs-header" id="title">
-                                <!-- 这里是标题 -->
+                        <ul>
+                            <li>
+                                <div>
+                                我是博客1
                             </div>
-                        </center>
-                        <span style="float: right;color: grey;" id="update_time">---------------发表于</span>
-                    </div>
-                </header>
-                <section style="background-color: white;margin-bottom: 20px;">
-                    <div class="container">
-                        <div class="docs-content markdown markdown-body editormd-preview-container" id="result">
-                            <!-- 此处插入内容 -->
-                        </div>
+                            </li>
+                            <li>
+                                <div>
+                                我是博客2
+                            </div>
+                            </li>
+                        </ul>
                     </div>
                 </section>
             </div>
             <div class='div-inline div-right'>
-                <div class="container">
-                    <ul class="my_menu" id="menu-left">
-                        <li style="margin-bottom: 10px;"><strong>目录</strong></li>
-                    </ul>
-                </div>
+                <section class='my-blog-aside'>
+                    <div class="container">
+                        此处为侧边栏
+                    </div>
+                </section>
             </div>
         </div>
         <section class="vibrant centered">
@@ -102,10 +100,16 @@
             </div>
         </footer>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
     <script src="/static/js/vue.js"></script>
-    <script src="/static/js/blog_detail.js"></script>
+    <script src="/static/layui/layui.js"></script>
+    <script>
+        layui.use('element', function () {
+            var element = layui.element;
+        })
+    </script>
+    <script src="/static/js/index.js"></script>
 </body>
 
 </html>

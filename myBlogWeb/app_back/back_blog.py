@@ -46,7 +46,7 @@ class Tag(Resource):
 		parser.add_argument('category', type=str)
 		args = parser.parse_args()
 		category = args['category']
-		if category:
+		if category and category != "''":
 			tags = tag_dict.get(category, None)
 			if tags:
 				return {
@@ -114,9 +114,9 @@ class BlogList(Resource):
 		blog_list = getBlogList(user_id=manager_id, sort_by=sort_by)
 		blog_list_res = []
 		for blog in blog_list:
-			if category:
+			if category and category != "''":
 				if blog['category'] == category:
-					if tag:
+					if tag and tag != "''":
 						if len(set(blog['tag'].split(',') | set(tag.split(',')))) > 0:
 							blog_list_res.append(blog)
 						else:

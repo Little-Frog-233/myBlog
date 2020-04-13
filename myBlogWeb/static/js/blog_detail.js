@@ -91,7 +91,7 @@ function toToc(data) {
     // const addEndUL = () => { result += '</ul>\n'; }
     const addLI = (index, itemText) => { result += '<li><a name="link" class=""' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
     data.forEach(function (item, index) {
-                 let h = item.match(/[hH][1-6]/g)[0];
+        let h = item.match(/[hH][1-6]/g)[0];
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
         // itemText = itemText.replace(/<[hH][1-6].*?>/, '');
         itemText = item
@@ -131,6 +131,7 @@ function compile() {
         var blog = getBlog(blog_id);
         var text = blog.content;
         var title = blog.title;
+        document.title = title;
         var cover_img_url = blog.cover_img_url + '&width=800&height=300';
         var update_time = blog.update_time.split(' ')[0];
         var read_count = blog.read_count;
@@ -174,3 +175,48 @@ function getCommentList() {
     $.ajax(op);
     return comment_list
 }
+
+// 页面滚动，目录固定
+function htmlFixPosition(elFix1, elFix2) {
+    function htmlScroll() {
+        var top = document.body.scrollTop || document.documentElement.scrollTop;
+        if (elFix.data_top < top) {
+            elFix.style.position = 'fixed';
+            elFix.style.top = 0;
+            elFix.style.left = elFix.data_left;
+        }
+        else {
+            elFix.style.position = 'static';
+        }
+    }
+
+    function htmlPosition(obj) {
+        var o = obj;
+        var t = o.offsetTop;
+        var l = o.offsetLeft;
+        while (o = o.offsetParent) {
+            t += o.offsetTop;
+            l += o.offsetLeft;
+        }
+        obj.data_top = t;
+        obj.data_left = l;
+    }
+
+    var oldHtmlWidth = document.documentElement.offsetWidth;
+    window.onresize = function () {
+        var newHtmlWidth = document.documentElement.offsetWidth;
+        if (oldHtmlWidth == newHtmlWidth) {
+            return;
+        }
+        oldHtmlWidth = newHtmlWidth;
+        elFix.style.position = 'static';
+        htmlPosition(elFix);
+        htmlScroll();
+    }
+    window.onscroll = htmlScroll;
+
+    htmlPosition(elFix);
+}
+
+var elFix = document.getElementById('menu-left');
+htmlFixPosition(elFix);

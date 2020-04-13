@@ -1,0 +1,83 @@
+.my-header {
+    background-color: white;
+    margin: 0 350px;
+}
+.my_title {
+    font-family: Georgia, Palatino, serif;
+    color: black;
+    font-weight: normal;
+    font-size: 45px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.my-ul-a {
+    color: grey;
+}
+
+.my-tag {
+    height: 20px;
+    background-color: rgb(244, 245, 245);
+    margin-top: 10px;
+    /* margin-bottom: 5px; */
+    margin-left: 400px;
+}
+
+.my-tag li {
+    color: grey;
+    margin-top: 10px;
+    margin-right: 10px;
+    background-color: white;
+    width:100%;
+    /* border:2px solid ; */
+    border-radius:10px;
+    display: inline;
+    padding: 5px 10px 5px 10px;;
+}
+
+.my-tag li.tag-active {
+    color: blue;
+}
+
+.my-blog {
+    margin-left: 350px;
+    width: 70%;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.div-left{
+    width: 700px;
+}
+
+.div-right{
+    width: 250px;
+}
+
+.div-inline{ 
+    float: left;
+}
+
+.my-blog section {
+    /* width: 700px; */
+    background-color: white;
+    margin:0 auto;
+    /* margin-right: 500px; */
+}
+
+.my-blog .my-blog-aside{
+    margin-left: 20px;
+    background-color: white;
+    /* margin-left: 720px; */
+}
+
+.my-blog .article-utils{
+    width: 50px;
+    margin-top: 200px;
+    margin-right: 10px;
+    /* margin-left: 65px; */
+    z-index: 1000;
+    position: fixed;
+}
+

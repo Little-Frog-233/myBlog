@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/static/css/menu.css">
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <link rel="stylesheet" href="/static/css/myblog.css">
-    <link rel="stylesheet" href="/static/css/iconfont.css">
     <style>
         [v-cloak] {
             display: none;
@@ -36,9 +35,8 @@
                         <li>
                             <!-- <div class="layui-form-item">
                                 <div class="layui-input-block"> -->
-                            <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
-                                class="layui-input">
-                            <!-- </div>
+                                    <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off" class="layui-input">
+                                <!-- </div>
                             </div> -->
                         </li>
                     </ul>
@@ -46,51 +44,31 @@
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
         </nav>
-        <div class="my-blog" style="margin-top: 2px;">
-            <div class="div-inline article-utils" id='article-utils'>
-                <ul>
-                    <li class="icon-li">
-                        <a href="javascript:void(0)">
-                            <i class="iconfont icon-item" title="点赞">&#xe8ad;</i>
-                        </a>
-                    </li>
-                    <li class="icon-li">
-                        <a href="javascript:void(0)">
-                            <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
-                        </a>
-                    </li>
+        <center>
+        <header style="width: 70%;">
+            <div class="container">
+                <div>
+                    <center><img id="cover_img" src="" alt=""></center>
+                </div>
+                <center>
+                    <div class="docs-header" id="title">
+                        <!-- 这里是标题 -->
+                    </div>
+                </center>
+                <span style="float: right;color: grey;" id="update_time">---------------发表于</span>
+            </div>
+        </header>
+        <section style="width: 70%; background-color: white;margin-bottom: 20px;">
+            <div class="container">
+                <div class="docs-content markdown markdown-body editormd-preview-container" id="result">
+                    <!-- 此处插入内容 -->
+                </div>
+                <ul class="docs-nav my_menu" id="menu-left" style="background-color: #f4f5f5;">
+                    <li><strong>目录</strong></li>
                 </ul>
             </div>
-            <div class='div-inline div-left' style="margin-left: 60px;">
-                <header>
-                    <div class="container">
-                        <div style="margin-top: 10px;">
-                            <center><img id="cover_img" src="" alt=""></center>
-                        </div>
-                        <center>
-                            <div class="docs-header" id="title">
-                                <!-- 这里是标题 -->
-                            </div>
-                        </center>
-                        <span style="float: right;color: grey;" id="update_time">---------------发表于</span>
-                    </div>
-                </header>
-                <section style="background-color: white;margin-bottom: 20px;">
-                    <div class="container">
-                        <div class="docs-content markdown markdown-body editormd-preview-container" id="result">
-                            <!-- 此处插入内容 -->
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class='div-inline div-right'>
-                <div class="container">
-                    <ul class="my_menu" id="menu-left">
-                        <li style="margin-bottom: 10px;"><strong>目录</strong></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        </section>
+        </center>
         <section class="vibrant centered">
             <div class="container">
                 <h4> Designed By rui.cheng@zndex.com</h4>
@@ -104,6 +82,10 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
+    <script src="/static/js/layout.js"></script>
+    <script src="/static/js/jquery.localscroll-1.2.7.js" type="text/javascript"></script>
+    <script src="/static/js/jquery.scrollTo-1.4.3.1.js" type="text/javascript"></script>
     <script src="/static/js/vue.js"></script>
     <script src="/static/js/blog_detail.js"></script>
 </body>
