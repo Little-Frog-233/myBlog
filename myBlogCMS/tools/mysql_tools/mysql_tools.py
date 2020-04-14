@@ -32,10 +32,16 @@ def getManagerLogo(username):
 	return res
 
 def getCategories(user_id):
-	db = mysqlModel()
-	res = db.getCategories(user_id=user_id)
-	db.close()
-	return res
+    db = mysqlModel()
+    res = db.getCategories(user_id=user_id)
+    for r in res:
+        r['tags'] = []
+        tags = db.getTag(user_id=user_id, category_id=r['id'])
+        if tags:
+            for tag in tags:
+                r['tags'].append(tag['tag'])
+    db.close()
+    return res
 
 def getCategoryList(user_id):
 	db = mysqlModel()

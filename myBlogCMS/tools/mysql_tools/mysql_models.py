@@ -199,6 +199,27 @@ class mysqlModel:
             log('mysqlModel.updateCategoryCount').logger.error(msg)
             self.db.rollback()
             return False
+    
+    def getTag(self, user_id, category_id):
+        '''
+
+        :return:
+        '''
+        sql = '''select a.name, b.id, b.tag, b.blog_count from category a join tag b on a.id=b.category_id where a.manager_id={user_id} and b.manager_id={user_id} and a.id={category_id}; '''.format(
+            user_id=user_id, category_id=category_id)
+        self.cursor.execute(sql)
+        results = self.cursor.fetchall()
+        if not results or len(results) <= 0:
+            return None
+        tags = []
+        for res in results:
+            temp = {}
+            temp['id'] = res[1]
+            temp['category'] = res[0]
+            temp['tag'] = res[2]
+            temp['blog_count'] = res[3]
+            tags.append(temp)
+        return tags
 
     def getTags(self, user_id):
         '''

@@ -25,6 +25,7 @@ function get_html_content(index, item) {
     var html = '<tr>' +
         '<td>' + item.id + '</td>' +
         '<td>' + item.category + '</td>' +
+        '<td>' + item.tags.join(',') + '</td>' +
         '<td>' + item.blog_count + '</td>' +
         '<td>'
         + '<button class="layui-btn layui-btn-danger" onclick=deleteCategoryNotice(' + item.id + ',' + item.blog_count + ')><i class="layui-icon layui-icon-delete"></i>删除</button>'
