@@ -177,7 +177,7 @@ function getCommentList() {
 }
 
 // 页面滚动，目录固定
-function htmlFixPosition(elFix1, elFix2) {
+function htmlFixPosition(elFix) {
     function htmlScroll() {
         var top = document.body.scrollTop || document.documentElement.scrollTop;
         if (elFix.data_top < top) {

@@ -32,9 +32,16 @@
                 </button>
             </div>
             <div class="layui-card-body">
-                <div id="after-all-chosed" style="display: none;float: right">
+                <div id="after-all-chosed" style="display: none;float: right" class="layui-btn-group">
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-normal"
+                            style="margin-right: 10px;" onclick="updateAllVisibleNotice(1)">
+                        <i class='layui-icon layui-icon-ok'></i>可见
+                    </button>
                     <button type="button" class="layui-btn layui-btn-lg layui-btn-danger"
-                            style="float: right; margin-right: 5px;" onclick="deleteAllNoticeV2()">
+                            style="margin-right: 10px;" onclick="updateAllVisibleNotice(0)">
+                        <i class='layui-icon layui-icon-close'></i>隐藏
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-danger" onclick="deleteAllNoticeV2()">
                         <i class='layui-icon'></i>删除
                     </button>
                 </div>
@@ -71,6 +78,7 @@
                         <th>tag</th>
                         <th>read_count</th>
                         <th>comment_count</th>
+                        <th>visible</th>
                         <th>update_time <button onclick="sortByUpdateTime()" title="按更新日期排序"><i class='layui-icon layui-icon-triangle-d'></i></button></th>
                         <th>操作</th>
                     </tr>

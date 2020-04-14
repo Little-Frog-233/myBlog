@@ -66,6 +66,11 @@ function getBlogList() {
 }
 
 function get_html_content(index, item) {
+    if (item.visible == 1){
+        var visible_html = '<td style="color: blue;">可见</td>'
+    }else{
+        var visible_html = '<td style="color: red;">不可见</td>'
+    }
     var html = '<tr>' +
         '<td>' + item.id + '</td>' +
         '<td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">' + item.title + '</td>' +
@@ -75,6 +80,7 @@ function get_html_content(index, item) {
         '<td>' + item.tag + '</td>' +
         '<td>' + item.read_count + '</td>' +
         '<td>' + item.comment_count + '</td>' +
+        visible_html +
         '<td>' + item.update_time + '</td>' +
         '<td>'
         + "<input style='margin-right:10px;' type='checkbox' onclick='showDivAfterChose()' name='' lay-skin='primary' value='" + item.id + "'>"
@@ -161,6 +167,56 @@ function deleteBlogAllV2(blog_ids) {
         }
     };
     $.ajax(op_delete);
+    closeDivAfterChose()
+}
+
+function updateAllVisibleNotice(visible){
+    var task_chosen = '';
+    $("input[type='checkbox']").each(function () {
+        if (this.checked == true) {
+            task_chosen = task_chosen + this.value + ','
+        }
+    });
+    console.log(task_chosen);
+    layer.open({
+        skin: 'demo-class'
+        , title: '注意'
+        , content: '确定要更新可见吗吗？'
+        , btn: ['确定', '再说吧']
+        , yes: function (index, layero) {
+            updateAllVisible(task_chosen, visible);
+            layer.closeAll();
+        } //按钮【按钮一】的回调
+    });
+}
+
+function updateAllVisible(blog_ids, visible){
+    blog_ids = blog_ids.toString();
+    var csrftoken = $("meta[name=csrf-token]").attr("content");
+    var op = {
+        "method": "put",
+        "url": "/api/restful/blog_list/",
+        "data": {
+            'type': 'visible',
+            'blog_ids': blog_ids,
+            'visible': visible
+        },
+        "headers": { "X-CSRFToken": csrftoken },
+        "success": function(data){
+            loadPageBlog();
+                layer.open({
+                    skin: 'demo-class',
+                    content: '更新成功'
+                });
+        },"error": function(error){
+            loadPageBlog();
+            layer.open({
+                skin: 'demo-class',
+                content: '更新失败, message: ' + error
+            });
+        }
+    };
+    $.ajax(op);
     closeDivAfterChose()
 }
 

@@ -20,9 +20,9 @@
 
 <body>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
-        <nav style="border-bottom: 1px solid #f1f1f1;">
+        <nav style="border-bottom: 1px solid #f1f1f1;" id='my-blog-head'>
             <div class="container">
-                <a href="">
+                <a href="" style="background: white;">
                     <img src="/show/logo/zndex_logo.png" alt="">
                     <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
                 </a>
@@ -44,7 +44,7 @@
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
         </nav>
-        <div style="background-color: white;">
+        <div style="background-color: white;" id="my-category">
             <div class="layui-header my-header" style="width: 70%;">
                 <ul class="layui-nav" lay-filter="" style="background-color: white;">
                     <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"
@@ -54,28 +54,66 @@
                 </ul>
             </div>
         </div>
-        <div v-show="now_category != ''" class="my-tag">
+        <div v-show="now_category != ''" class="my-tag" id="my-tag">
             <ul>
                 <li>
-                    全部
+                    <a href="javascript:void(0)" @click="changeNowTag('')" :style="getTagStyle('')">全部</a>
                 </li>
-                <li v-for="item in getTags()">{[item]}</li>
+                <li v-for="item in getTags()"><a href="javascript:void(0)" @click="changeNowTag(item)"
+                        :style="getTagStyle(item)">{[item]}</a></li>
             </ul>
         </div>
-        <div class="my-blog">
+        <div class="my-blog" id="my-blog-body">
             <div class='div-inline div-left'>
                 <section class='my-blog-main'>
                     <div class="container">
                         <ul>
-                            <li>
-                                <div>
-                                我是博客1
-                            </div>
+                            <li class="item">
+                                <div class='content-box'>
+                                    <div class="meta-row">
+                                        <ul class="meta-list">
+                                            <li class="categpry">
+                                                分类
+                                            </li>
+                                            <li class='tag'>
+                                                标签
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="title-row">
+                                        <a href="" class="title">
+                                            我是标题
+                                        </a>
+                                    </div>
+                                    <div class="content-row">
+                                        <div class="cover-img"><img src="http://127.0.0.1:5000/show/picture/?filename=dongman_1.jpg&width=200" alt=""></div>
+                                        <div class="content"> 在很多情况下，我们会有把 Python 对象进行序列化或反序列化的需求，比如开发 REST API，比如一些面向对象化的数据加载和保存，都会应用到这个功能。
+                                            比如这里看一个最基本的例子，这里给到一个 User 的 Class 定义，再给到一个 data 数据，像这样：</div>
+                                    </div>
+                                </div>
                             </li>
-                            <li>
-                                <div>
-                                我是博客2
-                            </div>
+                            <li class="item">
+                                <div class='content-box'>
+                                    <div class="meta-row">
+                                        <ul class="meta-list">
+                                            <li class="categpry">
+                                                分类
+                                            </li>
+                                            <li class='tag'>
+                                                标签
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="title-row">
+                                        <a href="" class="title">
+                                            我是标题
+                                        </a>
+                                    </div>
+                                    <div class="content-row" style="width: 750px;">
+                                        <div>我是画</div>
+                                        <div>我是内容</div>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>

@@ -1,7 +1,10 @@
+
+
 .my-header {
     background-color: white;
     margin: 0 350px;
 }
+
 .my_title {
     font-family: Georgia, Palatino, serif;
     color: black;
@@ -35,7 +38,7 @@
     padding: 5px 10px 5px 10px;;
 }
 
-.my-tag li.tag-active {
+.my-tag .tag-active {
     color: blue;
 }
 
@@ -81,3 +84,64 @@
     position: fixed;
 }
 
+/* .my-blog .item{
+    border-bottom: 1px solid rgb(241, 241, 241);
+} */
+
+.my-blog .content-box{
+    border-bottom: 1px solid rgb(241, 241, 241);
+    margin-bottom: 10px;
+}
+
+.my-blog .meta-list{
+    display: flex;
+    font-size: 16px;
+}
+
+.my-blog .meta-list .categpry{
+    color: plum;
+}
+
+.my-blog .meta-list .tag{
+    color: grey;
+    font-size: 14px;
+}
+
+.my-blog .meta-list li {
+    margin-right: 5px;
+    line-height: 20px;
+}
+
+.my-blog .title-row{
+    margin-top: 5px;
+}
+
+.my-blog .title-row{
+    margin-bottom: 10px;
+}
+
+.my-blog .title-row .title{
+    font-size: 20px;
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
+}
+
+.my-blog .content-row {
+    margin-bottom: 20px;
+}
+
+.my-blog .content-row{
+    display: inline-block;
+    /* float: left; */
+}
+
+.my-blog .cover-img{
+    width: 200px;
+    height: 100%;
+    margin-right: 10px;
+    float: left;
+}
+
+.my-blog .content-row .content{
+    width: 400px;
+    float: left;
+}

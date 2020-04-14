@@ -394,6 +394,14 @@ class BlogList(Resource):
         '''
         更新所有博客的数据
         '''
+        parser = reqparse.RequestParser()
+        parser.add_argument('type', type=str, default='all')
+        parser.add_argument('blog_ids', type=str)
+        parser.add_argument('visible', type=int)
+        args = parser.parse_args()
+        type = args['type']
+        blog_ids = args['blog_ids']
+        visible = args['visible']
         if 'user_id' in session:
             user_id = session['user_id']
         else:
@@ -402,16 +410,28 @@ class BlogList(Resource):
                 'message': '',
                 'category_list': []
             }, 400
-        if not updateAllBlogCommentCount(manager_id=user_id):
-            return {
-                'status_code': 400,
-                'message': 'some error happened, please check log'
-            }, 400
-        else:
-            return {
-                'status_code': 200,
-                'message': ''
-            }
+        if not type or type == 'all':
+            if not updateAllBlogCommentCount(manager_id=user_id):
+                return {
+                    'status_code': 400,
+                    'message': 'some error happened, please check log'
+                }, 400
+            else:
+                return {
+                    'status_code': 200,
+                    'message': ''
+                } 
+        elif type == 'visible':
+            if not updateBlogsVisible(blog_ids=blog_ids, user_id=user_id, visible=visible):
+                return {
+                        'status_code': 400,
+                        'message': 'some error happened, please check log'
+                    }, 400
+            else:
+                return {
+                        'status_code': 200,
+                        'message': ''
+                    }
 
 class CommentList(Resource):
     def get(self):

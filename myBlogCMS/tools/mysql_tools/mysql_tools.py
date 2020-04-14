@@ -190,6 +190,23 @@ def deleteBlogs(blog_ids, user_id):
 			return False
 	return True
 
+def updateBlogVisible(blog_id, user_id, visible=0):
+    db = mysqlModel()
+    res = db.updateBlogVisible(blog_id=blog_id, user_id=user_id, visible=visible)
+    db.close
+    return res
+
+def updateBlogsVisible(blog_ids, user_id, visible=0):
+    '''
+    '''
+    blog_id_list = blog_ids.split(',')
+    for blog_id in blog_id_list:
+        if len(blog_id) <= 0:
+            continue
+        if not updateBlogVisible(blog_id=blog_id, user_id=user_id, visible=visible):
+            return False
+    return True
+
 def getComments(manager_id, sort_by='update_time', blog_title=None, comment_id=None):
     '''
     '''

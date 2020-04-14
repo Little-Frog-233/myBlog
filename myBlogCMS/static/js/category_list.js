@@ -42,10 +42,10 @@ $(document).ready(function () {
 });
 
 function deleteCategory(category_id, blog_count){
-    if (blog_count > 0){
-        layer.msg("blog_count > 0, 无法删除");
-        return
-    }
+    // if (blog_count > 0){
+    //     layer.msg("blog_count > 0, 无法删除");
+    //     return
+    // }
     var delete_data = {
         'category_id': category_id
     }
@@ -73,12 +73,12 @@ function deleteCategoryNotice(category_id, blog_count){
     layer.open({
         skin: 'demo-class'
         , title: '警告'
-        , content: '确定要删除吗？(删除该分类，该分类下的标签也会一并删除)'
+        , content: '确定要删除吗？(删除该分类，该分类下的标签也会一并删除，并且属于该分类的文章将会被隐藏)'
         , btn: ['确定', '再说吧']
         , yes: function (index, layero) {
             layer.closeAll();
-            layer.msg('此功能暂未开放')
-            // deleteCategory(category_id, blog_count);
+            // layer.msg('此功能暂未开放')
+            deleteCategory(category_id, blog_count);
         } //按钮【按钮一】的回调
     });
 }

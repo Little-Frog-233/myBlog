@@ -162,10 +162,13 @@ class mysqlModel:
         '''
         sql = '''delete from category where id=%s and manager_id=%s ''' % (category_id, user_id)
         sql_tag = '''delete from tag where category_id=%s and manager_id=%s '''%(category_id, user_id)
+        sql_blog = '''update blog visible=0 where category=(select name from category where id={category_id}) and manager_id={user_id} '''.format(category_id=category_id, user_id=user_id)
         try:
             self.cursor.execute(sql)
             self.db.commit()
             self.cursor.execute(sql_tag)
+            self.db.commit()
+            self.cursor.execute(sql_blog)
             self.db.commit()
             return True
         except Exception as e:
@@ -291,7 +294,7 @@ class mysqlModel:
 
         :return:
         '''
-        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where manager_id={user_id} ; '''.format(
+        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count, visible from blog where manager_id={user_id} ; '''.format(
             user_id=user_id)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
@@ -309,6 +312,7 @@ class mysqlModel:
             result['update_time'] = res[6].strftime('%Y-%m-%d %H:%M:%S')
             result['read_count'] = res[7]
             result['comment_count'] = res[8]
+            result['visible'] = res[9]
             blogs.append(result)
         if sort_by == 'id':
             blogs = sorted(blogs, key=lambda x: x['id'])
@@ -400,6 +404,20 @@ class mysqlModel:
         except Exception as e:
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('mysqlModel.deleteBlog').logger.error(msg)
+            self.db.rollback()
+            return False
+    
+    def updateBlogVisible(self, blog_id, user_id, visible=0):
+        '''
+        '''
+        sql = '''update blog set visible={visible} where id={blog_id} and manager_id={user_id}; '''.format(blog_id=blog_id, user_id=user_id, visible=visible)
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            return True
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('mysqlModel.updateBlogVisible').logger.error(msg)
             self.db.rollback()
             return False
     

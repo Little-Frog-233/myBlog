@@ -1,16 +1,30 @@
+console.log('求职，联系邮箱：1342468180@qq.com')
 const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
     data: {
         categories: getCategory(),
-        now_category: ''
+        now_category: '',
+        now_tag: ''
     },
     methods: {
         getCategoryClass(item){
             return {'layui-this': item == this.now_category}
         },
+        getTagClass(item){
+            return {'tag-activate': item == this.now_tag}
+        },
+        getTagStyle(item){
+            if (item == this.now_tag){
+                return {'color': 'rgb(2, 117, 248)'}
+            }
+        },
         changeNowCategory(item){
-            this.now_category = item
+            this.now_category = item;
+            this.now_tag = '';
+        },
+        changeNowTag(item){
+            this.now_tag = item
         },
         getTags(){
             return getTag(this.now_category)
