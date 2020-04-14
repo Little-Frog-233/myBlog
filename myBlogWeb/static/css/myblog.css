@@ -125,9 +125,9 @@
     font-family: -apple-system,system-ui,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
 }
 
-.my-blog .content-row {
+/* .my-blog .content-row {
     margin-bottom: 20px;
-}
+} */
 
 .my-blog .content-row{
     display: inline-block;
@@ -136,13 +136,13 @@
 
 .my-blog .cover-img{
     width: 200px;
-    height: 100%;
+    height: 125px;
     margin-right: 10px;
     float: left;
 }
 
 .my-blog .content-row .content{
-    width: 400px;
+    width: 430px;
     height: 100%;
     float: left;
     /* max-height: 100px;
