@@ -162,13 +162,17 @@ class mysqlModel:
         '''
         sql = '''delete from category where id=%s and manager_id=%s ''' % (category_id, user_id)
         sql_tag = '''delete from tag where category_id=%s and manager_id=%s '''%(category_id, user_id)
-        sql_blog = '''update blog visible=0 where category=(select name from category where id={category_id}) and manager_id={user_id} '''.format(category_id=category_id, user_id=user_id)
+        sql_category_name = '''select name from category where id={category_id} '''.format(category_id=category_id)
+        sql_blog = '''update blog set visible=0 where category='%s' and manager_id={user_id} '''.format(category_id=category_id, user_id=user_id)
         try:
+            self.cursor.execute(sql_category_name)
+            one = self.cursor.fetchone()
+            category_name = one[0]
             self.cursor.execute(sql)
             self.db.commit()
             self.cursor.execute(sql_tag)
             self.db.commit()
-            self.cursor.execute(sql_blog)
+            self.cursor.execute(sql_blog%category_name)
             self.db.commit()
             return True
         except Exception as e:
