@@ -67,8 +67,8 @@
             <div class='div-inline div-left'>
                 <section class='my-blog-main'>
                     <div class="container">
-                        <ul>
-                            <li class="item">
+                        <ul id="blog_list">
+                            <!-- <li class="item">
                                 <div class='content-box'>
                                     <div class="meta-row">
                                         <ul class="meta-list">
@@ -87,35 +87,72 @@
                                     </div>
                                     <div class="content-row">
                                         <div class="cover-img"><img src="http://127.0.0.1:5000/show/picture/?filename=dongman_1.jpg&width=200" alt=""></div>
-                                        <div class="content"> 在很多情况下，我们会有把 Python 对象进行序列化或反序列化的需求，比如开发 REST API，比如一些面向对象化的数据加载和保存，都会应用到这个功能。
-                                            比如这里看一个最基本的例子，这里给到一个 User 的 Class 定义，再给到一个 data 数据，像这样：</div>
+                                        <div class="content">{[getContent(temp_content)]}</div>
+                                    </div>
+                                    <div>
+                                        <ul class="meta-list" style="margin-left: 60%;">
+                                            <li>
+                                                <i class="iconfont icon-item" title="浏览">&#xe8bf;</i>
+                                            </li>
+                                            <li>
+                                                <i class="iconfont icon-item" title="点赞">&#xe8ad;</i>
+                                            </li>
+                                            <li>
+                                                <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
+                                            </li>
+                                            <li>
+                                                2019-09-20
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="item">
+                            </li> -->
+                            <li class="item" v-for="item in blog_lists">
                                 <div class='content-box'>
                                     <div class="meta-row">
                                         <ul class="meta-list">
                                             <li class="categpry">
-                                                分类
+                                                {[item.category]}
                                             </li>
-                                            <li class='tag'>
-                                                标签
+                                            <li class='tag' v-for="tag in item.tag.split(',')">
+                                                {[tag]}
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="title-row">
-                                        <a href="" class="title">
-                                            我是标题
+                                        <a :href="getBlogUrl(item.id)" class="title" target="_blank">
+                                            {[item.title]}
                                         </a>
                                     </div>
-                                    <div class="content-row" style="width: 750px;">
-                                        <div>我是画</div>
-                                        <div>我是内容</div>
+                                    <div class="content-row">
+                                        <div class="cover-img"><img :src="item.cover_img_url" alt=""></div>
+                                        <div class="content">{[getContent(item.content)]}</div>
+                                    </div>
+                                    <div>
+                                        <ul class="meta-list" style="margin-left: 60%; margin-right: 10%;">
+                                            <li>
+                                                <i class="iconfont icon-item" title="浏览" style="font-size: 16px;">&#xe8bf;{[item.read_count]}</i>
+                                            </li>
+                                            <!-- <li>
+                                                <i class="iconfont icon-item" title="点赞">&#xe8ad;{[item.like_count]}</i>
+                                            </li> -->
+                                            <li>
+                                                <i class="iconfont icon-item" title="评论" style="font-size: 16px;">&#xe8b4;{[item.comment_count]}</i>
+                                            </li>
+                                            <li>
+                                                {[item.update_time.split(' ')[0]]}
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </li>
                         </ul>
+                        <div v-show="more">
+                            <button @click="getBlogList()">点击加载更多</button>
+                        </div>
+                        <div v-show="!more" class="no-more">
+                            没有更多了
+                        </div>
                     </div>
                 </section>
             </div>
@@ -138,8 +175,9 @@
             </div>
         </footer>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/prettify/prettify.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/prettify/prettify.js"></script> -->
     <script src="/static/js/vue.js"></script>
     <script src="/static/layui/layui.js"></script>
     <script>

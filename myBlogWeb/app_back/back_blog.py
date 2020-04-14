@@ -96,42 +96,60 @@ class Blog(Resource):
 		}, 400
 
 class BlogList(Resource):
-	def get(self):
-		'''
-		获取blog列表
-		:return:
-		'''
-		parser = reqparse.RequestParser()
-		parser.add_argument('category', type=str)
-		parser.add_argument('tag', type=str)
-		parser.add_argument('sort_by', type=str)
-		args = parser.parse_args()
-		category = args['category']
-		tag = args['tag']
-		sort_by = args['sort_by']
-		if not sort_by:
-			sort_by = 'id'
-		blog_list = getBlogList(user_id=manager_id, sort_by=sort_by)
-		blog_list_res = []
-		for blog in blog_list:
-			if category and category != "''":
-				if blog['category'] == category:
-					if tag and tag != "''":
-						if len(set(blog['tag'].split(',') | set(tag.split(',')))) > 0:
-							blog_list_res.append(blog)
-						else:
-							continue
-					else:
-						blog_list_res.append(blog)
-				else:
-					continue
-			else:
-				blog_list_res.append(blog)
-		return {
-			'status_code': 200,
-			'message': '',
-			'blog_list': blog_list_res
-		}
+    def get(self):
+        '''
+        获取blog列表
+        :return:
+        '''
+        parser = reqparse.RequestParser()
+        parser.add_argument('category', type=str)
+        parser.add_argument('tag', type=str)
+        parser.add_argument('sort_by', type=str)
+        parser.add_argument('start', type=int)
+        parser.add_argument('offset', type=int, default=10)
+        args = parser.parse_args()
+        category = args['category']
+        tag = args['tag']
+        sort_by = args['sort_by']
+        start = args['start']
+        offset = args['offset']
+        if not sort_by:
+            sort_by = 'id'
+        blog_list = getBlogList(user_id=manager_id, sort_by=sort_by)
+        blog_list_res = []
+        if not blog_list:
+            return {
+            'status_code': 200,
+            'message': '',
+            'blog_list': blog_list_res
+        }
+        for blog in blog_list:
+            if category and category != "''":
+                if blog['category'] == category:
+                    if tag and tag != "''":
+                        if len(set(blog['tag'].split(',') | set(tag.split(',')))) > 0:
+                            blog_list_res.append(blog)
+                        else:
+                            continue
+                    else:
+                        blog_list_res.append(blog)
+                else:
+                    continue
+            else:
+                blog_list_res.append(blog)
+        if start is not None:
+            end = start + offset
+            if end >= len(blog_list_res):
+                more = False
+            else:
+                more = True
+            blog_list_res = blog_list_res[start:end]
+        return {
+            'status_code': 200,
+            'message': '',
+            'blog_list': blog_list_res,
+            'more': more
+        }
 
 class CommentList(Resource):
     '''

@@ -143,5 +143,16 @@
 
 .my-blog .content-row .content{
     width: 400px;
+    height: 100px;
     float: left;
+    /* max-height: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap */
+}
+
+.my-blog .no-more{
+    margin-left: 40%;
+    margin-right: 40%;
+    color: grey;
 }

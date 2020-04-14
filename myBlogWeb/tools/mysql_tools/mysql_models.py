@@ -155,7 +155,7 @@ class mysqlModel:
 
         :return:
         '''
-        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where manager_id={user_id} ; '''.format(
+        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where manager_id={user_id} and visible=1 ; '''.format(
             user_id=user_id)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
