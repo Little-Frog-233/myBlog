@@ -135,10 +135,13 @@
 }
 
 .my-blog .cover-img{
-    width: 200px;
-    height: 125px;
     margin-right: 10px;
     float: left;
+}
+
+.my-blog .cover-img img{
+    width: 200px;
+    height: 125px;
 }
 
 .my-blog .content-row .content{
