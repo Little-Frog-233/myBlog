@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/api_documment_css/style.css">
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <link rel="stylesheet" href="/static/css/myblog.css">
+    <link rel="stylesheet" href="/static/css/myblog-mobile.css">
     <link rel="stylesheet" href="/static/css/menu.css">
     <link rel="stylesheet" href="/static/css/iconfont.css">
     <style>
@@ -20,93 +21,57 @@
 
 <body>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
-        <nav style="border-bottom: 1px solid #f1f1f1;" id='my-blog-head'>
-            <div class="container">
-                <a href="" style="background: white;">
-                    <img src="/show/logo/zndex_logo.png" alt="">
-                    <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
-                </a>
-                <div id="menu">
-                    <ul class="layui-nav" lay-filter="" style="background-color: white;">
-                        <li class="layui-nav-item"><a href="" style="color: grey;">首页</a></li>
-                    </ul>
-                    <ul class="layui-nav layui-layout-right" style="background-color: white; margin-top: 10px;">
-                        <li>
-                            <!-- <div class="layui-form-item">
+        <div id="my-blog-top">
+            <nav style="border-bottom: 1px solid #f1f1f1;" id='my-blog-head'>
+                <div class="container">
+                    <a href="" style="background: white;">
+                        <img src="/show/logo/zndex_logo.png" alt="">
+                        <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
+                    </a>
+                    <div id="menu">
+                        <ul class="layui-nav" lay-filter="" style="background-color: white;">
+                            <li class="layui-nav-item"><a href="" style="color: grey;">首页</a></li>
+                        </ul>
+                        <ul class="layui-nav layui-layout-right my-top"
+                            style="background-color: white; margin-top: 10px;">
+                            <li>
+                                <!-- <div class="layui-form-item">
                                 <div class="layui-input-block"> -->
-                            <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
-                                class="layui-input">
-                            <!-- </div>
+                                <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
+                                    class="layui-input">
+                                <!-- </div>
                             </div> -->
-                        </li>
+                            </li>
+                        </ul>
+                    </div>
+                    <a id="menu-toggle" href="javascript:void(0)" class=" ">&#9776;</a>
+                </div>
+            </nav>
+            <div style="background-color: white;" id="my-category">
+                <div class="layui-header my-header" style="width: 70%;">
+                    <ul class="layui-nav" lay-filter="" style="background-color: white;">
+                        <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"
+                                href="javascript:void(0)">全部</a></li>
+                        <li v-for="item in categories" class="layui-nav-item"><a href="javascript:void(0)"
+                                @click="changeNowCategory(item)">{[item]}</a></li>
                     </ul>
                 </div>
-                <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
-        </nav>
-        <div style="background-color: white;" id="my-category">
-            <div class="layui-header my-header" style="width: 70%;">
-                <ul class="layui-nav" lay-filter="" style="background-color: white;">
-                    <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"
-                            href="javascript:void(0)">全部</a></li>
-                    <li v-for="item in categories" class="layui-nav-item"><a href="javascript:void(0)"
-                            @click="changeNowCategory(item)">{[item]}</a></li>
+            <div v-show="now_category != ''" class="my-tag" id="my-tag">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)" @click="changeNowTag('')" :style="getTagStyle('')">全部</a>
+                    </li>
+                    <li v-for="item in getTags()"><a href="javascript:void(0)" @click="changeNowTag(item)"
+                            :style="getTagStyle(item)">{[item]}</a></li>
                 </ul>
             </div>
-        </div>
-        <div v-show="now_category != ''" class="my-tag" id="my-tag">
-            <ul>
-                <li>
-                    <a href="javascript:void(0)" @click="changeNowTag('')" :style="getTagStyle('')">全部</a>
-                </li>
-                <li v-for="item in getTags()"><a href="javascript:void(0)" @click="changeNowTag(item)"
-                        :style="getTagStyle(item)">{[item]}</a></li>
-            </ul>
         </div>
         <div class="my-blog" id="my-blog-body">
             <div class='div-inline div-left'>
                 <section class='my-blog-main'>
                     <div class="container">
                         <ul id="blog_list">
-                            <!-- <li class="item">
-                                <div class='content-box'>
-                                    <div class="meta-row">
-                                        <ul class="meta-list">
-                                            <li class="categpry">
-                                                分类
-                                            </li>
-                                            <li class='tag'>
-                                                标签
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="title-row">
-                                        <a href="" class="title">
-                                            我是标题
-                                        </a>
-                                    </div>
-                                    <div class="content-row">
-                                        <div class="cover-img"><img src="http://127.0.0.1:5000/show/picture/?filename=dongman_1.jpg&width=200" alt=""></div>
-                                        <div class="content">{[getContent(temp_content)]}</div>
-                                    </div>
-                                    <div>
-                                        <ul class="meta-list" style="margin-left: 60%;">
-                                            <li>
-                                                <i class="iconfont icon-item" title="浏览">&#xe8bf;</i>
-                                            </li>
-                                            <li>
-                                                <i class="iconfont icon-item" title="点赞">&#xe8ad;</i>
-                                            </li>
-                                            <li>
-                                                <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
-                                            </li>
-                                            <li>
-                                                2019-09-20
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li> -->
                             <li class="item" v-for="item in blog_lists">
                                 <div class='content-box'>
                                     <div class="meta-row">
@@ -129,15 +94,17 @@
                                         <div class="content">{[getContent(item.content)]}</div>
                                     </div>
                                     <div>
-                                        <ul class="meta-list" style="margin-left: 60%; margin-right: 10%;">
+                                        <ul class="meta-list content-meta-list">
                                             <li>
-                                                <i class="iconfont icon-item" title="浏览" style="font-size: 16px;">&#xe8bf;{[item.read_count]}</i>
+                                                <i class="iconfont icon-item" title="浏览"
+                                                    style="font-size: 16px;">&#xe8bf;{[item.read_count]}</i>
                                             </li>
                                             <!-- <li>
                                                 <i class="iconfont icon-item" title="点赞">&#xe8ad;{[item.like_count]}</i>
                                             </li> -->
                                             <li>
-                                                <i class="iconfont icon-item" title="评论" style="font-size: 16px;">&#xe8b4;{[item.comment_count]}</i>
+                                                <i class="iconfont icon-item" title="评论"
+                                                    style="font-size: 16px;">&#xe8b4;{[item.comment_count]}</i>
                                             </li>
                                             <li>
                                                 {[item.update_time.split(' ')[0]]}
@@ -147,6 +114,9 @@
                                 </div>
                             </li>
                         </ul>
+                        <div v-show="showLoading">
+                            等待中
+                        </div>
                         <div v-show="more">
                             <button @click="getBlogList()">点击加载更多</button>
                         </div>
@@ -157,9 +127,12 @@
                 </section>
             </div>
             <div class='div-inline div-right'>
-                <section class='my-blog-aside'>
+                <section class='my-blog-aside' id="menu-right" :class="getBarFixedClass()">
                     <div class="container">
                         此处为侧边栏
+                        <div>
+                            点击此处回到顶部
+                        </div>
                     </div>
                 </section>
             </div>

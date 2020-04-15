@@ -9,9 +9,13 @@ const app = new Vue({
         temp_content: `### 在很多情况下，我们会有把 Python 对象进行序列化或反序列化的需求 \n### 比如开发 REST API，比如一些面向对象化的数据加载和保存，都会应用到这个功能。比如这里看一个最基本的例子，这里给到一个 User 的 Class 定义，再给到一个 data 数据，像这样：`,
         blog_lists: [],
         start: 0,
-        offset: 1,
+        offset: 2,
         more: true,
-        sort_by: 'update_time'
+        sort_by: 'update_time',
+        elFix: '#menu-right',
+        searchBarFixed: false, //是否要固定单位
+        oldScrollTop: 0, //记录固定单位的初始高度,
+        showLoading: false
     },
     methods: {
         getCategoryClass(item) {
@@ -49,41 +53,73 @@ const app = new Vue({
             }
         },
         getBlogList() {
-            if (this.start == 0){
+            if (this.start == 0) {
                 this.blog_lists = []
             }
+
             if (this.more) {
                 let blog_data = getBlogDataFunc(this.start, this.offset, this.category, this.tag, this.sort_by);
                 this.start = this.start + this.offset;
                 this.more = blog_data.more;
                 for (item of blog_data.blog_list) {
                     this.blog_lists.push(item)
-                }          
-            }
-        },
-        getBlogUrl(blog_id){
-            return '/blog_detail/?blog_id=' + blog_id;
-        },
-        scroll(blog_list) {
-            let isLoading = false
-            window.onscroll = () => {
-                // 距离底部200px时加载一次
-                let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= 200
-                if (bottomOfWindow && isLoading == false) {
-                    isLoading = true
-                    this.getBlogList();
-                    isLoading = false
                 }
             }
+            console.log('加载完成');
+            
+        },
+        getBlogUrl(blog_id) {
+            return '/blog_detail/?blog_id=' + blog_id;
+        },
+        handleScroll() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+            let offsetTop = document.querySelector(this.elFix).offsetTop;
+            if (scrollTop > offsetTop) {
+                this.searchBarFixed = true
+            } else {
+                this.searchBarFixed = false
+            }
+            if (this.searchBarFixed){
+                if (scrollTop < this.oldScrollTop){
+                    this.searchBarFixed = false
+                }
+            }
+        },
+        getBarFixedClass(){
+            return {'active': this.searchBarFixed}
+        },
+        scroll() {
+            let diffHeight = 200;
+            if ( document.body.offsetWidth <= 900){
+                diffHeight = 100;
+            }
+            let isLoading = false
+            // 距离底部200px时加载一次
+            let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= diffHeight
+            if (this.more){
+            if (bottomOfWindow && isLoading == false) {
+                isLoading = true
+                this.showLoading = true
+                setTimeout(this.getBlogList(), 5000);
+                this.showLoading = false
+                isLoading = false
+            }}
         }
     },
     beforeMount() {
         // 在页面挂载前就发起请求
-        this.getBlogList()
+        this.getBlogList();
     },
     mounted() {
-        this.scroll(this.blog_lists)
-      }
+        window.addEventListener('scroll', this.scroll)
+        // this.scroll();
+        this.oldScrollTop = document.querySelector(this.elFix).offsetTop;
+        window.addEventListener('scroll', this.handleScroll)
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.scroll)
+        window.removeEventListener('scroll', this.handleScroll)
+    },
 })
 
 function getCategory() {
@@ -145,3 +181,49 @@ function getBlogDataFunc(start, offset, category, tag, sort_by) {
     $.ajax(op);
     return blog_data
 }
+
+// 页面滚动，目录固定
+// function htmlFixPosition(elFix) {
+//     function htmlScroll() {
+//         var top = document.body.scrollTop || document.documentElement.scrollTop;
+//         if (elFix.data_top < top) {
+//             elFix.style.position = 'fixed';
+//             elFix.style.top = 0;
+//             elFix.style.left = elFix.data_left;
+//         }
+//         else {
+//             elFix.style.position = 'static';
+//         }
+//     }
+
+//     function htmlPosition(obj) {
+//         var o = obj;
+//         var t = o.offsetTop;
+//         var l = o.offsetLeft;
+//         while (o = o.offsetParent) {
+//             t += o.offsetTop;
+//             l += o.offsetLeft;
+//         }
+//         obj.data_top = t;
+//         obj.data_left = l;
+//     }
+
+//     var oldHtmlWidth = document.documentElement.offsetWidth;
+//     window.onresize = function () {
+//         var newHtmlWidth = document.documentElement.offsetWidth;
+//         if (oldHtmlWidth == newHtmlWidth) {
+//             return;
+//         }
+//         oldHtmlWidth = newHtmlWidth;
+//         elFix.style.position = 'static';
+//         htmlPosition(elFix);
+//         htmlScroll();
+//         htmlPosition(elFix);
+//     }
+//     window.onscroll = htmlScroll;
+
+//     htmlPosition(elFix);
+// }
+
+// var elFix = document.getElementById('menu-right');
+// htmlFixPosition(elFix);

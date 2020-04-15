@@ -208,10 +208,10 @@ nav h1 a {
     line-height: 45px;
 }
 
-nav a:hover {
+/* nav a:hover {
     background: ghostwhite;
     text-decoration: none;
-}
+} */
 
 nav a:active {
     background: #27637e;
@@ -272,7 +272,7 @@ nav #menu-toggle {
 /* Content Styles */
 section {
     padding: 1em 0 3em;
-    text-align: center;
+    /* text-align: center; */
 }
 
 section.vibrant {

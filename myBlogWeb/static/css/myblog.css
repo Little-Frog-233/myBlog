@@ -48,6 +48,8 @@
     margin-top: 15px;
     margin-bottom: 20px;
     display: inline-block;
+    /* height: 900px; */
+    /* overflow: scroll; */
 }
 
 .div-left{
@@ -55,11 +57,15 @@
 }
 
 .div-right{
-    width: 250px;
+    /* width: 250px; */
 }
 
 .div-inline{ 
     float: left;
+}
+
+.my-blog .my-blog-container{
+    margin-left: 60px;
 }
 
 .my-blog section {
@@ -70,10 +76,19 @@
 }
 
 .my-blog .my-blog-aside{
+    width: 250px;
     margin-left: 20px;
     background-color: white;
     /* margin-left: 720px; */
 }
+
+.my-blog .my-blog-aside.active{
+    position: fixed;
+    top: 0px;
+    z-index: 9999;
+    /* margin-left: 720px; */
+}
+
 
 .my-blog .article-utils{
     width: 50px;
@@ -152,6 +167,10 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap */
+}
+
+.my-blog .content-meta-list{
+    margin-left: 70%;
 }
 
 .my-blog .no-more{

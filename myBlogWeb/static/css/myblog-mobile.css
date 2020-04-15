@@ -1,0 +1,160 @@
+@media screen and (max-width: 900px) { /*当屏幕尺寸小于600px时，应用下面的CSS样式*/
+    .my-top{
+        display: none;
+    }
+
+    .my-header {
+        background-color: white;
+        margin: 0 auto;
+    }
+    
+    /* .my_title {
+        font-family: Georgia, Palatino, serif;
+        color: black;
+        font-weight: normal;
+        font-size: 45px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    } */
+    
+    /* .my-ul-a {
+        color: grey;
+    } */
+    
+    .my-tag {
+        height: 20px;
+        background-color: rgb(244, 245, 245);
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+    
+    /* .my-tag li {
+        color: grey;
+        margin-top: 10px;
+        margin-right: 10px;
+        background-color: white;
+        width:100%;
+        border-radius:10px;
+        display: inline;
+        padding: 5px 10px 5px 10px;;
+    } */
+    
+    /* .my-tag .tag-active {
+        color: blue;
+    } */
+    
+    .my-blog {
+        margin-left: 0px;
+        width: 100%;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+    
+    .div-left{
+        width: 100%;
+    }
+    
+    .div-right{
+        display: none;
+    }
+    
+    /* .div-inline{ 
+        float: left;
+    } */
+    
+    /* .my-blog section {
+        background-color: white;
+        margin:0 auto;
+    } */
+    
+    /* .my-blog .my-blog-aside{
+        margin-left: 20px;
+        background-color: white;
+    } */
+
+    .my-blog .my-blog-container{
+        margin-left: 0px;
+    }
+
+    .my-blog #cover_img {
+        display: none;
+    }
+    
+    .my-blog .article-utils{
+        display: none;
+        width: 50px;
+        margin-top: 200px;
+        margin-right: 10px;
+        z-index: 1000;
+        position: fixed;
+    }
+    
+    /* .my-blog .content-box{
+        border-bottom: 1px solid rgb(241, 241, 241);
+        margin-bottom: 10px;
+    } */
+    
+    /* .my-blog .meta-list{
+        display: flex;
+        font-size: 16px;
+    } */
+    
+    /* .my-blog .meta-list .categpry{
+        color: plum;
+    }
+     */
+    /* .my-blog .meta-list .tag{
+        color: grey;
+        font-size: 14px;
+    } */
+    
+    /* .my-blog .meta-list li {
+        margin-right: 5px;
+        line-height: 20px;
+    } */
+    
+    /* .my-blog .title-row{
+        margin-top: 5px;
+    } */
+    
+    /* .my-blog .title-row{
+        margin-bottom: 10px;
+    } */
+    
+    .my-blog .title-row .title{
+        float: left;
+        font-size: 20px;
+        font-family: -apple-system,system-ui,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
+    }
+    
+    /* .my-blog .content-row{
+        display: block;
+    } */
+    
+    .my-blog .cover-img{
+        display: none;
+    }
+    
+    /* .my-blog .cover-img img{
+        width: 200px;
+        height: 125px;
+    } */
+    
+    .my-blog .content-row .content{
+        width: 350px;
+        height: 100%;
+        float: left;
+        margin-top: 10px;
+    }
+    
+    .my-blog .content-meta-list{
+        margin-top: 5px;
+        margin-left: 40%;
+    }
+    /* .my-blog .no-more{
+        margin-left: 40%;
+        margin-right: 40%;
+        color: grey;
+    } */
+  }
