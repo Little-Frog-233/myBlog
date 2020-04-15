@@ -152,11 +152,11 @@
         margin-top: 5px;
         margin-left: 40%;
     }
-    /* .my-blog .no-more{
+    .my-blog .no-more{
         margin-left: 40%;
-        margin-right: 40%;
+        margin-right: auto;
         color: grey;
-    } */
+    }
 
     .my-blog .blog-detail{
         margin-top: 10px;
