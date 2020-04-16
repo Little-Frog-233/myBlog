@@ -19,7 +19,9 @@ def index():
 
 @app_front_blue.route('/blog_detail/')
 def blogDetail():
-	return render_template('blog_detail.html')
+    if 'manager_id' not in session:
+        session['manager_id'] = manager_id
+    return render_template('blog_detail.html')
 
 @app_front_blue.route('/blog_detail/temp/')
 def blogDetailTemp():
