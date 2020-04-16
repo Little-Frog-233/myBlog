@@ -7,12 +7,12 @@ from flask_restful import Api
 from app_front import app_front_blue
 from app_back.back_blog import *
 
-current_path = os.path.realpath(__file__)
-root_path = os.path.dirname(current_path)
-cfp_path = os.path.join(os.path.dirname(root_path), 'conf/web.conf')
-cfp = configparser.ConfigParser()
-cfp.read(cfp_path, encoding='utf-8')
-manager_id = cfp.get('web', 'manager_id')
+# current_path = os.path.realpath(__file__)
+# root_path = os.path.dirname(current_path)
+# cfp_path = os.path.join(os.path.dirname(root_path), 'conf/web.conf')
+# cfp = configparser.ConfigParser()
+# cfp.read(cfp_path, encoding='utf-8')
+# manager_id = cfp.get('web', 'manager_id')
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -24,8 +24,13 @@ def after_request(response):
     csrf_token = generate_csrf()
     # 设置cookie传给前端
     response.set_cookie('csrf_token', csrf_token)
-    session['mamanger_id'] = manager_id
     return response
+
+# @app.before_request
+# def before_request():
+#     if 'manager_id' not in session:
+#         session['manager_id'] = manager_id
+#     return
 
 ########################启用csrf保护###########################
 app.config['WTF_CSRF_CHECK_DEFAULT'] = False
