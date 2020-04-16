@@ -1,9 +1,15 @@
 .my_menu {
     background-color: #f4f5f5;
-    width: 150px;
+    width: 200px;
     margin-top: 30px;
+    white-space: nowrap; 
     /* z-index: 999999; */
     /* position: fixed; */
+}
+
+.my_menu h1, .my_menu h2, .my_menu h3, .my_menu h4, .my_menu h5, .my_menu h6{
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .my_menu h1 {
