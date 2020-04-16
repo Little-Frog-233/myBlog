@@ -1,4 +1,4 @@
-console.log('求职，联系邮箱：1342468180@qq.com')
+// console.log('求职，联系邮箱：1342468180@qq.com')
 const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
