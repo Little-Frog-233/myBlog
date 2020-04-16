@@ -25,7 +25,7 @@
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
         <nav>
             <div class="container">
-                <a href="">
+                <a href="/">
                     <img src="/show/logo/zndex_logo.png" alt="">
                     <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
                 </a>
@@ -38,7 +38,7 @@
                             <!-- <div class="layui-form-item">
                                 <div class="layui-input-block"> -->
                             <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
-                                class="layui-input">
+                                class="layui-input" v-model="search" @keyup.enter="changeSearch()">
                             <!-- </div>
                             </div> -->
                         </li>
@@ -58,6 +58,11 @@
                     <li class="icon-li">
                         <a href="javascript:void(0)">
                             <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
+                        </a>
+                    </li>
+                    <li class="icon-li">
+                        <a href="javascript:scroll(0,0)">
+                            <i class="iconfont icon-item" title="返回顶部">&#xe6a5;</i>
                         </a>
                     </li>
                 </ul>

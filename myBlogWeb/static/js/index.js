@@ -13,9 +13,11 @@ const app = new Vue({
         more: true,
         sort_by: 'update_time',
         elFix: '#menu-right',
+        search: GetQueryValue('search'),
         searchBarFixed: false, //是否要固定单位
         oldScrollTop: 0, //记录固定单位的初始高度,
-        showLoading: false
+        showLoading: false,
+        showBackTop: false
     },
     methods: {
         getCategoryClass(item) {
@@ -29,12 +31,21 @@ const app = new Vue({
                 return { 'color': 'rgb(2, 117, 248)' }
             }
         },
+        changeSearch(){
+            window.location.href='/?search=' + this.search;
+        },
         changeNowCategory(item) {
             this.now_category = item;
             this.now_tag = '';
+            this.more = true;
+            this.start = 0;
+            this.getBlogList();
         },
         changeNowTag(item) {
             this.now_tag = item
+            this.more = true;
+            this.start = 0;
+            this.getBlogList();
         },
         getTags() {
             return getTag(this.now_category)
@@ -58,7 +69,7 @@ const app = new Vue({
             }
 
             if (this.more) {
-                let blog_data = getBlogDataFunc(this.start, this.offset, this.category, this.tag, this.sort_by);
+                let blog_data = getBlogDataFunc(this.start, this.offset, this.now_category, this.now_tag, this.sort_by, this.search);
                 this.start = this.start + this.offset;
                 this.more = blog_data.more;
                 for (item of blog_data.blog_list) {
@@ -76,12 +87,14 @@ const app = new Vue({
             let offsetTop = document.querySelector(this.elFix).offsetTop;
             if (scrollTop > offsetTop) {
                 this.searchBarFixed = true
+                this.showBackTop = true
             } else {
                 this.searchBarFixed = false
             }
             if (this.searchBarFixed){
                 if (scrollTop < this.oldScrollTop){
                     this.searchBarFixed = false
+                    this.showBackTop = false
                 }
             }
         },
@@ -100,7 +113,7 @@ const app = new Vue({
             if (bottomOfWindow && isLoading == false) {
                 isLoading = true
                 this.showLoading = true
-                setTimeout(this.getBlogList(), 5000);
+                this.getBlogList(), 5000;
                 this.showLoading = false
                 isLoading = false
             }}
@@ -158,7 +171,7 @@ function getTag(category) {
     return tag
 }
 
-function getBlogDataFunc(start, offset, category, tag, sort_by) {
+function getBlogDataFunc(start, offset, category, tag, sort_by, search) {
     let blog_data = {};
     const op = {
         'method': 'get',
@@ -168,12 +181,16 @@ function getBlogDataFunc(start, offset, category, tag, sort_by) {
             'tag': tag,
             'start': start,
             'offset': offset,
-            'sort_by': sort_by
+            'sort_by': sort_by,
+            'search': search
         },
         'async': false,
         'success': function (data) {
-            blog_data['blog_list'] = data.blog_list
-            blog_data['more'] = data.more
+            blog_data['blog_list'] = data.blog_list;
+            blog_data['more'] = data.more;
+            if(search){
+                layer.msg('为您搜索到' + data.total + '条博客');
+            }
         }, 'error': function (error) {
             console.log(error);
         }
@@ -182,48 +199,14 @@ function getBlogDataFunc(start, offset, category, tag, sort_by) {
     return blog_data
 }
 
-// 页面滚动，目录固定
-// function htmlFixPosition(elFix) {
-//     function htmlScroll() {
-//         var top = document.body.scrollTop || document.documentElement.scrollTop;
-//         if (elFix.data_top < top) {
-//             elFix.style.position = 'fixed';
-//             elFix.style.top = 0;
-//             elFix.style.left = elFix.data_left;
-//         }
-//         else {
-//             elFix.style.position = 'static';
-//         }
-//     }
-
-//     function htmlPosition(obj) {
-//         var o = obj;
-//         var t = o.offsetTop;
-//         var l = o.offsetLeft;
-//         while (o = o.offsetParent) {
-//             t += o.offsetTop;
-//             l += o.offsetLeft;
-//         }
-//         obj.data_top = t;
-//         obj.data_left = l;
-//     }
-
-//     var oldHtmlWidth = document.documentElement.offsetWidth;
-//     window.onresize = function () {
-//         var newHtmlWidth = document.documentElement.offsetWidth;
-//         if (oldHtmlWidth == newHtmlWidth) {
-//             return;
-//         }
-//         oldHtmlWidth = newHtmlWidth;
-//         elFix.style.position = 'static';
-//         htmlPosition(elFix);
-//         htmlScroll();
-//         htmlPosition(elFix);
-//     }
-//     window.onscroll = htmlScroll;
-
-//     htmlPosition(elFix);
-// }
-
-// var elFix = document.getElementById('menu-right');
-// htmlFixPosition(elFix);
+function GetQueryValue(queryName) {
+    var query = decodeURI(window.location.search.substring(1));
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == queryName) {
+            return pair[1];
+        }
+    }
+    return '';
+}

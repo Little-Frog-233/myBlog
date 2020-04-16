@@ -7,9 +7,13 @@ const app = new Vue({
         comment_list: getCommentList(),
         comment_count: 0,
         now_comment_li: -1,
-        now_reply_li: '-1_-1'
+        now_reply_li: '-1_-1',
+        search: ''
     },
     methods: {
+        changeSearch(){
+            window.location.href='/?search=' + this.search;
+        },
         showComment(index) {
             this.now_comment_li = index
         },

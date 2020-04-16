@@ -155,7 +155,7 @@ class mysqlModel:
 
         :return:
         '''
-        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where manager_id={user_id} and visible=1 ; '''.format(
+        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count, like_count from blog where manager_id={user_id} and visible=1 ; '''.format(
             user_id=user_id)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
@@ -173,6 +173,7 @@ class mysqlModel:
             result['update_time'] = res[6].strftime('%Y-%m-%d %H:%M:%S')
             result['read_count'] = res[7]
             result['comment_count'] = res[8]
+            result['like_count'] = res[9]
             blogs.append(result)
         if sort_by == 'id':
             blogs = sorted(blogs, key=lambda x: x['id'])

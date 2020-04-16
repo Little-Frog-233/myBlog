@@ -107,12 +107,14 @@ class BlogList(Resource):
         parser.add_argument('sort_by', type=str)
         parser.add_argument('start', type=int)
         parser.add_argument('offset', type=int, default=10)
+        parser.add_argument('search', type=str)
         args = parser.parse_args()
         category = args['category']
         tag = args['tag']
         sort_by = args['sort_by']
         start = args['start']
         offset = args['offset']
+        search = args['search']
         if not sort_by:
             sort_by = 'id'
         blog_list = getBlogList(user_id=manager_id, sort_by=sort_by)
@@ -123,11 +125,20 @@ class BlogList(Resource):
             'message': '',
             'blog_list': blog_list_res
         }
+        if search and search != '':
+            for blog in blog_list:
+                search_list = search.split(' ')
+                print(search_list)
+                print(any([i in blog['title'] for i in search_list]))
+                if any([i in blog['title'] for i in search_list]):
+                    blog_list_res.append(blog)
+            blog_list = blog_list_res
+            blog_list_res = []
         for blog in blog_list:
             if category and category != "''":
                 if blog['category'] == category:
                     if tag and tag != "''":
-                        if len(set(blog['tag'].split(',') | set(tag.split(',')))) > 0:
+                        if tag in blog['tag']:
                             blog_list_res.append(blog)
                         else:
                             continue
@@ -137,6 +148,7 @@ class BlogList(Resource):
                     continue
             else:
                 blog_list_res.append(blog)
+        total = len(blog_list_res)
         if start is not None:
             end = start + offset
             if end >= len(blog_list_res):
@@ -148,7 +160,8 @@ class BlogList(Resource):
             'status_code': 200,
             'message': '',
             'blog_list': blog_list_res,
-            'more': more
+            'more': more,
+            'total': total
         }
 
 class CommentList(Resource):
