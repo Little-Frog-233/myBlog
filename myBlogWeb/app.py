@@ -27,12 +27,12 @@ def after_request(response):
     response.set_cookie('csrf_token', csrf_token)
     return response
 
-@app.before_request
-def before_request():
-    print(request.referrer)
-    if root_url not in request.referrer:
-        return render_template('404.html')
-    return
+# @app.before_request
+# def before_request():
+#     print(request.referrer)
+#     if root_url not in request.referrer:
+#         return render_template('404.html')
+#     return
 
 ########################启用csrf保护###########################
 app.config['WTF_CSRF_CHECK_DEFAULT'] = False
