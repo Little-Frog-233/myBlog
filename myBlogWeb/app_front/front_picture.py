@@ -104,7 +104,7 @@ def showLogo(filename):
 def showLogouser(filename):
 	'''
 	展示用户头像
-	:param username:
+	:param filename: 文件名称
 	:return:
 	'''
 	file_dir = logouser_path

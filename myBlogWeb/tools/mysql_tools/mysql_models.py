@@ -28,44 +28,71 @@ class mysqlModel:
                                     password=password, port=3306,
                                     db=db, charset='utf8')
         self.cursor = self.db.cursor()
-
-    def verifyUser(self, username, password):
+    
+    def verifyMailExist(self, usermail):
         '''
-
-        :param username:
-        :param password:
-        :return:
+        验证邮箱是否存在
         '''
-        sql = '''select id, password from user where username='%s'; ''' % username
+        sql = '''select * from user where usermail='{usermail}' '''.format(usermail=usermail)
+        self.cursor.execute(sql)
+        one = self.cursor.fetchone()
+        if one is not None:
+            return True
+        return False
+
+    def verifyUser(self, usermail, password):
+        '''
+        验证用户
+        :param usermail: 用户邮箱
+        :param password: 用户密码
+        :return: 验证成功返回用户id
+        '''
+        sql = '''select id, password from user where usermail='%s'; ''' % usermail
         self.cursor.execute(sql)
         one = self.cursor.fetchone()
         if one is not None:
             db_password = one[1]
             if des_encrypt(password) == db_password:
-                return int(one[0])
+                return one[0]
         return None
+    
+    def addUser(self, usermail, password, nickname, picture):
+        '''
+        新增用户
+        '''
+        sql = '''insert into user(usermail, password, nickname, picture) values(%s, %s, %s, %s)'''
+        try:
+            self.cursor.execute(sql, (usermail, des_encrypt(password), nickname, picture))
+            self.db.commit()
+            return True
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('mysqlModel.addUser').logger.error(msg)
+            self.db.rollback()
+            return False
     
     def getUserMessage(self, user_id):
         '''
         '''
-        sql = '''select username, nickname, admin from user where id={user_id} '''.format(user_id=user_id)
+        sql = '''select usermail, nickname, author, picture from user where id={user_id} '''.format(user_id=user_id)
         self.cursor.execute(sql)
         one = self.cursor.fetchone()
         if one is not None:
             res = {}
-            res['username'] = one[0]
+            res['usermail'] = one[0]
             res['nickname'] = one[1]
             res['admin'] = one[2]
+            res['picture'] = one[3]
             return res
         return None
 
-    def getUserLogo(self, username):
+    def getUserLogo(self, nickname):
         '''
 
         :param username:
         :return:
         '''
-        sql = '''select picture from user where username="%s"; ''' % username
+        sql = '''select picture from user where nickname="%s"; ''' % nickname
         self.cursor.execute(sql)
         one = self.cursor.fetchone()
         if one is not None:

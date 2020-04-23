@@ -1,8 +1,10 @@
 #coding:utf-8
 import os
 import configparser
+import json
 from flask import session, request, Response, redirect, url_for, flash, render_template
 from app_front import app_front_blue
+from tools.other_tools.des_tools import des_encrypt
 
 current_path = os.path.realpath(__file__)
 root_path = os.path.dirname(os.path.dirname(current_path))

@@ -17,7 +17,8 @@ const app = new Vue({
         searchBarFixed: false, //是否要固定单位
         oldScrollTop: 0, //记录固定单位的初始高度,
         showLoading: false,
-        showBackTop: false
+        showBackTop: false,
+        isLogin: false
     },
     methods: {
         getCategoryClass(item) {
@@ -119,11 +120,15 @@ const app = new Vue({
             }}
         }
     },
+    components: {
+        'my-blog-head': my_blog_head
+    },
     beforeMount() {
         // 在页面挂载前就发起请求
         this.getBlogList();
     },
     mounted() {
+        // 挂载以后发起请求
         window.addEventListener('scroll', this.scroll)
         // this.scroll();
         this.oldScrollTop = document.querySelector(this.elFix).offsetTop;
@@ -192,7 +197,7 @@ function getBlogDataFunc(start, offset, category, tag, sort_by, search) {
                 layer.msg('为您搜索到' + data.total + '条博客');
             }
         }, 'error': function (error) {
-            console.log(error);
+            console.log(error.responseJSON);
         }
     };
     $.ajax(op);
@@ -210,3 +215,7 @@ function GetQueryValue(queryName) {
     }
     return '';
 }
+
+// localStorage.setItem('token', 2333333)
+console.log(localStorage.getItem('token'));
+

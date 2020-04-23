@@ -23,11 +23,10 @@
 
 <body>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
-        <nav>
+        <!-- <nav>
             <div class="container">
                 <a href="/">
                     <img src="/show/logo/zndex_logo.png" alt="">
-                    <!-- <h1 style="color: #007fff;">ZNDEX-Blog</h1> -->
                 </a>
                 <div id="menu">
                     <ul class="layui-nav" lay-filter="">
@@ -35,18 +34,15 @@
                     </ul>
                     <ul class="layui-nav layui-layout-right my-top" style="background-color: white; margin-top: 10px;">
                         <li>
-                            <!-- <div class="layui-form-item">
-                                <div class="layui-input-block"> -->
                             <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
-                                class="layui-input" v-model="search" @keyup.enter="changeSearch()">
-                            <!-- </div>
-                            </div> -->
+                                class="layui-input" v-model="search" @keyup.enter="changeSearch()">\
                         </li>
                     </ul>
                 </div>
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
-        </nav>
+        </nav> -->
+        <my-blog-head isLogin="isLogin" search="search"></my-blog-head>
         <div class="my-blog" style="margin-top: 2px;">
             <div class="div-inline article-utils" id='article-utils'>
                 <ul>
@@ -111,6 +107,7 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/vue.js"></script>
+    <script src="/static/js/components.js"></script>
     <script src="/static/js/blog_detail.js"></script>
 </body>
 

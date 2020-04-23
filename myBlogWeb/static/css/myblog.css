@@ -14,6 +14,30 @@
     margin-bottom: 5px;
 }
 
+.my-top {
+    position: absolute!important;
+    right: 0;
+    margin-top: 15px;
+}
+
+.my-top li {
+    display: flex;
+}
+
+.user-picture{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    line-height: 38px;
+}
+
+.my-top a {
+    line-height: 38px;
+    color: grey;
+    padding: 0 0.25em;
+    font-size: 14px;
+}
+
 .my-ul-a {
     color: grey;
 }

@@ -1,23 +1,47 @@
 #coding:utf-8
 from tools.mysql_tools.mysql_models import mysqlModel
 
-def verifyUser(username, password):
-	db = mysqlModel()
-	res = db.verifyUser(username=username, password=password)
-	db.close()
-	return res
+def verifyMailExist(usermail):
+    db = mysqlModel()
+    res = db.verifyMailExist(usermail=usermail)
+    db.close()
+    return res
+
+def verifyUser(usermail, password):
+    '''
+    验证用户，返回用户id
+    '''
+    db = mysqlModel()
+    res = db.verifyUser(usermail=usermail, password=password)
+    db.close()
+    return res
+
+def addUser(usermail, password, nickname, picture):
+    '''
+    '''
+    db = mysqlModel()
+    res = db.addUser(usermail=usermail, password=password, nickname=nickname, picture=picture)
+    db.close()
+    return res
 
 def getUserMessage(user_id):
+    '''
+    获取用户基础信息
+    '''
     db = mysqlModel()
     res = db.getUserMessage(user_id=user_id)
     db.close()
     return res
 
-def getUserLogo(username):
-	db = mysqlModel()
-	res = db.getUserLogo(username=username)
-	db.close()
-	return res
+def getUserLogo(nickname):
+    '''
+    获取用户头像
+    目前禁用
+    '''
+    db = mysqlModel()
+    res = db.getUserLogo(nickname=nickname)
+    db.close()
+    return res
 
 def getCategories(user_id):
 	db = mysqlModel()

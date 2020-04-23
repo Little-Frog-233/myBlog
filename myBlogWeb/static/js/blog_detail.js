@@ -8,7 +8,8 @@ const app = new Vue({
         comment_count: 0,
         now_comment_li: -1,
         now_reply_li: '-1_-1',
-        search: ''
+        search: '',
+        isLogin: false
     },
     methods: {
         changeSearch(){
@@ -30,7 +31,10 @@ const app = new Vue({
             let l_index = c_index + '_' + r_index;
             return l_index == this.now_reply_li
         }
-    }
+    },
+    components: {
+        'my-blog-head': my_blog_head
+    },
 })
 
 function GetQueryValue(queryName) {

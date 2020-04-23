@@ -1,11 +1,12 @@
 # coding:utf-8
+import os
+import configparser
 from flask import Flask, session, request, Response, redirect, url_for, flash, render_template
+from flask_cache import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_restful import Api
-from app_front import app_front_blue
-from app_back.back_blog import *
 
 current_path = os.path.realpath(__file__)
 root_path = os.path.dirname(current_path)
@@ -18,6 +19,9 @@ root_url = cfp.get('flask', 'web_root_url')
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+########################启用缓存###############################
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
 ########################cookie存放token#######################
 @app.after_request
 def after_request(response):
@@ -25,6 +29,12 @@ def after_request(response):
     csrf_token = generate_csrf()
     # 设置cookie传给前端
     response.set_cookie('csrf_token', csrf_token)
+    # if 'token' in session:
+    #     # 说明处于登陆状态，设置cookie
+    #     response.set_cookie('token', session['token'])
+    # else:
+    #     # 说明登陆状态已过期
+    #     response.set_cookie('token', '')
     return response
 
 # @app.before_request
@@ -48,6 +58,8 @@ def check_csrf():
 	# 	csrf.protect()
 
 ########################注册Restful Api###########################
+from app_back.back_blog import *
+from app_back.back_user import *
 api = Api(app)
 api.add_resource(Blog, '/api/restful/blog/')
 api.add_resource(BlogList, '/api/restful/blog_list/')
@@ -55,7 +67,10 @@ api.add_resource(Category, '/api/restful/category/')
 api.add_resource(Tag, '/api/restful/tag/')
 api.add_resource(CommentList, '/api/restful/comment_list/')
 
+api.add_resource(User, '/api/restful/user/')
+
 ########################注册蓝图###########################
+from app_front import app_front_blue
 app.register_blueprint(app_front_blue)
 
 ########################限制器###########################
