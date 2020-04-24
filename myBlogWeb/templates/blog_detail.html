@@ -42,7 +42,7 @@
                 <a id="menu-toggle" href="#" class=" ">&#9776;</a>
             </div>
         </nav> -->
-        <my-blog-head isLogin="isLogin" search="search"></my-blog-head>
+        <my-blog-head :is-login="isLogin" :search="search"></my-blog-head>
         <div class="my-blog" style="margin-top: 2px;">
             <div class="div-inline article-utils" id='article-utils'>
                 <ul>
@@ -107,6 +107,8 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/vue.js"></script>
+    <script src="/static/layui/lay/modules/layer.js"></script>
+    <script src="/static/js/cookie.js"></script>
     <script src="/static/js/components.js"></script>
     <script src="/static/js/blog_detail.js"></script>
 </body>

@@ -18,31 +18,37 @@ class User(Resource):
         验证用户
         token: {
             'id': 用户id,
-            'end_time': token过期时间
         }
         '''
         parser = reqparse.RequestParser()
         parser.add_argument('usermail', type=str)
         parser.add_argument('password', type=str)
+        parser.add_argument('captcha', type=str)
         args = parser.parse_args()
         usermail = args['usermail']
         password = args['password']
+        captcha = args['captcha']
+        if 'captcha' in session:
+            if captcha != session['captcha']:
+                return {
+                    'status_code': 400,
+                    'message': '验证码错误',
+                }, 400
         id = verifyUser(usermail=usermail, password=password)
         if id is None:
             return {
                 'status_code': 400,
-                'message': '',
-                'token': ''
+                'message': '密码与邮箱不匹配',
             }, 400
         token = {
             'id': id
         }
         user_message = getUserMessage(user_id=id)
         token = des_encrypt(json.dumps(token, ensure_ascii=False).encode('utf-8'))
-        cache.set(token, user_message, timeout=60) # 设置缓存，缓存token timeout单位为秒
+        cache.set(token, user_message, timeout=240) # 设置缓存，缓存token timeout单位为秒
         return {
             'status_code': 200,
-            'message': '',
+            'message': '登陆成功',
             'token': token
         }
     
@@ -65,6 +71,7 @@ class User(Resource):
             'status_code': 400,
             'message': 'bad request'
         }, 400
+        cache.set(token, user_message, timeout=240)
         return {
             'status_code': 200,
             'messaga': '',

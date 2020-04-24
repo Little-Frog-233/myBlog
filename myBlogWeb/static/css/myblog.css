@@ -32,10 +32,25 @@
 }
 
 .my-top a {
-    line-height: 38px;
+    line-height: 30px;
     color: grey;
     padding: 0 0.25em;
     font-size: 14px;
+}
+
+.my-top .user-menu{
+    background-color: white; 
+    display: inline-block;
+}
+
+.my-top .user-menu .user-nickname{
+    float: right;
+    line-height: 38px;
+}
+
+.my-top .user-menu dd{
+    padding: 5px;
+    text-align: center;
 }
 
 .my-ul-a {
@@ -108,7 +123,7 @@
 
 .my-blog .my-blog-aside.active{
     position: fixed;
-    top: 0px;
+    top: 70px;
     z-index: 9999;
     /* margin-left: 720px; */
 }

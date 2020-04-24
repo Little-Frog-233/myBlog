@@ -195,7 +195,7 @@ nav a {
     padding: 0 1em;
     color: #EEE;
     font-size: .9em;
-    height: 60px;
+    /* height: 60px; */
     line-height: 60px;
     display: block;
 }

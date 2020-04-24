@@ -9,9 +9,17 @@ const app = new Vue({
         now_comment_li: -1,
         now_reply_li: '-1_-1',
         search: '',
-        isLogin: false
+        isLogin: 0,
+        user_message: {}
     },
     methods: {
+        checkLogin(){
+            let u_m = getUserMessage();
+            if (u_m){
+                this.isLogin = 1;
+                this.user_message = u_m
+            }
+        },
         changeSearch(){
             window.location.href='/?search=' + this.search;
         },
@@ -35,7 +43,33 @@ const app = new Vue({
     components: {
         'my-blog-head': my_blog_head
     },
+    beforeMount() {
+        // 在页面挂载前就发起请求
+        this.checkLogin();
+    },
 })
+
+function getUserMessage(){
+    let user_message;
+    let token = localStorage.getItem('token');
+    if (token){
+        var op = {
+            'url': '/api/restful/user/',
+            'method': 'get',
+            'async': false,
+            'data': {
+                'token': token
+            },
+            'success': function(data){
+                user_message = data.data.user_message
+            },'error':function(error){
+                localStorage.removeItem('token')
+            }
+        };
+        $.ajax(op);
+    }
+    return user_message
+}
 
 function GetQueryValue(queryName) {
     var query = decodeURI(window.location.search.substring(1));
@@ -188,9 +222,10 @@ function getCommentList() {
 function htmlFixPosition(elFix) {
     function htmlScroll() {
         var top = document.body.scrollTop || document.documentElement.scrollTop;
-        if (elFix.data_top < top) {
+        // if (elFix.data_top < top) {
+        if (5 < top) {
             elFix.style.position = 'fixed';
-            elFix.style.top = 0;
+            elFix.style.top = 70;
             elFix.style.left = elFix.data_left;
         }
         else {

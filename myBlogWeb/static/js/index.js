@@ -15,12 +15,20 @@ const app = new Vue({
         elFix: '#menu-right',
         search: GetQueryValue('search'),
         searchBarFixed: false, //是否要固定单位
-        oldScrollTop: 0, //记录固定单位的初始高度,
+        oldScrollTop: 70, //记录固定单位的初始高度,
         showLoading: false,
         showBackTop: false,
-        isLogin: false
+        isLogin: 0,
+        user_message: {}
     },
     methods: {
+        checkLogin(){
+            let u_m = getUserMessage();
+            if (u_m){
+                this.isLogin = 1;
+                this.user_message = u_m
+            }
+        },
         getCategoryClass(item) {
             return { 'layui-this': item == this.now_category }
         },
@@ -86,18 +94,20 @@ const app = new Vue({
         handleScroll() {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
             let offsetTop = document.querySelector(this.elFix).offsetTop;
-            if (scrollTop > offsetTop) {
+            // if (scrollTop > offsetTop) {
+            if (scrollTop > 55) {
                 this.searchBarFixed = true
                 this.showBackTop = true
             } else {
                 this.searchBarFixed = false
+                this.showBackTop = false
             }
-            if (this.searchBarFixed){
-                if (scrollTop < this.oldScrollTop){
-                    this.searchBarFixed = false
-                    this.showBackTop = false
-                }
-            }
+            // if (this.searchBarFixed){
+            //     if (scrollTop < this.oldScrollTop){
+            //         this.searchBarFixed = false
+            //         this.showBackTop = false
+            //     }
+            // }
         },
         getBarFixedClass(){
             return {'active': this.searchBarFixed}
@@ -125,6 +135,7 @@ const app = new Vue({
     },
     beforeMount() {
         // 在页面挂载前就发起请求
+        this.checkLogin();
         this.getBlogList();
     },
     mounted() {
@@ -132,13 +143,35 @@ const app = new Vue({
         window.addEventListener('scroll', this.scroll)
         // this.scroll();
         this.oldScrollTop = document.querySelector(this.elFix).offsetTop;
-        window.addEventListener('scroll', this.handleScroll)
+        window.addEventListener('scroll', this.handleScroll);
     },
     destroyed() {
         window.removeEventListener('scroll', this.scroll)
         window.removeEventListener('scroll', this.handleScroll)
     },
 })
+
+function getUserMessage(){
+    let user_message;
+    let token = localStorage.getItem('token');
+    if (token){
+        var op = {
+            'url': '/api/restful/user/',
+            'method': 'get',
+            'async': false,
+            'data': {
+                'token': token
+            },
+            'success': function(data){
+                user_message = data.data.user_message
+            },'error':function(error){
+                localStorage.removeItem('token')
+            }
+        };
+        $.ajax(op);
+    }
+    return user_message
+}
 
 function getCategory() {
     let category = [];
@@ -215,7 +248,4 @@ function GetQueryValue(queryName) {
     }
     return '';
 }
-
-// localStorage.setItem('token', 2333333)
-console.log(localStorage.getItem('token'));
 

@@ -68,6 +68,8 @@ api.add_resource(Tag, '/api/restful/tag/')
 api.add_resource(CommentList, '/api/restful/comment_list/')
 
 api.add_resource(User, '/api/restful/user/')
+api.add_resource(UserRegister, '/api/restful/user_register/')
+api.add_resource(UserActive, '/api/restful/user_active/')
 
 ########################注册蓝图###########################
 from app_front import app_front_blue
