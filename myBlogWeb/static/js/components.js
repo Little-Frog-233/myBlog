@@ -36,7 +36,7 @@ const head_html = `
                         <div class="user-menu">
                             <img src="http://task.zndex.com/show/logouser/zndex" alt="" class="user-picture">
                             <p class="user-nickname">小蛤蛤</p>
-                            <dl>
+                            <dl class="menu-list" v-show="userMenuShow">
                                 <dd><a href="javascript:void(0)" @click="logout()">退出登陆</a></dd>
                             </dl>
                         </div>
@@ -54,26 +54,58 @@ const singIn_html = `
 <form action="">
         <div>
             <label for="usermail">邮箱: 
-                <input type="text" id="usermail" name="usermail" autocomplete="off" v-model="usermail">
+                <input type="text" id="signin_usermail" name="signin_usermail" autocomplete="off" v-model="usermail">
             </label>
         </div>
         <div>
             <label for="password">密码: 
-                <input type="password" id="password" name="password" autocomplete="off" v-model="password">
+                <input type="password" id="signin_password" name="signin_password" autocomplete="off" v-model="password">
             </label>
         </div>
         <div>
             <label for="captcha">验证码:
-                <input type="text" id="captcha" name="captcha" autocomplete="off" v-model="captcha">
+                <input type="text" id="signin_captcha" name="signin_captcha" autocomplete="off" v-model="captcha">
             </label>
             <br>
-            <img src="http://127.0.0.1:7000/captcha/" alt="" title="点击更换验证码" onclick="this.src='/captcha?'+ Math.random()"/>
+            <img src="/captcha/" alt="" title="点击更换验证码" onclick="this.src='/captcha?'+ Math.random()"/>
+        </div>
+</form>
+`
+
+const logout_html = `
+<form action="">
+        <div>
+            <label for="usermail">邮箱: 
+                <input type="text" id="logout_usermail" name="logout_usermail" autocomplete="off" v-model="usermail">
+            </label>
+        </div>
+        <div>
+            <label for="password">密码: 
+                <input type="password" id="logout_password" name="logout_password" autocomplete="off" v-model="password">
+            </label>
+        </div>
+        <div>
+            <label for="password">密码: 
+                <input type="password" id="logout_password_re" name="logout_password_re" autocomplete="off" v-model="password">
+            </label>
+        </div>
+        <div>
+            <label for="captcha">验证码:
+                <input type="text" id="logout_captcha" name="logout_captcha" autocomplete="off" v-model="captcha">
+            </label>
+            <br>
+            <img src="/captcha/" alt="" title="点击更换验证码" onclick="this.src='/captcha?'+ Math.random()"/>
         </div>
 </form>
 `
 
 const my_blog_head = {
     template: head_html,
+    data(){
+        return {
+            userMenuShow: false,
+        }
+    },
     props: {
         isLogin: {
             type: Number,
@@ -98,9 +130,9 @@ const my_blog_head = {
                 btn: ['登陆', '取消'],
                 yes: function (index, layero) {
                     layer.closeAll();
-                    const usermail = $('#usermail').val();
-                    const password = $('#password').val();
-                    const captcha = $('#captcha').val();
+                    const usermail = $('#signin_usermail').val();
+                    const password = $('#signin_password').val();
+                    const captcha = $('#signin_captcha').val();
                     checkUser(usermail, password, captcha);
                 }
             })

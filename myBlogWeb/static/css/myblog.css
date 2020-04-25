@@ -48,6 +48,20 @@
     line-height: 38px;
 }
 
+.my-top .user-menu .menu-list{
+    float: left;
+    position: absolute;
+    line-height: 36px;
+    margin-top: 10px;
+    /* padding: 5px 0; */
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    border: 1px solid #d2d2d2;
+    background-color: #fff;
+    z-index: 100;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
 .my-top .user-menu dd{
     padding: 5px;
     text-align: center;
