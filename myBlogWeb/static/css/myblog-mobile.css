@@ -164,4 +164,9 @@
     .my-blog .back-top{
         display: none;
     }
+
+    .my-blog .my-comment{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
   }

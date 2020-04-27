@@ -15,14 +15,14 @@ manager_id = cfp.get('web', 'manager_id')
 
 @app_front_blue.route('/')
 def index():
-    if 'manager_id' not in session:
-        session['manager_id'] = manager_id
+    # if 'manager_id' not in session:
+    #     session['manager_id'] = manager_id
     return render_template('index.html')
 
 @app_front_blue.route('/blog_detail/')
 def blogDetail():
-    if 'manager_id' not in session:
-        session['manager_id'] = manager_id
+    # if 'manager_id' not in session:
+    #     session['manager_id'] = manager_id
     return render_template('blog_detail.html')
 
 @app_front_blue.route('/blog_detail/temp/')

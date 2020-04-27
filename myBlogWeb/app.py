@@ -20,7 +20,18 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 ########################启用缓存###############################
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
+# 配置redis作为缓存
+redis_config = {
+    'CACHE_TYPE': 'redis',
+    'CACHE_REDIS_HOST': '127.0.0.1',
+    'CACHE_REDIS_PORT': 6379,
+    'CACHE_REDIS_DB': '1',
+    'CACHE_REDIS_PASSWORD': ''
+ }
+# app.config.from_object(redis_config)
+# cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+cache = Cache(app, config=redis_config)
 
 ########################cookie存放token#######################
 @app.after_request
@@ -37,12 +48,10 @@ def after_request(response):
     #     response.set_cookie('token', '')
     return response
 
-# @app.before_request
-# def before_request():
-#     print(request.referrer)
-#     if root_url not in request.referrer:
-#         return render_template('404.html')
-#     return
+@app.before_request
+def before_request():
+    session['manager_id'] = manager_id
+    return
 
 ########################启用csrf保护###########################
 app.config['WTF_CSRF_CHECK_DEFAULT'] = False

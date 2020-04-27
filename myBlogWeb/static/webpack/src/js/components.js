@@ -1,5 +1,7 @@
 // 头部组件
 // 每个页面通用
+const {getCookie} = require('./cookie.js')
+const {checkUser} = require('./utils.js')
 
 const head_html = `
 <div style="top: 0px;height: 65px">
@@ -34,8 +36,10 @@ const head_html = `
                     <li v-show="isLogin==1">
                         <a href="javascript:void(0)">
                         <div class="user-menu">
-                            <img src="http://task.zndex.com/show/logouser/zndex" alt="" class="user-picture" @click="showUserMenu()">
-                            <p class="user-nickname">小蛤蛤</p>
+                        <div @click="showUserMenu()">
+                            <img :src="'/show/logouser/' + userMessage.picture" alt="" class="user-picture">
+                            <p class="user-nickname" >{[userMessage.nickname]}</p>
+                            </div>
                             <dl class="menu-list" v-show="userMenuShow">
                                 <dd><a href="javascript:void(0)" @click="logout()">退出登陆</a></dd>
                             </dl>
@@ -100,6 +104,7 @@ const logout_html = `
 `
 
 const my_blog_head = {
+    delimiters: ["{[", "]}"],
     template: head_html,
     data(){
         return {
@@ -115,7 +120,7 @@ const my_blog_head = {
             type: String,
             default: ''
         },
-        user_message: {
+        userMessage: {
 
         }
     },
@@ -171,25 +176,7 @@ const my_blog_head = {
     }
 }
 
-function checkUser(usermail, password, captcha){
-    const csrf_token = getCookie('csrf_token')
-    const op = {
-        'url': '/api/restful/user/',
-        'method': 'post',
-        'data': {
-            'usermail': usermail,
-            'password': password,
-            'captcha': captcha
-        },
-        'headers': {'X-CSRFToken':csrf_token},
-        'success': function(data){
-            layer.msg(data.message);
-            localStorage.setItem('token', data.token)
-            setTimeout("window.location.href='/' ", 1000)
-        },'error': function(error){
-            layer.msg(error.responseJSON.message)
-        }
-    };
-    $.ajax(op);
+module.exports = {
+    my_blog_head
 }
 

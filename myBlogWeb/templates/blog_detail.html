@@ -23,26 +23,7 @@
 
 <body>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
-        <!-- <nav>
-            <div class="container">
-                <a href="/">
-                    <img src="/show/logo/zndex_logo.png" alt="">
-                </a>
-                <div id="menu">
-                    <ul class="layui-nav" lay-filter="">
-                        <li class="layui-nav-item"><a href="/" style="color: grey;">首页</a></li>
-                    </ul>
-                    <ul class="layui-nav layui-layout-right my-top" style="background-color: white; margin-top: 10px;">
-                        <li>
-                            <input type="text" name="search" placeholder="搜索ZNDEX" autocomplete="off"
-                                class="layui-input" v-model="search" @keyup.enter="changeSearch()">\
-                        </li>
-                    </ul>
-                </div>
-                <a id="menu-toggle" href="#" class=" ">&#9776;</a>
-            </div>
-        </nav> -->
-        <my-blog-head :is-login="isLogin" :search="search"></my-blog-head>
+        <my-blog-head :is-login="isLogin" :search="search" :user-message="user_message"></my-blog-head>
         <div class="my-blog" style="margin-top: 2px;">
             <div class="div-inline article-utils" id='article-utils'>
                 <ul>
@@ -52,7 +33,7 @@
                         </a>
                     </li>
                     <li class="icon-li">
-                        <a href="javascript:void(0)">
+                        <a href="#comment-title">
                             <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
                         </a>
                     </li>
@@ -70,6 +51,7 @@
                             <center><img id="cover_img" src="" alt=""></center>
                         </div>
                         <center>
+                            <div class="anchor" id="title-anchor" style="margin-top: 0px;"></div>
                             <div class="docs-header" id="title">
                                 <!-- 这里是标题 -->
                             </div>
@@ -84,11 +66,43 @@
                         </div>
                     </div>
                 </section>
+                <div>
+                <section>
+                    <div class="my-comment">
+                        <h3 id="comment-title">评论</h2>
+                        <div class="comment-block">
+                            <div style="margin-left: 30px;">
+                            <div class="comment-user-head">
+                            <img src="http://task.zndex.com/show/logouser/zndex" class="user-picture" alt="">
+                            </div>
+                            <div class="comment-input">
+                                <input type="text" style="width: 500px;" placeholder="   请输入评论...">
+
+                            </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 50px;">
+                            <ul>
+                                <li>
+                                    <div class='content-box'>
+                                        厉害了
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class='content-box'>
+                                        牛逼
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
             </div>
             <div class='div-inline div-right'>
                 <div class="container">
                     <ul class="my_menu" id="menu-left">
-                        <li style="margin-bottom: 10px;"><a href="#title"><strong>目录</strong></a></li>
+                        <li style="margin-bottom: 10px;"><a href="#title-anchor"><strong>目录</strong></a></li>
                     </ul>
                 </div>
             </div>
@@ -108,9 +122,7 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/vue.js"></script>
     <script src="/static/layui/lay/modules/layer.js"></script>
-    <script src="/static/js/cookie.js"></script>
-    <script src="/static/js/components.js"></script>
-    <script src="/static/js/blog_detail.js"></script>
+    <script src="/static/js/blog_detail_new.js"></script>
 </body>
 
 </html>

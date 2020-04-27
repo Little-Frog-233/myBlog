@@ -45,7 +45,7 @@ class User(Resource):
         }
         user_message = getUserMessage(user_id=id)
         token = des_encrypt(json.dumps(token, ensure_ascii=False).encode('utf-8'))
-        cache.set(token, user_message, timeout=240) # 设置缓存，缓存token timeout单位为秒
+        cache.set(token, user_message, timeout=600) # 设置缓存，缓存token timeout单位为秒
         return {
             'status_code': 200,
             'message': '登陆成功',
@@ -71,7 +71,7 @@ class User(Resource):
             'status_code': 400,
             'message': 'bad request'
         }, 400
-        cache.set(token, user_message, timeout=240)
+        cache.set(token, user_message, timeout=600)
         return {
             'status_code': 200,
             'messaga': '',

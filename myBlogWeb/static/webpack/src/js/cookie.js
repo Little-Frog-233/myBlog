@@ -7,3 +7,10 @@ function addCookie(key, value){
     document.cookie = key + '=' + value;
 }
 
+function deleteCookie(){
+    
+}
+
+module.exports = {
+    getCookie
+}

@@ -310,7 +310,8 @@ input {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-
+    border-radius: 3px;
+    border: 1px solid #f1f1f1;
     -webkit-transition: all linear 0.2s;
     -moz-transition: all linear 0.2s;
     -o-transition: all linear 0.2s;
@@ -318,7 +319,7 @@ input {
 }
 
 input:focus {
-    border-color: #007eb2;
+    border-color: #007fff;
     outline: 0;
 }
 

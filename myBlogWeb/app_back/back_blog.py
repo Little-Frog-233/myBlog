@@ -173,6 +173,7 @@ class BlogList(Resource):
             else:
                 blog_list_res.append(blog)
         total = len(blog_list_res)
+        more = False
         if start is not None:
             end = start + offset
             if end >= len(blog_list_res):
@@ -204,19 +205,34 @@ class CommentList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('blog_id', type=int)
         parser.add_argument('sort_by', type=str, default='update_time')
+        parser.add_argument('start', type=int)
+        parser.add_argument('offset', type=int, default=10)
         args = parser.parse_args()
         blog_id = args['blog_id']
         sort_by = args['sort_by']
+        start = args['start']
+        offset = args['offset']
         comment_list = getComments(manager_id=manager_id, blog_id=blog_id, sort_by=sort_by)
         if comment_list is None:
             return {
                 'status_code': 400,
                 'message': 'soem error happened, please check log'
             }
+        total = len(comment_list)
+        more = False
+        if start is not None:
+            end = start + offset
+            if end >= len(comment_list):
+                more = False
+            else:
+                more = True
+            comment_list = comment_list[start:end]
         return {
             'status_code': 200,
             'message': '',
-            'comment_list': comment_list
+            'comment_list': comment_list,
+            'total': total,
+            'more': more
         }
     
     def post(self):

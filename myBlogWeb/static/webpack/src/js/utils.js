@@ -1,0 +1,64 @@
+const {getCookie} = require('./cookie.js');
+
+function checkUser(usermail, password, captcha){
+    const csrf_token = getCookie('csrf_token')
+    const op = {
+        'url': '/api/restful/user/',
+        'method': 'post',
+        'data': {
+            'usermail': usermail,
+            'password': password,
+            'captcha': captcha
+        },
+        'headers': {'X-CSRFToken':csrf_token},
+        'success': function(data){
+            layer.msg(data.message);
+            localStorage.setItem('token', data.token)
+            setTimeout("window.location.href='/' ", 1000)
+        },'error': function(error){
+            layer.msg(error.responseJSON.message)
+        }
+    };
+    $.ajax(op);
+}
+
+function getUserMessage(){
+    let user_message;
+    let token = localStorage.getItem('token');
+    if (token){
+        var op = {
+            'url': '/api/restful/user/',
+            'method': 'get',
+            'async': false,
+            'data': {
+                'token': token
+            },
+            'success': function(data){
+                user_message = data.data.user_message
+            },'error':function(error){
+                localStorage.removeItem('token')
+            }
+        };
+        $.ajax(op);
+    }
+    return user_message
+}
+    
+
+function GetQueryValue(queryName) {
+    var query = decodeURI(window.location.search.substring(1));
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == queryName) {
+            return pair[1];
+        }
+    }
+    return '';
+}
+
+module.exports = {
+    checkUser,
+    getUserMessage,
+    GetQueryValue
+}
