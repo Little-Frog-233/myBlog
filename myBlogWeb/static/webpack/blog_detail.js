@@ -28,6 +28,11 @@ const app = new Vue({
         changeSearch(){
             window.location.href='/?search=' + this.search;
         },
+        getCommentCommit(content){
+            // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
+            console.log(content);
+            this.comment_list.unshift(content);
+        },
         getComment(){
             if (this.more){
             let comment_data = getCommentList(this.start, this.offset, this.sort_by)

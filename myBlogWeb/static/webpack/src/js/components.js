@@ -180,7 +180,7 @@ const my_blog_head = {
 const comment_html = `
 <div class="comment-input">
     <div>
-    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()" v-model:value="commentContent">
+    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()"  v-model:value="commentContent">
     </div>
     <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
         <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
@@ -208,7 +208,12 @@ const my_blog_comment = {
     },
     methods: {
         showCommentButtonFunc(){
-            this.showCommentButton = true;            
+            this.showCommentButton = true;
+            // if (this.commentContent){
+            // this.showCommentButton = true;
+            // }else{
+            //     this.showCommentButton = false;
+            // }            
         },
         closeCommentButtonFunc(){
             this.showCommentButton = false;
@@ -218,8 +223,17 @@ const my_blog_comment = {
             layer.msg('评论内容不能为空')
             return
             }
+            if (this.commentContent.length > 140){
+                layer.msg('字数过多')
+                return
+            }
+            comment_message = postComment(this.blogId, this.commentContent);
             this.closeCommentButtonFunc();
-
+            // 发射事件，由父组件接收事件
+            if (comment_message){
+                console.log('咻～');
+                this.$emit('comment-commit', comment_message)
+            }
             this.commentContent = '';
         }
     }

@@ -173,4 +173,8 @@
     .my-blog .comment-input input{
         width: 250px;
     }
+
+    .my-blog .comment-item .comment-content{
+        max-width: 200px;
+    }
   }

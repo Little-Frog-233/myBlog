@@ -78,20 +78,38 @@
                                             <img :src="'/show/logouser/' + user_message.picture" class="user-picture"
                                                 alt="">
                                         </div>
-                                        <my-blog-comment :blog-id="blogId"></my-blog-comment>
+                                        <my-blog-comment :blog-id="blogId" v-on:comment-commit="getCommentCommit"></my-blog-comment>
                                     </div>
                                 </div>
-                                <div style="margin-top: 50px;">
+                                <div class="comment-list">
                                     <ul>
-                                        <li>
-                                            <div class='content-box'>
-                                                厉害了
+                                        <li class="comment-li" v-for="item in comment_list">
+                                            <div class="comment-item">
+                                            <div class="comment-head">
+                                                <img :src="'/show/logouser/' + item.user_picture" alt="" class="user-picture">
                                             </div>
-                                        </li>
-                                        <li>
-                                            <div class='content-box'>
-                                                牛逼
+                                            <div class="comment-content">
+                                                <div style="font-size: 13px;">
+                                                    {[item.nickname]}
+                                                </div>
+                                                <div style="margin-top: 10px;">
+                                                    {[item.content]}
+                                                </div>
+                                                <div style="margin-top: 20px;color: #8a9aa9;">
+                                                <div style="font-size: 12px;display: inline-block;float: left;">
+                                                    3小时前
+                                                </div>
+                                                    <ul class="meta-list content-meta-list comment-meta-list" style="float: right;"> 
+                                                        <li>
+                                                            <i title="点赞" class="iconfont icon-item" style="font-size: 16px;padding: 0px;">0</i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="iconfont icon-item" title="评论" style="font-size: 16px;padding: 0px;margin-left: 10px;">&#xe8b4;0</i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
+                                        </div>
                                         </li>
                                     </ul>
                                 </div>

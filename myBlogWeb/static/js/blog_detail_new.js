@@ -162,7 +162,31 @@ function slowScroll() {
 };
 
 function postComment(blog_id, content){
-    
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    let comment_message;
+    if (!token){
+        layer.msg('请登陆')
+    }
+    let op = {
+        'method': 'post',
+        'url': '/api/restful/comment_list/',
+        'data': {
+            'token': token,
+            'blog_id': blog_id,
+            'content': content,
+        },
+        'async': false,
+        'headers': { 'X-CSRFToken': csrf_token },
+        'success': function(data){
+            layer.msg('评论成功');
+            comment_message = data.data.comment_message
+        },'error':function(error){
+            layer.msg(error.responseJSON.message)
+        }        
+    };
+    $.ajax(op);
+    return comment_message
 }
 
 module.exports = {
@@ -359,7 +383,7 @@ const my_blog_head = {
 const comment_html = `
 <div class="comment-input">
     <div>
-    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()" v-model:value="commentContent">
+    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()"  v-model:value="commentContent">
     </div>
     <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
         <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
@@ -388,8 +412,11 @@ const my_blog_comment = {
     methods: {
         showCommentButtonFunc(){
             this.showCommentButton = true;
-            console.log(this.blogId);
-            
+            // if (this.commentContent){
+            // this.showCommentButton = true;
+            // }else{
+            //     this.showCommentButton = false;
+            // }            
         },
         closeCommentButtonFunc(){
             this.showCommentButton = false;
@@ -399,8 +426,13 @@ const my_blog_comment = {
             layer.msg('评论内容不能为空')
             return
             }
+            comment_message = postComment(this.blogId, this.commentContent);
             this.closeCommentButtonFunc();
-
+            // 发射事件，由父组件接收事件
+            if (comment_message){
+                console.log('咻～');
+                this.$emit('comment-commit', comment_message)
+            }
             this.commentContent = '';
         }
     }
@@ -447,6 +479,11 @@ const app = new Vue({
         },
         changeSearch(){
             window.location.href='/?search=' + this.search;
+        },
+        getCommentCommit(content){
+            // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
+            console.log(content);
+            this.comment_list.unshift(content);
         },
         getComment(){
             if (this.more){
