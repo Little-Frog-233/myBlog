@@ -71,7 +71,7 @@
                     <section>
                         <div class="my-comment">
                             <div class="anchor" id="comment-title-anchor"></div>
-                            <h3 id="comment-title">评论</h2>
+                            <h3 id="comment-title" style="font-size: 18px;">评论</h2>
                                 <div class="comment-block" v-show="isLogin==1">
                                     <div style="margin-left: 50px;margin-bottom: 10px;">
                                         <div class="comment-user-head">
@@ -97,7 +97,7 @@
                                                 </div>
                                                 <div style="margin-top: 20px;color: #8a9aa9;">
                                                 <div style="font-size: 12px;display: inline-block;float: left;">
-                                                    3小时前
+                                                    {[getTime(item.update_time)]}
                                                 </div>
                                                     <ul class="meta-list content-meta-list comment-meta-list" style="float: right;"> 
                                                         <li>
@@ -112,6 +112,17 @@
                                         </div>
                                         </li>
                                     </ul>
+                                </div>
+                                <div v-show="more" class="show-more">
+                                    <button @click="getComment()" >
+                                        点击加载更多
+                                    </button>
+                                </div>
+                                <div v-show="comment_list.length==0">
+                                    <h6 style="text-align: center;color: #8a9aa9;">暂无评论QAQ</h3>
+                                </div>
+                                <div v-show="!more">
+                                    <h6 style="text-align: center;color: #8a9aa9;">到底了QAQ</h3>
                                 </div>
                         </div>
                     </section>

@@ -1,5 +1,5 @@
 const {my_blog_head, my_blog_comment} = require('./src/js/components.js')
-const {getUserMessage, GetQueryValue, slowScroll} = require('./src/js/utils.js')
+const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = require('./src/js/utils.js')
 
 var blog_id = GetQueryValue('blog_id');
 
@@ -7,11 +7,12 @@ const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
     data: {
+        comment_ids: [],
         comment_list: [],
         comment_count: 0,
         more: true,
         start: 0,
-        offset: 5,
+        offset: 3,
         search: '',
         isLogin: 0,
         user_message: {},
@@ -31,18 +32,25 @@ const app = new Vue({
         getCommentCommit(content){
             // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
             console.log(content);
+            this.comment_ids.push(content.id)
             this.comment_list.unshift(content);
         },
         getComment(){
             if (this.more){
             let comment_data = getCommentList(this.start, this.offset, this.sort_by)
             this.start = this.start + this.offset;
-            this.more = comment_data.more
+            this.more = comment_data.more;
+            this.comment_count = comment_data.total;
             for (let item of comment_data.comment_list){
-                this.comment_list.push(item)
+                if (!this.comment_ids.includes(item.id)){
+                this.comment_list.push(item);
+                this.comment_ids.push(item.id);
+                }
             }
-
         }
+        },
+        getTime(time){
+            return handlePublishTimeDesc(time)
         }
     },
     components: {
@@ -95,7 +103,7 @@ function makeToc(html) {
         html = html.replace(item, _toc)
     });
     var toc_list = toToc(tocs)
-    console.log(toc_list);
+    // console.log(toc_list);
     // document.getElementById('menu-left').innerHTML = toc_list;
     $('#menu-left').append(toc_list);
     return html
@@ -112,7 +120,7 @@ function toToc(data) {
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
         // itemText = itemText.replace(/<[hH][1-6].*?>/, '');
         itemText = item
-        console.log(itemText);
+        // console.log(itemText);
 
         let itemLabel = item.match('<\w+?.*?>')  // 匹配h?标签<h?>
         let levelIndex = levelStack.indexOf(itemLabel) // 判断数组里有无<h?>
@@ -186,7 +194,8 @@ function getCommentList(start, offset, sort_by) {
         'async': false,
         'success': function (data) {
             comment_data['comment_list'] = data.comment_list;
-            comment_data['more'] = data.more
+            comment_data['more'] = data.more;
+            comment_data['total'] = data.total;
         }, 'error': function (error) {
             console.log(error);
 

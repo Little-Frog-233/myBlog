@@ -189,12 +189,70 @@ function postComment(blog_id, content){
     return comment_message
 }
 
+function getTs(time){
+    var arr = time.split(/[- :]/),
+    _date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]),
+    timeStr = Date.parse(_date)
+    return timeStr
+}    
+function handlePublishTimeDesc(post_modified){
+        // 拿到当前时间戳和发布时的时间戳，然后得出时间戳差
+        var curTime = new Date();
+        var postTime = new Date(post_modified);                  //部分浏览器不兼容此转换建议所以对此进行补充（指定调用自己定义的函数进行生成发布时间的时间戳）
+        
+        //var timeDiff = curTime.getTime() - postTime.getTime();
+        //上面一行代码可以换成以下（兼容性的解决）
+        var timeDiff = curTime.getTime() - getTs(post_modified);
+ 
+        // 单位换算
+        var min = 60 * 1000;
+        var hour = min * 60;
+        var day = hour * 24;
+        var week = day * 7;
+        var month =  week*4;
+        var year = month*12;
+ 
+        // 计算发布时间距离当前时间的周、天、时、分
+        var  exceedyear = Math.floor(timeDiff/year);
+        var exceedmonth = Math.floor(timeDiff/month);
+        var exceedWeek = Math.floor(timeDiff/week);
+        var exceedDay = Math.floor(timeDiff/day);
+        var exceedHour = Math.floor(timeDiff/hour);
+        var exceedMin = Math.floor(timeDiff/min);
+ 
+        
+        // 最后判断时间差到底是属于哪个区间，然后return
+ 
+        if(exceedyear<100&&exceedyear>0){
+            return exceedyear + '年前';
+            }else{
+            if(exceedmonth<12&&exceedmonth>0){
+                return exceedmonth + '月前';
+                }else{
+                if(exceedWeek<4&&exceedWeek>0){
+                    return exceedWeek + '星期前';
+                    }else{
+                    if(exceedDay < 7 && exceedDay > 0){
+                        return exceedDay + '天前';
+                        }else {
+                        if (exceedHour < 24 && exceedHour > 0) {
+                            return exceedHour + '小时前';
+                        } else {
+                            return exceedMin + '分钟前';
+                        }
+                    }
+                    }
+                }
+            }
+    }
+
 module.exports = {
     checkUser,
     getUserMessage,
     GetQueryValue,
     slowScroll,
-    postComment
+    postComment,
+    handlePublishTimeDesc
 }
 
 /***/ }),
@@ -426,6 +484,10 @@ const my_blog_comment = {
             layer.msg('评论内容不能为空')
             return
             }
+            if (this.commentContent.length > 140){
+                layer.msg('字数过多')
+                return
+            }
             comment_message = postComment(this.blogId, this.commentContent);
             this.closeCommentButtonFunc();
             // 发射事件，由父组件接收事件
@@ -451,7 +513,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 const {my_blog_head, my_blog_comment} = __webpack_require__(2)
-const {getUserMessage, GetQueryValue, slowScroll} = __webpack_require__(1)
+const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = __webpack_require__(1)
 
 var blog_id = GetQueryValue('blog_id');
 
@@ -459,11 +521,12 @@ const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
     data: {
+        comment_ids: [],
         comment_list: [],
         comment_count: 0,
         more: true,
         start: 0,
-        offset: 5,
+        offset: 3,
         search: '',
         isLogin: 0,
         user_message: {},
@@ -483,18 +546,25 @@ const app = new Vue({
         getCommentCommit(content){
             // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
             console.log(content);
+            this.comment_ids.push(content.id)
             this.comment_list.unshift(content);
         },
         getComment(){
             if (this.more){
             let comment_data = getCommentList(this.start, this.offset, this.sort_by)
             this.start = this.start + this.offset;
-            this.more = comment_data.more
+            this.more = comment_data.more;
+            this.comment_count = comment_data.total;
             for (let item of comment_data.comment_list){
-                this.comment_list.push(item)
+                if (!this.comment_ids.includes(item.id)){
+                this.comment_list.push(item);
+                this.comment_ids.push(item.id);
+                }
             }
-
         }
+        },
+        getTime(time){
+            return handlePublishTimeDesc(time)
         }
     },
     components: {
@@ -547,7 +617,7 @@ function makeToc(html) {
         html = html.replace(item, _toc)
     });
     var toc_list = toToc(tocs)
-    console.log(toc_list);
+    // console.log(toc_list);
     // document.getElementById('menu-left').innerHTML = toc_list;
     $('#menu-left').append(toc_list);
     return html
@@ -564,7 +634,7 @@ function toToc(data) {
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
         // itemText = itemText.replace(/<[hH][1-6].*?>/, '');
         itemText = item
-        console.log(itemText);
+        // console.log(itemText);
 
         let itemLabel = item.match('<\w+?.*?>')  // 匹配h?标签<h?>
         let levelIndex = levelStack.indexOf(itemLabel) // 判断数组里有无<h?>
@@ -638,7 +708,8 @@ function getCommentList(start, offset, sort_by) {
         'async': false,
         'success': function (data) {
             comment_data['comment_list'] = data.comment_list;
-            comment_data['more'] = data.more
+            comment_data['more'] = data.more;
+            comment_data['total'] = data.total;
         }, 'error': function (error) {
             console.log(error);
 
