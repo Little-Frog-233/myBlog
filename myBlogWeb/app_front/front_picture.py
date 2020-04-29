@@ -102,26 +102,32 @@ def showLogo(filename):
 
 @app_front_blue.route('/show/logouser/<string:filename>', methods=['GET'])
 def showLogouser(filename):
-	'''
-	展示用户头像
-	:param filename: 文件名称
-	:return:
-	'''
-	file_dir = logouser_path
-	# filename = username
-	if request.method == 'GET':
-		if not os.path.exists(os.path.join(file_dir, '%s' % filename)):
-			pass
-		else:
-			try:
-				image_data = open(os.path.join(file_dir, '%s' % filename), "rb").read()
-				response = make_response(image_data)
-				response.headers['Content-Type'] = 'image/png'
-				return response
-			except:
-				return redirect(url_for('app_front.showLgo', filename='upload_photo.jpg'))
-	else:
-		pass
+    '''
+    展示用户头像
+    :param filename: 文件名称
+    :return:
+    '''
+    try:
+        if not filename:
+            return redirect(url_for('app_front.showLogo', filename='user_undefined.png'))
+        file_dir = logouser_path
+        # filename = username
+        if request.method == 'GET':
+            if not os.path.exists(os.path.join(file_dir, '%s' % filename)):
+                return redirect(url_for('app_front.showLogo', filename='user_undefined.png'))
+                # pass
+            else:
+                try:
+                    image_data = open(os.path.join(file_dir, '%s' % filename), "rb").read()
+                    response = make_response(image_data)
+                    response.headers['Content-Type'] = 'image/png'
+                    return response
+                except:
+                    return redirect(url_for('app_front.showLogo', filename='user_undefined.png'))
+        else:
+            pass
+    except Exception as e:
+        return redirect(url_for('app_front.showLogo', filename='user_undefined.png'))
 
 @app_front_blue.route('/captcha/')
 def graph_captcha():

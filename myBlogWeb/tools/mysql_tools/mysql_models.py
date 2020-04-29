@@ -79,6 +79,7 @@ class mysqlModel:
         one = self.cursor.fetchone()
         if one is not None:
             res = {}
+            res['id'] = int(user_id)
             res['usermail'] = one[0]
             res['nickname'] = one[1]
             res['admin'] = one[2]
@@ -176,6 +177,21 @@ class mysqlModel:
             result['comment_count'] = one[7]
             return result
         return None
+    
+    def updateBlogRead(self, blog_id, user_id):
+        '''
+        '''
+        sql = '''update blog set read_count=read_count+1 where id={blog_id} and manager_id={user_id} ;'''.format(
+            blog_id=blog_id, user_id=user_id)
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            return True
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('mysqlModel.updateBlogRead').logger.error(msg)
+            self.db.rollback()
+            return False
 
     def getBlogs(self, user_id, sort_by='id'):
         '''
@@ -217,6 +233,38 @@ class mysqlModel:
         else:
             pass
         return blogs
+    
+    def getComment(self, comment_id, manager_id):
+        '''
+        sort_by: 'update_time', 'blog_id', 'id'
+        '''
+        sql = '''select a.id, a.blog_id, a.user_id, c.nickname, a.content, a.like_count, a.reply_count, a.update_time, b.title, c.picture as user_picture
+        from comment a join blog b on a.blog_id=b.id
+        join user c on a.user_id=c.id
+        where b.manager_id={manager_id} and a.id={comment_id} '''.format(manager_id=manager_id, comment_id=comment_id)
+        try:
+            self.cursor.execute(sql)
+            res = self.cursor.fetchone()
+            if not res:
+                return None
+            temp = {}
+            temp['id'] = res[0]
+            temp['blog_id'] = res[1]
+            temp['user_id'] = res[2]
+            temp['nickname'] = res[3]
+            temp['content'] = res[4]
+            temp['like_count'] = res[5]
+            temp['reply_count'] = res[6]
+            temp['update_time'] = res[7].strftime('%Y-%m-%d %H:%M:%S')
+            temp['blog_title'] = res[8]
+            temp['user_picture'] = res[9]
+            temp['reply_list'] = []
+            return temp
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('mysqlModel.getComments').logger.error(msg)
+            self.db.rollback()
+            return None
 
     def getComments(self, manager_id, sort_by='update_time'):
         '''
@@ -271,15 +319,18 @@ class mysqlModel:
         try:
             self.cursor.execute(sql, (blog_id, user_id, content))
             self.db.commit()
+            comment_id = self.cursor.lastrowid
+            comment_message = self.getComment(comment_id=comment_id, manager_id=manager_id)
             if self.updateBlogCommentCount(manager_id=manager_id, blog_id=blog_id):
-                return True
+                if comment_message is not None:
+                    return comment_message
             else:
-                return False
+                return None
         except Exception as e:
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('mysqlModel.addComment').logger.error(msg)
             self.db.rollback()
-            return False
+            return None
 
 
     def updateBlogCommentCount(self, manager_id, blog_id):

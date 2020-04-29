@@ -147,10 +147,30 @@ function GetQueryValue(queryName) {
     return '';
 }
 
+function slowScroll() {
+    $(".label").click(function () {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+            var $target = $(this.hash);
+            $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+            if ($target.length) {
+                var targetOffset = $target.offset().top;
+                $('html,body').animate({ scrollTop: targetOffset }, 800);
+                return false;
+            }
+        }
+    });
+};
+
+function postComment(blog_id, content){
+    
+}
+
 module.exports = {
     checkUser,
     getUserMessage,
-    GetQueryValue
+    GetQueryValue,
+    slowScroll,
+    postComment
 }
 
 /***/ }),
@@ -159,8 +179,9 @@ module.exports = {
 
 // 头部组件
 // 每个页面通用
-const {getCookie} = __webpack_require__(0)
-const {checkUser} = __webpack_require__(1)
+// 组件中涉及到jquery的函数全部写在utils.js中
+const { getCookie } = __webpack_require__(0)
+const { checkUser, postComment } = __webpack_require__(1)
 
 const head_html = `
 <div style="top: 0px;height: 65px">
@@ -265,7 +286,7 @@ const logout_html = `
 const my_blog_head = {
     delimiters: ["{[", "]}"],
     template: head_html,
-    data(){
+    data() {
         return {
             userMenuShow: false,
         }
@@ -284,10 +305,10 @@ const my_blog_head = {
         }
     },
     methods: {
-        changeSearch(){
-            window.location.href='/?search=' + this.search;
+        changeSearch() {
+            window.location.href = '/?search=' + this.search;
         },
-        signIn(){
+        signIn() {
             layer.open({
                 title: '用户登陆',
                 content: singIn_html,
@@ -301,7 +322,7 @@ const my_blog_head = {
                 }
             })
         },
-        signUp(){
+        signUp() {
             layer.open({
                 title: '用户注册',
                 content: '暂未开放',
@@ -311,7 +332,7 @@ const my_blog_head = {
                 }
             })
         },
-        logout(){
+        logout() {
             const csrf_token = getCookie('csrf_token')
             const op = {
                 'url': '/api/restful/user/',
@@ -319,24 +340,75 @@ const my_blog_head = {
                 'data': {
                     'token': localStorage.getItem('token')
                 },
-                'headers': {'X-CSRFToken':csrf_token},
-                'success': function(data){
-                    window.location.href='/'
-                },'error': function(error){
-                    window.location.href='/'
+                'headers': { 'X-CSRFToken': csrf_token },
+                'success': function (data) {
+                    window.location.href = '/'
+                }, 'error': function (error) {
+                    window.location.href = '/'
                 }
             };
             $.ajax(op);
             localStorage.removeItem('token')
         },
-        showUserMenu(){
+        showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
     }
 }
 
+const comment_html = `
+<div class="comment-input">
+    <div>
+    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()" v-model:value="commentContent">
+    </div>
+    <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
+        <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
+    </div>
+</div>
+`
+
+const my_blog_comment = {
+    delimiters: ["{[", "]}"],
+    template: comment_html,
+    data(){
+        return {
+            commentContent: '',
+            showCommentButton: false
+        }
+    },
+    props: {
+        inputType: {
+            type: String,
+            default: 'comment'
+        },
+        blogId: {
+            type: Number
+        }
+    },
+    methods: {
+        showCommentButtonFunc(){
+            this.showCommentButton = true;
+            console.log(this.blogId);
+            
+        },
+        closeCommentButtonFunc(){
+            this.showCommentButton = false;
+        },
+        postComment(){
+            if (!this.commentContent){
+            layer.msg('评论内容不能为空')
+            return
+            }
+            this.closeCommentButtonFunc();
+
+            this.commentContent = '';
+        }
+    }
+}
+
 module.exports = {
-    my_blog_head
+    my_blog_head,
+    my_blog_comment
 }
 
 
@@ -346,7 +418,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 const {my_blog_head} = __webpack_require__(2)
-const {getUserMessage, GetQueryValue} = __webpack_require__(1)
+const {getUserMessage, GetQueryValue, slowScroll} = __webpack_require__(1)
 
 // console.log('求职，联系邮箱：1342468180@qq.com')
 const app = new Vue({
@@ -436,8 +508,6 @@ const app = new Vue({
                     this.blog_lists.push(item)
                 }
             }
-            console.log('加载完成');
-            
         },
         getBlogUrl(blog_id) {
             return '/blog_detail/?blog_id=' + blog_id;
@@ -501,6 +571,10 @@ const app = new Vue({
         window.removeEventListener('scroll', this.handleScroll)
     },
 })
+
+$(document).ready(function () {
+    slowScroll();
+});
 
 
 function getCategory() {

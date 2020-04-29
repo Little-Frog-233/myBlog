@@ -1,7 +1,8 @@
 // 头部组件
 // 每个页面通用
-const {getCookie} = require('./cookie.js')
-const {checkUser} = require('./utils.js')
+// 组件中涉及到jquery的函数全部写在utils.js中
+const { getCookie } = require('./cookie.js')
+const { checkUser, postComment } = require('./utils.js')
 
 const head_html = `
 <div style="top: 0px;height: 65px">
@@ -106,7 +107,7 @@ const logout_html = `
 const my_blog_head = {
     delimiters: ["{[", "]}"],
     template: head_html,
-    data(){
+    data() {
         return {
             userMenuShow: false,
         }
@@ -125,10 +126,10 @@ const my_blog_head = {
         }
     },
     methods: {
-        changeSearch(){
-            window.location.href='/?search=' + this.search;
+        changeSearch() {
+            window.location.href = '/?search=' + this.search;
         },
-        signIn(){
+        signIn() {
             layer.open({
                 title: '用户登陆',
                 content: singIn_html,
@@ -142,7 +143,7 @@ const my_blog_head = {
                 }
             })
         },
-        signUp(){
+        signUp() {
             layer.open({
                 title: '用户注册',
                 content: '暂未开放',
@@ -152,7 +153,7 @@ const my_blog_head = {
                 }
             })
         },
-        logout(){
+        logout() {
             const csrf_token = getCookie('csrf_token')
             const op = {
                 'url': '/api/restful/user/',
@@ -160,23 +161,72 @@ const my_blog_head = {
                 'data': {
                     'token': localStorage.getItem('token')
                 },
-                'headers': {'X-CSRFToken':csrf_token},
-                'success': function(data){
-                    window.location.href='/'
-                },'error': function(error){
-                    window.location.href='/'
+                'headers': { 'X-CSRFToken': csrf_token },
+                'success': function (data) {
+                    window.location.href = '/'
+                }, 'error': function (error) {
+                    window.location.href = '/'
                 }
             };
             $.ajax(op);
             localStorage.removeItem('token')
         },
-        showUserMenu(){
+        showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
     }
 }
 
+const comment_html = `
+<div class="comment-input">
+    <div>
+    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()" v-model:value="commentContent">
+    </div>
+    <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
+        <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
+    </div>
+</div>
+`
+
+const my_blog_comment = {
+    delimiters: ["{[", "]}"],
+    template: comment_html,
+    data(){
+        return {
+            commentContent: '',
+            showCommentButton: false
+        }
+    },
+    props: {
+        inputType: {
+            type: String,
+            default: 'comment'
+        },
+        blogId: {
+            type: Number
+        }
+    },
+    methods: {
+        showCommentButtonFunc(){
+            this.showCommentButton = true;            
+        },
+        closeCommentButtonFunc(){
+            this.showCommentButton = false;
+        },
+        postComment(){
+            if (!this.commentContent){
+            layer.msg('评论内容不能为空')
+            return
+            }
+            this.closeCommentButtonFunc();
+
+            this.commentContent = '';
+        }
+    }
+}
+
 module.exports = {
-    my_blog_head
+    my_blog_head,
+    my_blog_comment
 }
 

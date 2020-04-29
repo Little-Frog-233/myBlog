@@ -169,4 +169,8 @@
         margin-left: 0px;
         margin-right: 0px;
     }
+
+    .my-blog .comment-input input{
+        width: 250px;
+    }
   }

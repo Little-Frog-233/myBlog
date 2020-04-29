@@ -85,6 +85,12 @@ def getBlog(blog_id, user_id):
 	db.close()
 	return res
 
+def updateBlogRead(blog_id, user_id):
+    db = mysqlModel()
+    res = db.updateBlogRead(blog_id=blog_id, user_id=user_id)
+    db.close()
+    return res
+
 def getBlogList(user_id, sort_by='id'):
 	db = mysqlModel()
 	blog_list = db.getBlogs(user_id=user_id, sort_by=sort_by)

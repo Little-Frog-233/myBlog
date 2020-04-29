@@ -1,5 +1,5 @@
-const {my_blog_head} = require('./src/js/components.js')
-const {getUserMessage, GetQueryValue} = require('./src/js/utils.js')
+const {my_blog_head, my_blog_comment} = require('./src/js/components.js')
+const {getUserMessage, GetQueryValue, slowScroll} = require('./src/js/utils.js')
 
 var blog_id = GetQueryValue('blog_id');
 
@@ -7,13 +7,15 @@ const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
     data: {
-        comment_list: getCommentList(),
+        comment_list: [],
         comment_count: 0,
-        now_comment_li: -1,
-        now_reply_li: '-1_-1',
+        more: true,
+        start: 0,
+        offset: 5,
         search: '',
         isLogin: 0,
-        user_message: {}
+        user_message: {},
+        blogId: Number(blog_id)
     },
     methods: {
         checkLogin(){
@@ -26,30 +28,28 @@ const app = new Vue({
         changeSearch(){
             window.location.href='/?search=' + this.search;
         },
-        showComment(index) {
-            this.now_comment_li = index
-        },
-        notShowComment() {
-            this.now_comment_li = -1
-        },
-        showReply(c_index, r_index) {
-            this.now_reply_li = c_index + '_' + r_index
-        },
-        notShowReply() {
-            this.now_reply_li = '-1_-1'
-        },
-        getReplyShow(c_index, r_index) {
-            let l_index = c_index + '_' + r_index;
-            return l_index == this.now_reply_li
+        getComment(){
+            if (this.more){
+            let comment_data = getCommentList(this.start, this.offset, this.sort_by)
+            this.start = this.start + this.offset;
+            this.more = comment_data.more
+            for (let item of comment_data.comment_list){
+                this.comment_list.push(item)
+            }
+
+        }
         }
     },
     components: {
-        'my-blog-head': my_blog_head
+        'my-blog-head': my_blog_head,
+        'my-blog-comment': my_blog_comment
     },
     beforeMount() {
         // 在页面挂载前就发起请求
         this.checkLogin();
+        this.getComment();
     },
+
 })
 
 function getBlog(blog_id) {
@@ -78,7 +78,7 @@ function getBlog(blog_id) {
 }
 function makeToc(html) {
     const tocs = html.match(/<[hH][1-6].*?>.*?<\/[hH][1-6]>/g);
-    console.log(tocs);
+    // console.log(tocs);
 
     tocs.forEach((item, index) => {
         let h = item.match(/[hH][1-6]/g)[0];
@@ -101,7 +101,7 @@ function toToc(data) {
     let result = ''
     // const addStartUL = () => { result += '<ul class="catalog-list">'; }
     // const addEndUL = () => { result += '</ul>\n'; }
-    const addLI = (index, itemText) => { result += '<li><a name="link" class=""' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
+    const addLI = (index, itemText) => { result += '<li><a name="link" class="label"' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
     data.forEach(function (item, index) {
         let h = item.match(/[hH][1-6]/g)[0];
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
@@ -147,7 +147,6 @@ function compile() {
         var cover_img_url = blog.cover_img_url + '&width=800&height=300';
         var update_time = blog.update_time.split(' ')[0];
         var read_count = blog.read_count;
-        app.comment_count = blog.comment_count;
     } else {
         var text = '';
         var title = '';
@@ -165,6 +164,7 @@ function compile() {
 
 $(document).ready(function () {
     compile();
+    slowScroll();
 });
 
 function getCommentList(start, offset, sort_by) {
@@ -189,6 +189,15 @@ function getCommentList(start, offset, sort_by) {
     };
     $.ajax(op);
     return comment_data
+}
+
+function postComment(content){
+    let token = localStorage.getItem('token');
+    if (!token){
+        layer.msg('请先登录')
+        return
+    }
+
 }
 
 // 页面滚动，目录固定

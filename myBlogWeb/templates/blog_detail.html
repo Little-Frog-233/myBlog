@@ -22,6 +22,7 @@
 </head>
 
 <body>
+    <div id="top"></div>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
         <my-blog-head :is-login="isLogin" :search="search" :user-message="user_message"></my-blog-head>
         <div class="my-blog" style="margin-top: 2px;">
@@ -33,12 +34,12 @@
                         </a>
                     </li>
                     <li class="icon-li">
-                        <a href="#comment-title">
+                        <a href="#comment-title-anchor" class="label">
                             <i class="iconfont icon-item" title="评论">&#xe8b4;</i>
                         </a>
                     </li>
                     <li class="icon-li">
-                        <a href="javascript:scroll(0,0)">
+                        <a href="#top" class="label">
                             <i class="iconfont icon-item" title="返回顶部">&#xe6a5;</i>
                         </a>
                     </li>
@@ -51,7 +52,7 @@
                             <center><img id="cover_img" src="" alt=""></center>
                         </div>
                         <center>
-                            <div class="anchor" id="title-anchor" style="margin-top: 0px;"></div>
+                            <div class="anchor" id="title-anchor"></div>
                             <div class="docs-header" id="title">
                                 <!-- 这里是标题 -->
                             </div>
@@ -67,42 +68,41 @@
                     </div>
                 </section>
                 <div>
-                <section>
-                    <div class="my-comment">
-                        <h3 id="comment-title">评论</h2>
-                        <div class="comment-block">
-                            <div style="margin-left: 30px;">
-                            <div class="comment-user-head">
-                            <img src="http://task.zndex.com/show/logouser/zndex" class="user-picture" alt="">
-                            </div>
-                            <div class="comment-input">
-                                <input type="text" style="width: 500px;" placeholder="   请输入评论...">
-
-                            </div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 50px;">
-                            <ul>
-                                <li>
-                                    <div class='content-box'>
-                                        厉害了
+                    <section>
+                        <div class="my-comment">
+                            <div class="anchor" id="comment-title-anchor"></div>
+                            <h3 id="comment-title">评论</h2>
+                                <div class="comment-block" v-show="isLogin==1">
+                                    <div style="margin-left: 50px;margin-bottom: 10px;">
+                                        <div class="comment-user-head">
+                                            <img :src="'/show/logouser/' + user_message.picture" class="user-picture"
+                                                alt="">
+                                        </div>
+                                        <my-blog-comment :blog-id="blogId"></my-blog-comment>
                                     </div>
-                                </li>
-                                <li>
-                                    <div class='content-box'>
-                                        牛逼
-                                    </div>
-                                </li>
-                            </ul>
+                                </div>
+                                <div style="margin-top: 50px;">
+                                    <ul>
+                                        <li>
+                                            <div class='content-box'>
+                                                厉害了
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class='content-box'>
+                                                牛逼
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                         </div>
-                    </div>
-                </section>
-            </div>
+                    </section>
+                </div>
             </div>
             <div class='div-inline div-right'>
                 <div class="container">
                     <ul class="my_menu" id="menu-left">
-                        <li style="margin-bottom: 10px;"><a href="#title-anchor"><strong>目录</strong></a></li>
+                        <li style="margin-bottom: 10px;"><a href="#title-anchor" class="label"><strong>目录</strong></a></li>
                     </ul>
                 </div>
             </div>

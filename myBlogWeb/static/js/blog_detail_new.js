@@ -147,10 +147,30 @@ function GetQueryValue(queryName) {
     return '';
 }
 
+function slowScroll() {
+    $(".label").click(function () {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+            var $target = $(this.hash);
+            $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+            if ($target.length) {
+                var targetOffset = $target.offset().top;
+                $('html,body').animate({ scrollTop: targetOffset }, 800);
+                return false;
+            }
+        }
+    });
+};
+
+function postComment(blog_id, content){
+    
+}
+
 module.exports = {
     checkUser,
     getUserMessage,
-    GetQueryValue
+    GetQueryValue,
+    slowScroll,
+    postComment
 }
 
 /***/ }),
@@ -159,8 +179,9 @@ module.exports = {
 
 // 头部组件
 // 每个页面通用
-const {getCookie} = __webpack_require__(0)
-const {checkUser} = __webpack_require__(1)
+// 组件中涉及到jquery的函数全部写在utils.js中
+const { getCookie } = __webpack_require__(0)
+const { checkUser, postComment } = __webpack_require__(1)
 
 const head_html = `
 <div style="top: 0px;height: 65px">
@@ -265,7 +286,7 @@ const logout_html = `
 const my_blog_head = {
     delimiters: ["{[", "]}"],
     template: head_html,
-    data(){
+    data() {
         return {
             userMenuShow: false,
         }
@@ -284,10 +305,10 @@ const my_blog_head = {
         }
     },
     methods: {
-        changeSearch(){
-            window.location.href='/?search=' + this.search;
+        changeSearch() {
+            window.location.href = '/?search=' + this.search;
         },
-        signIn(){
+        signIn() {
             layer.open({
                 title: '用户登陆',
                 content: singIn_html,
@@ -301,7 +322,7 @@ const my_blog_head = {
                 }
             })
         },
-        signUp(){
+        signUp() {
             layer.open({
                 title: '用户注册',
                 content: '暂未开放',
@@ -311,7 +332,7 @@ const my_blog_head = {
                 }
             })
         },
-        logout(){
+        logout() {
             const csrf_token = getCookie('csrf_token')
             const op = {
                 'url': '/api/restful/user/',
@@ -319,24 +340,75 @@ const my_blog_head = {
                 'data': {
                     'token': localStorage.getItem('token')
                 },
-                'headers': {'X-CSRFToken':csrf_token},
-                'success': function(data){
-                    window.location.href='/'
-                },'error': function(error){
-                    window.location.href='/'
+                'headers': { 'X-CSRFToken': csrf_token },
+                'success': function (data) {
+                    window.location.href = '/'
+                }, 'error': function (error) {
+                    window.location.href = '/'
                 }
             };
             $.ajax(op);
             localStorage.removeItem('token')
         },
-        showUserMenu(){
+        showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
     }
 }
 
+const comment_html = `
+<div class="comment-input">
+    <div>
+    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()" v-model:value="commentContent">
+    </div>
+    <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
+        <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
+    </div>
+</div>
+`
+
+const my_blog_comment = {
+    delimiters: ["{[", "]}"],
+    template: comment_html,
+    data(){
+        return {
+            commentContent: '',
+            showCommentButton: false
+        }
+    },
+    props: {
+        inputType: {
+            type: String,
+            default: 'comment'
+        },
+        blogId: {
+            type: Number
+        }
+    },
+    methods: {
+        showCommentButtonFunc(){
+            this.showCommentButton = true;
+            console.log(this.blogId);
+            
+        },
+        closeCommentButtonFunc(){
+            this.showCommentButton = false;
+        },
+        postComment(){
+            if (!this.commentContent){
+            layer.msg('评论内容不能为空')
+            return
+            }
+            this.closeCommentButtonFunc();
+
+            this.commentContent = '';
+        }
+    }
+}
+
 module.exports = {
-    my_blog_head
+    my_blog_head,
+    my_blog_comment
 }
 
 
@@ -346,8 +418,8 @@ module.exports = {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const {my_blog_head} = __webpack_require__(2)
-const {getUserMessage, GetQueryValue} = __webpack_require__(1)
+const {my_blog_head, my_blog_comment} = __webpack_require__(2)
+const {getUserMessage, GetQueryValue, slowScroll} = __webpack_require__(1)
 
 var blog_id = GetQueryValue('blog_id');
 
@@ -355,13 +427,15 @@ const app = new Vue({
     delimiters: ["{[", "]}"],
     el: '#app',
     data: {
-        comment_list: getCommentList(),
+        comment_list: [],
         comment_count: 0,
-        now_comment_li: -1,
-        now_reply_li: '-1_-1',
+        more: true,
+        start: 0,
+        offset: 5,
         search: '',
         isLogin: 0,
-        user_message: {}
+        user_message: {},
+        blogId: Number(blog_id)
     },
     methods: {
         checkLogin(){
@@ -374,30 +448,28 @@ const app = new Vue({
         changeSearch(){
             window.location.href='/?search=' + this.search;
         },
-        showComment(index) {
-            this.now_comment_li = index
-        },
-        notShowComment() {
-            this.now_comment_li = -1
-        },
-        showReply(c_index, r_index) {
-            this.now_reply_li = c_index + '_' + r_index
-        },
-        notShowReply() {
-            this.now_reply_li = '-1_-1'
-        },
-        getReplyShow(c_index, r_index) {
-            let l_index = c_index + '_' + r_index;
-            return l_index == this.now_reply_li
+        getComment(){
+            if (this.more){
+            let comment_data = getCommentList(this.start, this.offset, this.sort_by)
+            this.start = this.start + this.offset;
+            this.more = comment_data.more
+            for (let item of comment_data.comment_list){
+                this.comment_list.push(item)
+            }
+
+        }
         }
     },
     components: {
-        'my-blog-head': my_blog_head
+        'my-blog-head': my_blog_head,
+        'my-blog-comment': my_blog_comment
     },
     beforeMount() {
         // 在页面挂载前就发起请求
         this.checkLogin();
+        this.getComment();
     },
+
 })
 
 function getBlog(blog_id) {
@@ -426,7 +498,7 @@ function getBlog(blog_id) {
 }
 function makeToc(html) {
     const tocs = html.match(/<[hH][1-6].*?>.*?<\/[hH][1-6]>/g);
-    console.log(tocs);
+    // console.log(tocs);
 
     tocs.forEach((item, index) => {
         let h = item.match(/[hH][1-6]/g)[0];
@@ -449,7 +521,7 @@ function toToc(data) {
     let result = ''
     // const addStartUL = () => { result += '<ul class="catalog-list">'; }
     // const addEndUL = () => { result += '</ul>\n'; }
-    const addLI = (index, itemText) => { result += '<li><a name="link" class=""' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
+    const addLI = (index, itemText) => { result += '<li><a name="link" class="label"' + 'href="#' + index + '">' + itemText + "</a></li>\n"; }
     data.forEach(function (item, index) {
         let h = item.match(/[hH][1-6]/g)[0];
         let itemText = item.replace(/<\/[hH][1-6]>/, '');  // 匹配h标签的文字
@@ -495,7 +567,6 @@ function compile() {
         var cover_img_url = blog.cover_img_url + '&width=800&height=300';
         var update_time = blog.update_time.split(' ')[0];
         var read_count = blog.read_count;
-        app.comment_count = blog.comment_count;
     } else {
         var text = '';
         var title = '';
@@ -513,6 +584,7 @@ function compile() {
 
 $(document).ready(function () {
     compile();
+    slowScroll();
 });
 
 function getCommentList(start, offset, sort_by) {
@@ -537,6 +609,15 @@ function getCommentList(start, offset, sort_by) {
     };
     $.ajax(op);
     return comment_data
+}
+
+function postComment(content){
+    let token = localStorage.getItem('token');
+    if (!token){
+        layer.msg('请先登录')
+        return
+    }
+
 }
 
 // 页面滚动，目录固定

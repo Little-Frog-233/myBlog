@@ -305,8 +305,8 @@ input {
     line-height: 30px;
     margin: 0 auto;
     width: 100%;
-    max-width: 400px;
-
+    max-width: 600px;
+    text-indent: 10px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

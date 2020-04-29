@@ -69,7 +69,7 @@ class User(Resource):
         if user_message is None:
             return {
             'status_code': 400,
-            'message': 'bad request'
+            'message': '登陆已过期'
         }, 400
         cache.set(token, user_message, timeout=600)
         return {

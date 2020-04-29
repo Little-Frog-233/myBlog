@@ -1,5 +1,5 @@
 const {my_blog_head} = require('./src/js/components.js')
-const {getUserMessage, GetQueryValue} = require('./src/js/utils.js')
+const {getUserMessage, GetQueryValue, slowScroll} = require('./src/js/utils.js')
 
 // console.log('求职，联系邮箱：1342468180@qq.com')
 const app = new Vue({
@@ -89,8 +89,6 @@ const app = new Vue({
                     this.blog_lists.push(item)
                 }
             }
-            console.log('加载完成');
-            
         },
         getBlogUrl(blog_id) {
             return '/blog_detail/?blog_id=' + blog_id;
@@ -154,6 +152,10 @@ const app = new Vue({
         window.removeEventListener('scroll', this.handleScroll)
     },
 })
+
+$(document).ready(function () {
+    slowScroll();
+});
 
 
 function getCategory() {

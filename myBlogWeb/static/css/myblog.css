@@ -273,8 +273,9 @@
 }
 
 .my-blog .comment-block{
-    background-color: ghostwhite;
-    height: 50px;
+    background-color:rgb(244, 245, 245);
+    /* height: 50px; */
+    display: flex;
 }
 
 .my-blog .comment-user-head{
@@ -288,4 +289,7 @@
     padding-top: 10px;
     display: inline-block;
     float: left;
+}
+.my-blog .comment-input input{
+    width: 500px;
 }
