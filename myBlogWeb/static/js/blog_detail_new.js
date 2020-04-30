@@ -106,7 +106,11 @@ function checkUser(usermail, password, captcha){
             localStorage.setItem('token', data.token)
             setTimeout("window.location.href='/' ", 1000)
         },'error': function(error){
+            if (error.responseJSON.message){
             layer.msg(error.responseJSON.message)
+            }else{
+                layer.msg('发生错误，请稍后重试')
+            }
         }
     };
     $.ajax(op);
@@ -132,6 +136,38 @@ function getUserMessage(){
         $.ajax(op);
     }
     return user_message
+}
+
+function postComment(blog_id, content){
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    let comment_message;
+    if (!token){
+        layer.msg('请登陆')
+    }
+    let op = {
+        'method': 'post',
+        'url': '/api/restful/comment_list/',
+        'data': {
+            'token': token,
+            'blog_id': blog_id,
+            'content': content,
+        },
+        'async': false,
+        'headers': { 'X-CSRFToken': csrf_token },
+        'success': function(data){
+            layer.msg('评论成功');
+            comment_message = data.data.comment_message
+        },'error':function(error){
+            if (error.responseJSON.message){
+            layer.msg(error.responseJSON.message)
+            }else{
+                layer.msg('发生错误，请稍后重试')
+            }
+        }        
+    };
+    $.ajax(op);
+    return comment_message
 }
     
 
@@ -160,34 +196,6 @@ function slowScroll() {
         }
     });
 };
-
-function postComment(blog_id, content){
-    const csrf_token = getCookie('csrf_token');
-    const token = localStorage.getItem('token');
-    let comment_message;
-    if (!token){
-        layer.msg('请登陆')
-    }
-    let op = {
-        'method': 'post',
-        'url': '/api/restful/comment_list/',
-        'data': {
-            'token': token,
-            'blog_id': blog_id,
-            'content': content,
-        },
-        'async': false,
-        'headers': { 'X-CSRFToken': csrf_token },
-        'success': function(data){
-            layer.msg('评论成功');
-            comment_message = data.data.comment_message
-        },'error':function(error){
-            layer.msg(error.responseJSON.message)
-        }        
-    };
-    $.ajax(op);
-    return comment_message
-}
 
 function getTs(time){
     var arr = time.split(/[- :]/),
@@ -285,17 +293,17 @@ const head_html = `
                         <!-- </div>
                     </div> -->
                     </li>
-                    <li v-show="isLogin==0">
+                    <li v-if="isLogin==0">
                         <a href="javascript:void(0)" style="margin-left: 5px;" @click="signIn()">
                             登陆
                         </a>
                     </li>
-                    <li v-show="isLogin==0">
+                    <li v-if="isLogin==0">
                         <a href="javascript:void(0)" @click="signUp()">
                             注册
                         </a>
                     </li>
-                    <li v-show="isLogin==1">
+                    <li v-if="isLogin==1">
                         <a href="javascript:void(0)">
                         <div class="user-menu">
                         <div @click="showUserMenu()">
@@ -464,7 +472,12 @@ const my_blog_comment = {
             default: 'comment'
         },
         blogId: {
-            type: Number
+            type: Number,
+            default: 0
+        },
+        commentId: {
+            type: Number,
+            default: 0
         }
     },
     methods: {
@@ -488,12 +501,14 @@ const my_blog_comment = {
                 layer.msg('字数过多')
                 return
             }
-            comment_message = postComment(this.blogId, this.commentContent);
             this.closeCommentButtonFunc();
+            if (this.inputType == 'comment'){
+            comment_message = postComment(this.blogId, this.commentContent);
             // 发射事件，由父组件接收事件
             if (comment_message){
                 console.log('咻～');
                 this.$emit('comment-commit', comment_message)
+            }
             }
             this.commentContent = '';
         }
@@ -512,6 +527,7 @@ module.exports = {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const {getCookie} = __webpack_require__(0)
 const {my_blog_head, my_blog_comment} = __webpack_require__(2)
 const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = __webpack_require__(1)
 
@@ -545,8 +561,8 @@ const app = new Vue({
         },
         getCommentCommit(content){
             // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
-            console.log(content);
-            this.comment_ids.push(content.id)
+            this.comment_count = this.comment_count + 1;
+            this.comment_ids.push(content.id);
             this.comment_list.unshift(content);
         },
         getComment(){
@@ -565,6 +581,16 @@ const app = new Vue({
         },
         getTime(time){
             return handlePublishTimeDesc(time)
+        },
+        deleteCommentFunc(index, comment_id){
+            if (deleteComment(this.blogId, comment_id)){
+                this.start = this.start - 1;
+                this.comment_count = this.comment_count - 1
+                this.comment_list.splice(index, 1)
+                if (this.comment_list.length == 0){
+                    this.getComment();
+                }
+            }
         }
     },
     components: {
@@ -578,6 +604,31 @@ const app = new Vue({
     },
 
 })
+
+function getCommentList(start, offset, sort_by) {
+    var comment_data = {};
+    var op = {
+        'method': 'get',
+        'url': '/api/restful/comment_list/',
+        'data': {
+            'blog_id': blog_id,
+            'sort_by': sort_by,
+            'start': start,
+            'offset': offset
+        },
+        'async': false,
+        'success': function (data) {
+            comment_data['comment_list'] = data.comment_list;
+            comment_data['more'] = data.more;
+            comment_data['total'] = data.total;
+        }, 'error': function (error) {
+            console.log(error);
+
+        }
+    };
+    $.ajax(op);
+    return comment_data
+}
 
 function getBlog(blog_id) {
     var blog;
@@ -603,6 +654,40 @@ function getBlog(blog_id) {
     $.ajax(op);
     return blog
 }
+
+
+function deleteComment(blog_id, comment_id){
+    let res = false;
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    if (!token){
+        layer.msg('请登陆')
+    }
+    let op = {
+        "method": "delete",
+        "url": "/api/restful/comment_list/",
+        "data": {
+            "token": token,
+            "blog_id": blog_id,
+            "comment_id": comment_id
+        },
+        "async": false,
+        "headers": { 'X-CSRFToken': csrf_token },
+        "success": function(data){
+            layer.msg('删除成功')
+            res = true;
+        },"error": function(error){
+            if (error.responseJSON.message){
+                layer.msg(error.responseJSON.message)
+                }else{
+                    layer.msg('发生错误，请稍后重试')
+                }
+        }
+    };
+    $.ajax(op);
+    return res
+}
+
 function makeToc(html) {
     const tocs = html.match(/<[hH][1-6].*?>.*?<\/[hH][1-6]>/g);
     // console.log(tocs);
@@ -693,40 +778,6 @@ $(document).ready(function () {
     compile();
     slowScroll();
 });
-
-function getCommentList(start, offset, sort_by) {
-    var comment_data = {};
-    var op = {
-        'method': 'get',
-        'url': '/api/restful/comment_list/',
-        'data': {
-            'blog_id': blog_id,
-            'sort_by': sort_by,
-            'start': start,
-            'offset': offset
-        },
-        'async': false,
-        'success': function (data) {
-            comment_data['comment_list'] = data.comment_list;
-            comment_data['more'] = data.more;
-            comment_data['total'] = data.total;
-        }, 'error': function (error) {
-            console.log(error);
-
-        }
-    };
-    $.ajax(op);
-    return comment_data
-}
-
-function postComment(content){
-    let token = localStorage.getItem('token');
-    if (!token){
-        layer.msg('请先登录')
-        return
-    }
-
-}
 
 // 页面滚动，目录固定
 function htmlFixPosition(elFix) {

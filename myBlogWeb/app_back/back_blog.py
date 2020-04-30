@@ -225,12 +225,16 @@ class CommentList(Resource):
         sort_by = args['sort_by']
         start = args['start']
         offset = args['offset']
-        comment_list = getComments(manager_id=manager_id, blog_id=blog_id, sort_by=sort_by)
-        if comment_list is None:
-            return {
-                'status_code': 400,
-                'message': 'some error happened, please check log'
-            }
+        # 缓存该blog_id下的comment_list
+        comment_list = cache.get('blog_id_%s_comment'%blog_id)
+        if not comment_list:
+            comment_list = getComments(manager_id=manager_id, blog_id=blog_id, sort_by=sort_by)
+            if comment_list is None:
+                return {
+                    'status_code': 400,
+                    'message': 'some error happened, please check log'
+                }
+            cache.set('blog_id_%s_comment'%blog_id, comment_list, timeout=600)
         total = len(comment_list)
         more = False
         if start is not None:
@@ -281,8 +285,18 @@ class CommentList(Resource):
             'message': '登陆已过期'
         }, 400
         user_id = user_message['id']
+        post_time = cache.get('%s_comment_post'%user_id)
+        if post_time:
+            return {
+                        'status_code': 400,
+                        'message': '请求频繁'
+                    }, 400
+        else:
+            cache.set('%s_comment_post'%user_id, 1, timeout=30)
         comment_message = addComment(blog_id=blog_id, user_id=user_id, content=content, manager_id=manager_id)
         if comment_message is not None:
+            # 删除该blog_id下的comment_list缓存
+            cache.delete('blog_id_%s_comment'%blog_id)
             return {
                 'status_code': 200,
                 'message': 'add successfully',
@@ -299,9 +313,93 @@ class CommentList(Resource):
     def delete(self):
         '''
         '''
-        pass
+        if 'manager_id' not in session:
+            return {
+                'status_code': 400,
+                'message': 'illegal request'
+            }, 400
+        manager_id = session['manager_id']
+        parser = reqparse.RequestParser()
+        parser.add_argument('token', type=str)
+        parser.add_argument('blog_id', type=int)
+        parser.add_argument('comment_id', type=int)
+        args = parser.parse_args()
+        token = args['token']
+        blog_id = args['blog_id']
+        comment_id = args['comment_id']
+        if not token:
+            return {
+                'status_code': 400,
+                'message': 'bad requests'
+            }, 400
+        cache.delete(('blog_id_%s'%blog_id)) ###清除blog的缓存
+        user_message = cache.get(token)
+        if user_message is None:
+            return {
+            'status_code': 400,
+            'message': '登陆已过期'
+        }, 400
+        user_id = user_message['id']
+        if deleteComment(comment_id=comment_id, user_id=user_id, blog_id=blog_id, manager_id=manager_id):
+            # 删除该blog_id下的comment_list缓存
+            cache.delete('blog_id_%s_comment'%blog_id)
+            return {
+                'status_code': 200,
+                'message': '删除成功'
+            }
+        return {
+            'status_code': 400,
+            'message': '删除失败'
+        }, 400
 
-class Reply(Resource):
+
+
+        
+
+
+class ReplyList(Resource):
+    def get(self):
+        '''
+        '''
+        if 'manager_id' not in session:
+            return {
+                'status_code': 400,
+                'message': 'illegal request'
+            }, 400
+        manager_id = session['manager_id']
+        parser = reqparse.RequestParser()
+        parser.add_argument('comment_id', type=int)
+        parser.add_argument('start', type=int)
+        parser.add_argument('offset', type=int)
+        parser.add_argument('sort_by', type=str, default='update_time')
+        args = parser.parse_args()
+        comment_id = args['comment_id']
+        start = args['start']
+        offset = args['offset']
+        sort_by = args['sort_by']
+        reply_list = getReplyList(manager_id=manager_id, comment_id=comment_id, sort_by=sort_by)
+        if reply_list is None:
+            return {
+                'status_code': 400,
+                'message': 'some error happened, please check log'
+            }
+        total = len(reply_list)
+        more = False
+        if start is not None:
+            end = start + offset
+            if end >= len(reply_list):
+                more = False
+            else:
+                more = True
+            reply_list = reply_list[start:end]
+        return {
+            'status_code': 200,
+            'message': '',
+            'reply_list': reply_list,
+            'total': total,
+            'more': more
+        }
+
     def post(self):
         '''
         '''

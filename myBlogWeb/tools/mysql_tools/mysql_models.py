@@ -156,11 +156,11 @@ class mysqlModel:
 
     def getBlog(self, blog_id, user_id):
         '''
-
+        只显示visible==1的blog内容
         :param blog_id:
         :return:
         '''
-        sql = '''select title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where id={blog_id} and manager_id={user_id} ; '''.format(
+        sql = '''select title, cover_img_url, content, category, tag, update_time, read_count, comment_count from blog where id={blog_id} and manager_id={user_id} and visible=1 ; '''.format(
             blog_id=blog_id, user_id=user_id)
         self.cursor.execute(sql)
         one = self.cursor.fetchone()
@@ -195,10 +195,10 @@ class mysqlModel:
 
     def getBlogs(self, user_id, sort_by='id'):
         '''
-
+        
         :return:
         '''
-        sql = '''select id, title, cover_img_url, content, category, tag, update_time, read_count, comment_count, like_count from blog where manager_id={user_id} and visible=1 ; '''.format(
+        sql = '''select id, title, cover_img_url, content, category, tag, create_time, read_count, comment_count, like_count from blog where manager_id={user_id} and visible=1 ; '''.format(
             user_id=user_id)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
@@ -395,6 +395,33 @@ class mysqlModel:
             log('mysqlModel.deleteComment').logger.error(msg)
             self.db.rollback()
             return False
+    
+    def getReply(self, reply_id, manager_id):
+        '''
+        '''
+        sql = '''select a.id, a.comment_id, a.replied_id, a.replied_user_id, a.user_id, a.content,
+                    b.nickname as reply_nickname, 
+                    c.nickname as user_nickname,
+                    a.like_count,
+                    e.title,
+                    a.update_time,
+                    d.content as comment_content,
+                    e.id as blog_id,
+                    c.picture as picture
+                    from reply a left join user b on a.replied_user_id = b.id
+                    join user c on a.user_id = c.id
+                    join comment d on a.comment_id = d.id
+                    join blog e on d.blog_id = e.id
+                    where e.manager_id = {manager_id} and a.id = {reply_id}; '''.format(manager_id=manager_id, reply_id=reply_id)
+        try:
+            self.cursor.execute(sql)
+            results = self.cursor.fetchone()
+        except Exception as e:
+            msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
+            log('mysqlModel.getReply').logger.error(msg)
+            self.db.rollback()
+            return None
+
 
     def getReplyList(self, manager_id, sort_by='update_time'):
         '''
@@ -462,6 +489,7 @@ class mysqlModel:
             self.cursor.execute(sql, (comment_id, user_id, content, replied_id, replied_user_id))
             self.db.commit()
             if self.updateCommentReplyCount(manager_id=manager_id, comment_id=comment_id, method='add') and self.updateBlogCommentCount(manager_id=manager_id, blog_id=blog_id):
+
                 return True
             else:
                 return False
@@ -480,7 +508,7 @@ class mysqlModel:
             self.db.commit()
             self.cursor.execute(sql)
             self.db.commit()
-            ###更新博客回复数
+            ###更新博客评论回复数和博客评论数
             if self.updateCommentReplyCount(manager_id=manager_id, comment_id=comment_id, method='reduce') and self.updateBlogCommentCount(manager_id=manager_id, blog_id=blog_id):
                 return True
             else:

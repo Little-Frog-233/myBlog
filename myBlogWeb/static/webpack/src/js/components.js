@@ -24,17 +24,17 @@ const head_html = `
                         <!-- </div>
                     </div> -->
                     </li>
-                    <li v-show="isLogin==0">
+                    <li v-if="isLogin==0">
                         <a href="javascript:void(0)" style="margin-left: 5px;" @click="signIn()">
                             登陆
                         </a>
                     </li>
-                    <li v-show="isLogin==0">
+                    <li v-if="isLogin==0">
                         <a href="javascript:void(0)" @click="signUp()">
                             注册
                         </a>
                     </li>
-                    <li v-show="isLogin==1">
+                    <li v-if="isLogin==1">
                         <a href="javascript:void(0)">
                         <div class="user-menu">
                         <div @click="showUserMenu()">
@@ -203,7 +203,12 @@ const my_blog_comment = {
             default: 'comment'
         },
         blogId: {
-            type: Number
+            type: Number,
+            default: 0
+        },
+        commentId: {
+            type: Number,
+            default: 0
         }
     },
     methods: {
@@ -227,12 +232,14 @@ const my_blog_comment = {
                 layer.msg('字数过多')
                 return
             }
-            comment_message = postComment(this.blogId, this.commentContent);
             this.closeCommentButtonFunc();
+            if (this.inputType == 'comment'){
+            comment_message = postComment(this.blogId, this.commentContent);
             // 发射事件，由父组件接收事件
             if (comment_message){
                 console.log('咻～');
                 this.$emit('comment-commit', comment_message)
+            }
             }
             this.commentContent = '';
         }

@@ -16,7 +16,11 @@ function checkUser(usermail, password, captcha){
             localStorage.setItem('token', data.token)
             setTimeout("window.location.href='/' ", 1000)
         },'error': function(error){
+            if (error.responseJSON.message){
             layer.msg(error.responseJSON.message)
+            }else{
+                layer.msg('发生错误，请稍后重试')
+            }
         }
     };
     $.ajax(op);
@@ -42,6 +46,38 @@ function getUserMessage(){
         $.ajax(op);
     }
     return user_message
+}
+
+function postComment(blog_id, content){
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    let comment_message;
+    if (!token){
+        layer.msg('请登陆')
+    }
+    let op = {
+        'method': 'post',
+        'url': '/api/restful/comment_list/',
+        'data': {
+            'token': token,
+            'blog_id': blog_id,
+            'content': content,
+        },
+        'async': false,
+        'headers': { 'X-CSRFToken': csrf_token },
+        'success': function(data){
+            layer.msg('评论成功');
+            comment_message = data.data.comment_message
+        },'error':function(error){
+            if (error.responseJSON.message){
+            layer.msg(error.responseJSON.message)
+            }else{
+                layer.msg('发生错误，请稍后重试')
+            }
+        }        
+    };
+    $.ajax(op);
+    return comment_message
 }
     
 
@@ -70,34 +106,6 @@ function slowScroll() {
         }
     });
 };
-
-function postComment(blog_id, content){
-    const csrf_token = getCookie('csrf_token');
-    const token = localStorage.getItem('token');
-    let comment_message;
-    if (!token){
-        layer.msg('请登陆')
-    }
-    let op = {
-        'method': 'post',
-        'url': '/api/restful/comment_list/',
-        'data': {
-            'token': token,
-            'blog_id': blog_id,
-            'content': content,
-        },
-        'async': false,
-        'headers': { 'X-CSRFToken': csrf_token },
-        'success': function(data){
-            layer.msg('评论成功');
-            comment_message = data.data.comment_message
-        },'error':function(error){
-            layer.msg(error.responseJSON.message)
-        }        
-    };
-    $.ajax(op);
-    return comment_message
-}
 
 function getTs(time){
     var arr = time.split(/[- :]/),

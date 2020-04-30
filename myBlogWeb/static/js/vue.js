@@ -11963,3 +11963,6 @@
   return Vue;
 
 }));
+Vue.config.productionTip = false;
+Vue.config.debug = false;
+Vue.config.devtools = false;

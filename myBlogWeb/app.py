@@ -75,6 +75,7 @@ api.add_resource(BlogList, '/api/restful/blog_list/')
 api.add_resource(Category, '/api/restful/category/')
 api.add_resource(Tag, '/api/restful/tag/')
 api.add_resource(CommentList, '/api/restful/comment_list/')
+api.add_resource(ReplyList, '/api/restful/reply_list/')
 
 api.add_resource(User, '/api/restful/user/')
 api.add_resource(UserRegister, '/api/restful/user_register/')

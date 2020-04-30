@@ -175,6 +175,7 @@
     }
 
     .my-blog .comment-item .comment-content{
-        max-width: 200px;
+        max-width: 250px;
+        width: 250px;
     }
   }

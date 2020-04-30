@@ -40,12 +40,14 @@ class User(Resource):
                 'status_code': 400,
                 'message': '密码与邮箱不匹配',
             }, 400
+        user_agent = request.headers.get('User-Agent', '111')
         token = {
-            'id': id
+            'id': id,
+            'user-agent': user_agent
         }
         user_message = getUserMessage(user_id=id)
         token = des_encrypt(json.dumps(token, ensure_ascii=False).encode('utf-8'))
-        cache.set(token, user_message, timeout=600) # 设置缓存，缓存token timeout单位为秒
+        cache.set(token, user_message, timeout=10080) # 设置缓存，缓存token timeout单位为秒
         return {
             'status_code': 200,
             'message': '登陆成功',
@@ -71,7 +73,7 @@ class User(Resource):
             'status_code': 400,
             'message': '登陆已过期'
         }, 400
-        cache.set(token, user_message, timeout=600)
+        cache.set(token, user_message, timeout=10080)
         return {
             'status_code': 200,
             'messaga': '',
@@ -137,7 +139,7 @@ class UserRegister(Resource):
             'end_time': end_time
         }
         user_token = des_encrypt(json.dumps(user_message, ensure_ascii=False).encode('utf-8'))
-        # sendMail(usermail=usermail)
+        # sendMail(usermail=usermail, token=user_token)
         return {
             'status_code': 200,
             'message': '已发送注册激活邮件'

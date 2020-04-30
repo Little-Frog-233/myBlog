@@ -106,8 +106,8 @@ def getComments(manager_id, blog_id, sort_by='update_time'):
         result = []
         for r in res:
             if r['blog_id'] == blog_id:
-                reply_list = getReplyList(manager_id=manager_id, sort_by=sort_by, comment_id=r['id'])
-                r['reply_list'] = reply_list
+                # reply_list = getReplyList(manager_id=manager_id, sort_by=sort_by, comment_id=r['id'])
+                # r['reply_list'] = reply_list
                 result.append(r)
         res = result
     db.close()
@@ -165,6 +165,14 @@ def getReplyList(manager_id, comment_id, sort_by='update_time'):
             if r['comment_id'] == comment_id:
                 result.append(r)
         res = result
+    db.close()
+    return res
+
+def addReply(comment_id, user_id, content, manager_id, blog_id, replied_id=None, replied_user_id=None):
+    '''
+    '''
+    db = mysqlModel()
+    res = db.addReply(comment_id=comment_id, user_id=user_id, content=content, manager_id=manager_id, blog_id=blog_id, replied_id=replied_id, replied_user_id=replied_user_id)
     db.close()
     return res
 

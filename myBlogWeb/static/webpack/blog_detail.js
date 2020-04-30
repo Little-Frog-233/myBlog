@@ -1,3 +1,4 @@
+const {getCookie} = require('./src/js/cookie.js')
 const {my_blog_head, my_blog_comment} = require('./src/js/components.js')
 const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = require('./src/js/utils.js')
 
@@ -31,8 +32,8 @@ const app = new Vue({
         },
         getCommentCommit(content){
             // 接收组件发出的comment-commit事件并将返回结果塞入comment_list
-            console.log(content);
-            this.comment_ids.push(content.id)
+            this.comment_count = this.comment_count + 1;
+            this.comment_ids.push(content.id);
             this.comment_list.unshift(content);
         },
         getComment(){
@@ -51,6 +52,16 @@ const app = new Vue({
         },
         getTime(time){
             return handlePublishTimeDesc(time)
+        },
+        deleteCommentFunc(index, comment_id){
+            if (deleteComment(this.blogId, comment_id)){
+                this.start = this.start - 1;
+                this.comment_count = this.comment_count - 1
+                this.comment_list.splice(index, 1)
+                if (this.comment_list.length == 0){
+                    this.getComment();
+                }
+            }
         }
     },
     components: {
@@ -64,6 +75,31 @@ const app = new Vue({
     },
 
 })
+
+function getCommentList(start, offset, sort_by) {
+    var comment_data = {};
+    var op = {
+        'method': 'get',
+        'url': '/api/restful/comment_list/',
+        'data': {
+            'blog_id': blog_id,
+            'sort_by': sort_by,
+            'start': start,
+            'offset': offset
+        },
+        'async': false,
+        'success': function (data) {
+            comment_data['comment_list'] = data.comment_list;
+            comment_data['more'] = data.more;
+            comment_data['total'] = data.total;
+        }, 'error': function (error) {
+            console.log(error);
+
+        }
+    };
+    $.ajax(op);
+    return comment_data
+}
 
 function getBlog(blog_id) {
     var blog;
@@ -89,6 +125,40 @@ function getBlog(blog_id) {
     $.ajax(op);
     return blog
 }
+
+
+function deleteComment(blog_id, comment_id){
+    let res = false;
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    if (!token){
+        layer.msg('请登陆')
+    }
+    let op = {
+        "method": "delete",
+        "url": "/api/restful/comment_list/",
+        "data": {
+            "token": token,
+            "blog_id": blog_id,
+            "comment_id": comment_id
+        },
+        "async": false,
+        "headers": { 'X-CSRFToken': csrf_token },
+        "success": function(data){
+            layer.msg('删除成功')
+            res = true;
+        },"error": function(error){
+            if (error.responseJSON.message){
+                layer.msg(error.responseJSON.message)
+                }else{
+                    layer.msg('发生错误，请稍后重试')
+                }
+        }
+    };
+    $.ajax(op);
+    return res
+}
+
 function makeToc(html) {
     const tocs = html.match(/<[hH][1-6].*?>.*?<\/[hH][1-6]>/g);
     // console.log(tocs);
@@ -179,40 +249,6 @@ $(document).ready(function () {
     compile();
     slowScroll();
 });
-
-function getCommentList(start, offset, sort_by) {
-    var comment_data = {};
-    var op = {
-        'method': 'get',
-        'url': '/api/restful/comment_list/',
-        'data': {
-            'blog_id': blog_id,
-            'sort_by': sort_by,
-            'start': start,
-            'offset': offset
-        },
-        'async': false,
-        'success': function (data) {
-            comment_data['comment_list'] = data.comment_list;
-            comment_data['more'] = data.more;
-            comment_data['total'] = data.total;
-        }, 'error': function (error) {
-            console.log(error);
-
-        }
-    };
-    $.ajax(op);
-    return comment_data
-}
-
-function postComment(content){
-    let token = localStorage.getItem('token');
-    if (!token){
-        layer.msg('请先登录')
-        return
-    }
-
-}
 
 // 页面滚动，目录固定
 function htmlFixPosition(elFix) {
