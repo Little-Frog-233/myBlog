@@ -541,7 +541,7 @@ const app = new Vue({
         start: 0,
         offset: 2,
         more: true,
-        sort_by: 'update_time',
+        sort_by: 'read_count',
         elFix: '#menu-right',
         search: GetQueryValue('search'),
         searchBarFixed: false, //是否要固定单位
