@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const {getCookie} = require('./src/js/cookie.js')
 const {my_blog_head, my_blog_comment} = require('./src/js/components.js')
 const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = require('./src/js/utils.js')

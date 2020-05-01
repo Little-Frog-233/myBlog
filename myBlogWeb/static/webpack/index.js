@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const {my_blog_head} = require('./src/js/components.js')
 const {getUserMessage, GetQueryValue, slowScroll} = require('./src/js/utils.js')
 
@@ -69,7 +70,7 @@ const app = new Vue({
             const max_length = 130;
             content = content.replace(/<.*?>/g, '')
             if (content.length > max_length) {
-                c_1 = content.substr(0, max_length);
+                let c_1 = content.substr(0, max_length);
                 content = c_1 + '...'
                 return content
             } else {
@@ -85,7 +86,7 @@ const app = new Vue({
                 let blog_data = getBlogDataFunc(this.start, this.offset, this.now_category, this.now_tag, this.sort_by, this.search);
                 this.start = this.start + this.offset;
                 this.more = blog_data.more;
-                for (item of blog_data.blog_list) {
+                for (let item of blog_data.blog_list) {
                     this.blog_lists.push(item)
                 }
             }
