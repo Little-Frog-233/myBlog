@@ -1,5 +1,6 @@
 import Vue from 'vue'
-const {my_blog_head} = require('./src/js/components.js')
+// const {my_blog_head} = require('./src/js/components.js')
+import my_blog_head from './src/vue/Head.vue'
 const {getUserMessage, GetQueryValue, slowScroll} = require('./src/js/utils.js')
 
 // console.log('求职，联系邮箱：1342468180@qq.com')

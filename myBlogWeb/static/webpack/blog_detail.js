@@ -1,6 +1,7 @@
 import Vue from 'vue'
 const {getCookie} = require('./src/js/cookie.js')
-const {my_blog_head, my_blog_comment} = require('./src/js/components.js')
+import my_blog_head from './src/vue/Head.vue'
+import my_blog_comment from './src/vue/Comment.vue'
 const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = require('./src/js/utils.js')
 
 var blog_id = GetQueryValue('blog_id');
