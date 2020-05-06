@@ -27,7 +27,7 @@ module.exports = {
         alias: {'vue': 'vue/dist/vue.js'}
     },
     plugins: [
-        new uglifyJsPlugin()
+        // new uglifyJsPlugin()
       ],
     module: {
         rules: [

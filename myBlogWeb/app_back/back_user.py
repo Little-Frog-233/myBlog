@@ -41,9 +41,12 @@ class User(Resource):
                 'message': '密码与邮箱不匹配',
             }, 400
         user_agent = request.headers.get('User-Agent', '111')
+        create_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         token = {
             'id': id,
-            'user-agent': user_agent
+            'user-agent': user_agent,
+            'create_time': create_time
+
         }
         user_message = getUserMessage(user_id=id)
         token = des_encrypt(json.dumps(token, ensure_ascii=False).encode('utf-8'))

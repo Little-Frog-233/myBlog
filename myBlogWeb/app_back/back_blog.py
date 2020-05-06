@@ -27,10 +27,7 @@ from app import cache
 class Category(Resource):
     def get(self):
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         category_list = getCategoryList(user_id=manager_id)
         categories = getCategories(user_id=manager_id)
@@ -43,19 +40,13 @@ class Category(Resource):
                 'categories': categories,
                 'category_count': category_count
             }
-        return {
-                'status_code': 400,
-                'message': '',
-                'category_list': []
-            }, 400
+        return {'status_code': 400, 'message': '', 'category_list': []}, 400
+
 
 class Tag(Resource):
     def get(self):
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         tag_dict = getTagDict(user_id=manager_id)
         parser = reqparse.RequestParser()
@@ -65,11 +56,7 @@ class Tag(Resource):
         if category and category != "''":
             tags = tag_dict.get(category, None)
             if tags:
-                return {
-                    'status_code': 200,
-                    'message': '',
-                    'tags': tags
-                }
+                return {'status_code': 200, 'message': '', 'tags': tags}
             else:
                 return {
                     'status_code': 400,
@@ -93,6 +80,7 @@ class Tag(Resource):
                     'tags': []
                 }, 400
 
+
 class Blog(Resource):
     def get(self):
         '''
@@ -100,17 +88,14 @@ class Blog(Resource):
         将博客信息按照blog_id_{blog_id}的形式存储在缓存中
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('blog_id', type=int)
         args = parser.parse_args()
         blog_id = args['blog_id']
         # cache.delete('blog_id_%s'%blog_id)
-        blog = cache.get('blog_id_%s'%blog_id)
+        blog = cache.get('blog_id_%s' % blog_id)
         if not blog:
             blog = getBlog(blog_id=blog_id, user_id=manager_id)
             if blog is None:
@@ -118,13 +103,14 @@ class Blog(Resource):
                     'status_code': 400,
                     'message': 'some error happened in mysql, please check log'
                 }, 400
-            cache.set('blog_id_%s'%blog_id, blog, timeout=600)
+            cache.set('blog_id_%s' % blog_id, blog, timeout=600)
             updateBlogRead(blog_id=blog_id, user_id=manager_id)
         return {
-                    'status_code': 200,
-                    'message': 'get successfully',
-                    'blog': blog
-            }
+            'status_code': 200,
+            'message': 'get successfully',
+            'blog': blog
+        }
+
 
 class BlogList(Resource):
     def get(self):
@@ -133,10 +119,7 @@ class BlogList(Resource):
         :return:
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('category', type=str)
@@ -158,10 +141,10 @@ class BlogList(Resource):
         blog_list_res = []
         if not blog_list:
             return {
-            'status_code': 200,
-            'message': '',
-            'blog_list': blog_list_res
-        }
+                'status_code': 200,
+                'message': '',
+                'blog_list': blog_list_res
+            }
         if search and search != '':
             for blog in blog_list:
                 search_list = search.split(' ')
@@ -202,6 +185,7 @@ class BlogList(Resource):
             'total': total
         }
 
+
 class CommentList(Resource):
     '''
     每个comment对象下面包含reply列表
@@ -210,10 +194,7 @@ class CommentList(Resource):
         '''
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('blog_id', type=int)
@@ -226,15 +207,20 @@ class CommentList(Resource):
         start = args['start']
         offset = args['offset']
         # 缓存该blog_id下的comment_list
-        comment_list = cache.get('blog_id_%s_comment'%blog_id)
+        # cache.delete('blog_id_%s_comment'%blog_id)
+        comment_list = cache.get('blog_id_%s_comment' % blog_id)
         if not comment_list:
-            comment_list = getComments(manager_id=manager_id, blog_id=blog_id, sort_by=sort_by)
+            comment_list = getComments(manager_id=manager_id,
+                                       blog_id=blog_id,
+                                       sort_by=sort_by)
             if comment_list is None:
                 return {
                     'status_code': 400,
                     'message': 'some error happened, please check log'
                 }
-            cache.set('blog_id_%s_comment'%blog_id, comment_list, timeout=600)
+            cache.set('blog_id_%s_comment' % blog_id,
+                      comment_list,
+                      timeout=600)
         total = len(comment_list)
         more = False
         if start is not None:
@@ -251,7 +237,7 @@ class CommentList(Resource):
             'total': total,
             'more': more
         }
-    
+
     def post(self):
         '''
         提交评论，清除blog_id_{blog_id}的缓存
@@ -259,10 +245,7 @@ class CommentList(Resource):
         user_id通过缓存获取
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('token', type=str)
@@ -271,32 +254,26 @@ class CommentList(Resource):
         args = parser.parse_args()
         token = args['token']
         if not token:
-            return {
-                'status_code': 400,
-                'message': 'bad requests'
-            }, 400
+            return {'status_code': 400, 'message': 'bad requests'}, 400
         blog_id = args['blog_id']
         content = args['content']
-        cache.delete(('blog_id_%s'%blog_id)) ###清除blog的缓存
-        user_message = cache.get(token) ### 从缓存中获取用户信息
+        cache.delete(('blog_id_%s' % blog_id))  ###清除blog的缓存
+        user_message = cache.get(token)  ### 从缓存中获取用户信息
         if user_message is None:
-            return {
-            'status_code': 400,
-            'message': '登陆已过期'
-        }, 400
+            return {'status_code': 400, 'message': '登陆已过期'}, 400
         user_id = user_message['id']
-        post_time = cache.get('%s_comment_post'%user_id)
+        post_time = cache.get('%s_comment_post' % user_id)
         if post_time:
-            return {
-                        'status_code': 400,
-                        'message': '请求频繁'
-                    }, 400
+            return {'status_code': 400, 'message': '请求频繁'}, 400
         else:
-            cache.set('%s_comment_post'%user_id, 1, timeout=30)
-        comment_message = addComment(blog_id=blog_id, user_id=user_id, content=content, manager_id=manager_id)
+            cache.set('%s_comment_post' % user_id, 1, timeout=30)
+        comment_message = addComment(blog_id=blog_id,
+                                     user_id=user_id,
+                                     content=content,
+                                     manager_id=manager_id)
         if comment_message is not None:
             # 删除该blog_id下的comment_list缓存
-            cache.delete('blog_id_%s_comment'%blog_id)
+            cache.delete('blog_id_%s_comment' % blog_id)
             return {
                 'status_code': 200,
                 'message': 'add successfully',
@@ -309,15 +286,12 @@ class CommentList(Resource):
                 'status_code': 400,
                 'message': 'some error happened, please check log'
             }, 400
-    
+
     def delete(self):
         '''
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('token', type=str)
@@ -328,33 +302,20 @@ class CommentList(Resource):
         blog_id = args['blog_id']
         comment_id = args['comment_id']
         if not token:
-            return {
-                'status_code': 400,
-                'message': 'bad requests'
-            }, 400
-        cache.delete(('blog_id_%s'%blog_id)) ###清除blog的缓存
+            return {'status_code': 400, 'message': 'bad requests'}, 400
+        cache.delete(('blog_id_%s' % blog_id))  ###清除blog的缓存
         user_message = cache.get(token)
         if user_message is None:
-            return {
-            'status_code': 400,
-            'message': '登陆已过期'
-        }, 400
+            return {'status_code': 400, 'message': '登陆已过期'}, 400
         user_id = user_message['id']
-        if deleteComment(comment_id=comment_id, user_id=user_id, blog_id=blog_id, manager_id=manager_id):
+        if deleteComment(comment_id=comment_id,
+                         user_id=user_id,
+                         blog_id=blog_id,
+                         manager_id=manager_id):
             # 删除该blog_id下的comment_list缓存
-            cache.delete('blog_id_%s_comment'%blog_id)
-            return {
-                'status_code': 200,
-                'message': '删除成功'
-            }
-        return {
-            'status_code': 400,
-            'message': '删除失败'
-        }, 400
-
-
-
-        
+            cache.delete('blog_id_%s_comment' % blog_id)
+            return {'status_code': 200, 'message': '删除成功'}
+        return {'status_code': 400, 'message': '删除失败'}, 400
 
 
 class ReplyList(Resource):
@@ -362,10 +323,7 @@ class ReplyList(Resource):
         '''
         '''
         if 'manager_id' not in session:
-            return {
-                'status_code': 400,
-                'message': 'illegal request'
-            }, 400
+            return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
         parser.add_argument('comment_id', type=int)
@@ -377,7 +335,9 @@ class ReplyList(Resource):
         start = args['start']
         offset = args['offset']
         sort_by = args['sort_by']
-        reply_list = getReplyList(manager_id=manager_id, comment_id=comment_id, sort_by=sort_by)
+        reply_list = getReplyList(manager_id=manager_id,
+                                  comment_id=comment_id,
+                                  sort_by=sort_by)
         if reply_list is None:
             return {
                 'status_code': 400,
@@ -402,8 +362,56 @@ class ReplyList(Resource):
 
     def post(self):
         '''
+        提交回复
+        '''
+        if 'manager_id' not in session:
+            return {'status_code': 400, 'message': 'illegal request'}, 400
+        manager_id = session['manager_id']
+        parser = reqparse.RequestParser()
+        parser.add_argument('token', type=str)
+        parser.add_argument('comment_id', type=int)
+        parser.add_argument('content', type=str)
+        parser.add_argument('blog_id', type=int)
+        parser.add_argument('replied_id')
+        parser.add_argument('replied_user_id')
+        args = parser.parse_args()
+        token = args['token']
+        if not token:
+            return {'status_code': 400, 'message': 'bad requests'}, 400
+        comment_id = args['comment_id']
+        content = args['content']
+        blog_id = args['blog_id']
+        replied_id = args['replied_id']
+        replied_user_id = args['replied_user_id']
+        user_message = cache.get(token)
+        if user_message is None:
+            return {'status_code': 400, 'message': '登陆已过期'}, 400
+        user_id = user_message['id']
+        reply_message = addReply(comment_id=comment_id,
+                                 user_id=user_id,
+                                 content=content,
+                                 manager_id=manager_id,
+                                 blog_id=blog_id,
+                                 replied_id=replied_id,
+                                 replied_user_id=replied_user_id)
+        if reply_message is not None:
+            # 删除该blog_id下的comment_list缓存
+            cache.delete('blog_id_%s_comment' % blog_id)
+            return {
+                'status_code': 200,
+                'message': 'add successfully',
+                'data': {
+                    'reply_message': reply_message
+                }
+            }
+        else:
+            return {
+                'status_code': 400,
+                'message': 'some error happened, please check log'
+            }, 400
+    
+    def delete(self):
+        '''
+        删除回复
         '''
         pass
-
-
-        

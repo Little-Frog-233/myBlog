@@ -238,7 +238,7 @@ class mysqlModel:
         '''
         sort_by: 'update_time', 'blog_id', 'id'
         '''
-        sql = '''select a.id, a.blog_id, a.user_id, c.nickname, a.content, a.like_count, a.reply_count, a.update_time, b.title, c.picture as user_picture
+        sql = '''select a.id, a.blog_id, a.user_id, c.nickname, a.content, a.like_count, a.reply_count, a.update_time, b.title, c.picture as user_picture, c.author as user_admin
         from comment a join blog b on a.blog_id=b.id
         join user c on a.user_id=c.id
         where b.manager_id={manager_id} and a.id={comment_id} '''.format(manager_id=manager_id, comment_id=comment_id)
@@ -258,6 +258,7 @@ class mysqlModel:
             temp['update_time'] = res[7].strftime('%Y-%m-%d %H:%M:%S')
             temp['blog_title'] = res[8]
             temp['user_picture'] = res[9]
+            temp['user_admin'] = res[10]
             temp['reply_list'] = []
             return temp
         except Exception as e:
@@ -270,7 +271,7 @@ class mysqlModel:
         '''
         sort_by: 'update_time', 'blog_id', 'id'
         '''
-        sql = '''select a.id, a.blog_id, a.user_id, c.nickname, a.content, a.like_count, a.reply_count, a.update_time, b.title, c.picture as user_picture
+        sql = '''select a.id, a.blog_id, a.user_id, c.nickname, a.content, a.like_count, a.reply_count, a.create_time, b.title, c.picture as user_picture, c.author as user_admin
         from comment a join blog b on a.blog_id=b.id
         join user c on a.user_id=c.id
         where b.manager_id={manager_id}'''.format(manager_id=manager_id)
@@ -292,6 +293,7 @@ class mysqlModel:
                 temp['update_time'] = res[7].strftime('%Y-%m-%d %H:%M:%S')
                 temp['blog_title'] = res[8]
                 temp['user_picture'] = res[9]
+                temp['user_admin'] = res[10]
                 comment_list.append(temp)
             if sort_by == 'update_time':
                 comment_list = sorted(comment_list, key=lambda x:x['update_time'])
@@ -407,7 +409,8 @@ class mysqlModel:
                     a.update_time,
                     d.content as comment_content,
                     e.id as blog_id,
-                    c.picture as picture
+                    c.picture as picture,
+                    c.author as user_admin
                     from reply a left join user b on a.replied_user_id = b.id
                     join user c on a.user_id = c.id
                     join comment d on a.comment_id = d.id
@@ -416,6 +419,28 @@ class mysqlModel:
         try:
             self.cursor.execute(sql)
             results = self.cursor.fetchone()
+            if not results:
+                return None
+            res = results
+            temp = {}
+            temp['id'] = res[0]
+            temp['comment_id'] = res[1]
+            temp['replied_id'] = res[2]
+            if res[6] == None:
+                temp['reply_nickname'] = ''
+            else:
+                temp['reply_nickname'] = res[6]
+            temp['user_id'] = res[4]
+            temp['user_nickname'] = res[7]
+            temp['content'] = res[5]
+            temp['like_count'] = res[8]
+            temp['title'] = res[9]
+            temp['update_time'] = res[10].strftime('%Y-%m-%d %H:%M:%S')
+            temp['comment_content'] = res[11]
+            temp['blog_id'] = res[12]
+            temp['user_picture'] = res[13]
+            temp['user_admin'] = res[14]
+            return temp
         except Exception as e:
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('mysqlModel.getReply').logger.error(msg)
@@ -434,7 +459,8 @@ class mysqlModel:
                     a.update_time,
                     d.content as comment_content,
                     e.id as blog_id,
-                    c.picture as picture
+                    c.picture as picture,
+                    c.author as user_admin
                     from reply a left join user b on a.replied_user_id = b.id
                     join user c on a.user_id = c.id
                     join comment d on a.comment_id = d.id
@@ -464,6 +490,7 @@ class mysqlModel:
                 temp['comment_content'] = res[11]
                 temp['blog_id'] = res[12]
                 temp['user_picture'] = res[13]
+                temp['user_admin'] = res[14]
                 reply_list.append(temp)
             if sort_by == 'update_time':
                 reply_list = sorted(reply_list, key=lambda x: x['update_time'])
@@ -488,11 +515,13 @@ class mysqlModel:
         try:
             self.cursor.execute(sql, (comment_id, user_id, content, replied_id, replied_user_id))
             self.db.commit()
+            reply_id = self.cursor.lastrowid
+            reply_message = self.getReply(reply_id=reply_id, manager_id=manager_id)
             if self.updateCommentReplyCount(manager_id=manager_id, comment_id=comment_id, method='add') and self.updateBlogCommentCount(manager_id=manager_id, blog_id=blog_id):
-
-                return True
+                if reply_message is not None:
+                    return reply_message
             else:
-                return False
+                return None
         except Exception as e:
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('mysqlModel.addReply').logger.error(msg)

@@ -1,10 +1,10 @@
 <template>
-<div class="comment-input">
+<div class="comment-input" :id="'comment-content-input-' + randomId">
     <div>
-    <input type="text" placeholder="   请输入评论..." @focus="showCommentButtonFunc()"  v-model:value="commentContent">
+    <input type="text" :placeholder="inputPlaceHolder" @focus="showCommentButtonFunc()"  v-model:value="commentContent" :id="'comment-content-input-input-' + randomId">
     </div>
     <div style="float: right;margin-top: 10px;" v-show="showCommentButton">
-        <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" @click="postComment()">评论</button>
+        <button style="background-color: #027fff;color: white;padding: .2rem 1.1rem;" :id="'comment-content-input-input-button-' + randomId" @click="postComment()">评论</button>
     </div>
 </div>
 </template>
@@ -26,6 +26,10 @@ export default {
             type: String,
             default: 'comment'
         },
+        inputPlaceHolder: {
+            type: String,
+            default: '   请输入评论'
+        },
         blogId: {
             type: Number,
             default: 0
@@ -33,6 +37,12 @@ export default {
         commentId: {
             type: Number,
             default: 0
+        },
+        repliedId: {
+            default: null
+        },
+        repliedUserId: {
+            default: null
         }
     },
     methods: {
@@ -64,10 +74,30 @@ export default {
                 console.log('咻～');
                 this.$emit('comment-commit', comment_message)
             }
+            }else if (this.inputType == 'reply'){
+                layer.msg('回复功能爷还没整出来')
             }
             this.commentContent = '';
         }
-    }
+    },
+    computed: {
+            randomId() {
+                var Num = "";
+                for (var i = 0; i < 6; i++) {
+                    Num += Math.floor(Math.random() * 10);
+                }
+                return Num;
+            }
+        },
+    created() {
+        let body = document.querySelector('body')
+        body.addEventListener('click',(e)=>{        
+        if(e.target.id == 'comment-content-input-' + this.randomId || e.target.id == 'comment-content-input-input-' + this.randomId || e.target.id == 'comment-content-button-' + this.randomId){
+        }else{
+            this.showCommentButton = false
+        }
+        },false)
+    },
 }
 </script>
 

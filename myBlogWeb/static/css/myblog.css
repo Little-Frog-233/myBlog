@@ -118,7 +118,7 @@
 
 .div-left{
     width: 60%;
-    /* min-width: 700px; */
+    max-width: 750px;
 }
 
 .div-right{
@@ -269,7 +269,7 @@
 }
 
 .my-blog .my-comment{
-    margin-left: 30px;
+    margin-left: 40px;
     margin-right: 30px;
 }
 
@@ -315,6 +315,7 @@
     margin-bottom: 10px;
     margin-left: 20px;
     margin-right: 20px;
+    width: 100%;
 }
 
 .my-blog .comment-item .comment-head {
@@ -326,12 +327,33 @@
     margin-left: 10px;
     float: left;
     max-width: 500px;
-    width: 500px;
+    width: 100%;
     border-bottom: 1px solid rgb(241, 241, 241);
-    max-height: 150px;
+    /* max-height: 150px; */
 }
 
 .my-blog .comment-item .comment-meta-list {
     float: left;
     margin-bottom: 0px;
+}
+
+.my-blog .comment-reply-list {
+    margin-top: 20px;
+    background-color: #fafbfc;
+    margin-bottom: 10px;
+}
+
+.my-blog .comment-item .comment-reply-content{
+    display: inline-block;
+    margin-left: 10px;
+    float: left;
+    max-width: 400px;
+    width: 100%;
+    border-bottom: 1px solid rgb(241, 241, 241);
+    /* max-height: 150px; */
+}
+
+.my-blog .reply-input {
+    display: flex;
+    margin-bottom: 10px;
 }

@@ -54,6 +54,7 @@ function postComment(blog_id, content){
     let comment_message;
     if (!token){
         layer.msg('请登陆')
+        return
     }
     let op = {
         'method': 'post',
@@ -78,6 +79,71 @@ function postComment(blog_id, content){
     };
     $.ajax(op);
     return comment_message
+}
+
+function postReply(comment_id, content, blog_id, replied_id, replied_user_id){
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    let reply_message;
+    if (!token){
+        layer.msg('请登陆')
+        return
+    }
+    let op = {
+        "method": "post",
+        "url": "/api/restful/reply_list/",
+        "data": {
+            "token": token,
+            "comment_id": comment_id,
+            "content": content,
+            "blog_id": blog_id,
+            "replied_id": replied_id,
+            "replied_user_id": replied_user_id
+        },
+        "async": false,
+        "headers": { 'X-CSRFToken': csrf_token },
+        "success": function(data){
+            layer.msg('评论成功');
+            reply_message = data.data.reply_message
+        },"error": function(error){
+            if (error.responseJSON.message){
+                layer.msg(error.responseJSON.message)
+                }else{
+                    layer.msg('发生错误，请稍后重试')
+                }
+        }
+    };
+    $.ajax(op);
+    return reply_message;
+}
+
+function getReplyList(comment_id, start, offset, order_by){
+    let reply_data = {};
+    let op = {
+        "url": "/api/restful/reply_list/",
+        "method": "get",
+        "async": false,
+        "data": {
+            "comment_id": comment_id,
+            "start": start,
+            "offset": offset,
+            "order_by": order_by
+        },
+        "success":function(data){
+            reply_data['reply_list'] = data.reply_list;
+            reply_data['more'] = data.more;
+            reply_data['total'] = data.total;
+        },"error":function(error){
+            if (error.responseJSON.message){
+                layer.msg(error.responseJSON.message)
+                }else{
+                    layer.msg('发生错误，请稍后重试')
+                    return
+                }
+        }
+    };
+    $.ajax(op);
+    return reply_data
 }
     
 
@@ -167,8 +233,10 @@ function handlePublishTimeDesc(post_modified){
 module.exports = {
     checkUser,
     getUserMessage,
+    getReplyList,
     GetQueryValue,
     slowScroll,
     postComment,
+    postReply,
     handlePublishTimeDesc
 }

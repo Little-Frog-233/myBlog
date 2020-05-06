@@ -78,77 +78,101 @@
                                             <img :src="'/show/logouser/' + user_message.picture" class="user-picture"
                                                 alt="">
                                         </div>
-                                        <my-blog-comment :blog-id="blogId" v-on:comment-commit="getCommentCommit"></my-blog-comment>
+                                        <my-blog-comment :blog-id="blogId" v-on:comment-commit="getCommentCommit">
+                                        </my-blog-comment>
                                     </div>
                                 </div>
                                 <div class="comment-list">
                                     <ul>
-                                        <li class="comment-li" v-for="(item, index) in comment_list">
+                                        <li class="comment-li" v-for="(item, index) in comment_list" :key="item.id">
                                             <div class="comment-item">
-                                            <div class="comment-head">
-                                                <img :src="'/show/logouser/' + item.user_picture" alt="" class="user-picture">
+                                                <div class="comment-head">
+                                                    <img :src="'/show/logouser/' + item.user_picture" alt=""
+                                                        class="user-picture">
+                                                </div>
+                                                <div class="comment-content">
+                                                    <div style="font-size: 13px;">
+                                                        {[item.nickname]}<p v-if="item.user_admin==1">(作者)</p>
+                                                    </div>
+                                                    <div style="margin-top: 10px;">
+                                                        {[item.content]}
+                                                    </div>
+                                                    <div style="margin-top: 20px;color: #8a9aa9;">
+                                                        <div style="font-size: 12px;display: inline-block;float: left;">
+                                                            {[getTime(item.update_time)]}
+                                                        </div>
+                                                        <ul class="meta-list content-meta-list comment-meta-list"
+                                                            style="float: right;">
+                                                            <li>
+                                                                <i title="点赞" class="iconfont icon-item"
+                                                                    style="font-size: 16px;padding: 0px;">{[item.like_count]}</i>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0)"
+                                                                    @click="showCommentReplyInput(index)">
+                                                                    <i class="iconfont icon-item" title="回复"
+                                                                        style="font-size: 16px;padding: 0px;margin-left: 10px;">&#xe8b4;</i>
+                                                                </a>
+                                                            </li>
+                                                            <li v-if="user_message.id == item.user_id">
+                                                                <a href="javascript:void(0)"
+                                                                    @click="deleteCommentFunc(index, item.id)">
+                                                                    <i class="iconfont icon-item" title="删除"
+                                                                        style="font-size: 16px;padding: 0px;margin-left: 10px;">&#xe8b6;</i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <br>
+                                                    <div class="reply-input" v-show="comment_reply_id == index">
+                                                        <my-blog-comment :blog-id="blogId"
+                                                            v-on:comment-commit="getCommentCommit"
+                                                            :input-place-holder="'   回复' + item.nickname"
+                                                            :input-type="'reply'"></my-blog-comment>
+                                                    </div>
+                                                    <my-blog-reply-list :comment-id="item.id"
+                                                        :user-message="user_message" :blog-id="blogId"
+                                                        :reply-list="item.reply_list" v-if="item.reply_count>0">
+                                                    </my-blog-reply-list>
+                                                </div>
                                             </div>
-                                            <div class="comment-content">
-                                                <div style="font-size: 13px;">
-                                                    {[item.nickname]}
-                                                </div>
-                                                <div style="margin-top: 10px;">
-                                                    {[item.content]}
-                                                </div>
-                                                <div style="margin-top: 20px;color: #8a9aa9;">
-                                                <div style="font-size: 12px;display: inline-block;float: left;">
-                                                    {[getTime(item.update_time)]}
-                                                </div>
-                                                    <ul class="meta-list content-meta-list comment-meta-list" style="float: right;"> 
-                                                        <!-- <li>
-                                                            <i title="点赞" class="iconfont icon-item" style="font-size: 16px;padding: 0px;">0</i>
-                                                        </li>
-                                                        <li>
-                                                            <i class="iconfont icon-item" title="评论" style="font-size: 16px;padding: 0px;margin-left: 10px;">&#xe8b4;0</i>
-                                                        </li> -->
-                                                        <li v-if="user_message.id == item.user_id" >
-                                                            <i class="iconfont icon-item" title="删除" style="font-size: 16px;padding: 0px;margin-left: 10px;" @click="deleteCommentFunc(index, item.id)">&#xe8b6;</i>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
                                         </li>
                                     </ul>
                                 </div>
                                 <div v-show="more" class="show-more">
-                                    <button @click="getComment()" >
+                                    <button @click="getComment()">
                                         点击加载更多
                                     </button>
                                 </div>
-                                <!-- <div v-show="comment_list.length==0">
+                                <!-- <div v-show="comment_list.length==0 && !more">
                                     <h6 style="text-align: center;color: #8a9aa9;">暂无评论QAQ</h3>
                                 </div> -->
                                 <div v-show="!more">
-                                    <h6 style="text-align: center;color: #8a9aa9;">到底了QAQ</h3>
-                                </div>
+                                    <h6 style="text-align: center;color: #8a9aa9;">到底了QAQ
+                            </h3>
                         </div>
-                    </section>
                 </div>
-            </div>
-            <div class='div-inline div-right'>
-                <div class="container">
-                    <ul class="my_menu" id="menu-left">
-                        <li style="margin-bottom: 10px;"><a href="#title-anchor" class="label"><strong>目录</strong></a></li>
-                    </ul>
-                </div>
+                </section>
             </div>
         </div>
-        <section class="vibrant centered">
+        <div class='div-inline div-right'>
             <div class="container">
-                <h4> Designed By rui.cheng@zndex.com</h4>
+                <ul class="my_menu" id="menu-left">
+                    <li style="margin-bottom: 10px;"><a href="#title-anchor" class="label"><strong>目录</strong></a></li>
+                </ul>
             </div>
-        </section>
-        <footer>
-            <div class="container">
-                <p> &copy; 2020 ZNDEX</p>
-            </div>
-        </footer>
+        </div>
+    </div>
+    <section class="vibrant centered">
+        <div class="container">
+            <h4> Designed By rui.cheng@zndex.com</h4>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p> &copy; 2020 ZNDEX</p>
+        </div>
+    </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>

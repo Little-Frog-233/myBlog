@@ -106,8 +106,8 @@ def getComments(manager_id, blog_id, sort_by='update_time'):
         result = []
         for r in res:
             if r['blog_id'] == blog_id:
-                # reply_list = getReplyList(manager_id=manager_id, sort_by=sort_by, comment_id=r['id'])
-                # r['reply_list'] = reply_list
+                reply_list = getReplyList(manager_id=manager_id, sort_by=sort_by, comment_id=r['id'])
+                r['reply_list'] = reply_list
                 result.append(r)
         res = result
     db.close()

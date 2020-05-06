@@ -179,4 +179,8 @@
         max-width: 250px;
         width: 250px;
     }
+
+    .my-blog .comment-item .comment-reply-content{
+        width: 70%;
+    }
   }

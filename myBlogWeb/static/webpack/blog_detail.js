@@ -2,6 +2,7 @@ import Vue from 'vue'
 const {getCookie} = require('./src/js/cookie.js')
 import my_blog_head from './src/vue/Head.vue'
 import my_blog_comment from './src/vue/Comment.vue'
+import my_blog_reply_list from './src/vue/ReplyList.vue'
 const {getUserMessage, GetQueryValue, slowScroll, handlePublishTimeDesc} = require('./src/js/utils.js')
 
 var blog_id = GetQueryValue('blog_id');
@@ -19,7 +20,8 @@ const app = new Vue({
         search: '',
         isLogin: 0,
         user_message: {},
-        blogId: Number(blog_id)
+        blogId: Number(blog_id),
+        comment_reply_id: -1
     },
     methods: {
         checkLogin(){
@@ -64,11 +66,19 @@ const app = new Vue({
                     this.getComment();
                 }
             }
+        },
+        showCommentReplyInput(index){
+            if (this.comment_reply_id == index){
+                this.comment_reply_id  = -1;
+                return
+            }
+            this.comment_reply_id = index
         }
     },
     components: {
         'my-blog-head': my_blog_head,
-        'my-blog-comment': my_blog_comment
+        'my-blog-comment': my_blog_comment,
+        'my-blog-reply-list': my_blog_reply_list
     },
     beforeMount() {
         // 在页面挂载前就发起请求
