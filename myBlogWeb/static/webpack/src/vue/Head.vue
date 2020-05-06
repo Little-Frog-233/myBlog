@@ -1,6 +1,6 @@
 <template>
   <div style="top: 0px;height: 65px">
-    <nav style="border-bottom: 1px solid #f1f1f1;top: 0px;z-index: 9999;position: fixed;width: 100%;left: 0;" id='my-blog-head'>
+    <nav style="border-bottom: 1px solid #f1f1f1;top: 0px;z-index: 9999;position: fixed;width: 100%;left: 0;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);" id='my-blog-head'>
         <div class="container">
             <a href="/" style="background: white;">
                 <img src="/show/logo/zndex_logo.png" alt="">
@@ -31,9 +31,9 @@
                     <li v-if="isLogin==1">
                         <a href="javascript:void(0)">
                         <div class="user-menu">
-                        <div @click="showUserMenu()">
-                            <img :src="'/show/logouser/' + userMessage.picture" alt="" class="user-picture">
-                            <p class="user-nickname" >{{userMessage.nickname}}</p>
+                        <div @click="showUserMenu()" id="user-menu-target">
+                            <img :src="'/show/logouser/' + userMessage.picture" alt="" class="user-picture" id="user-menu-target-img">
+                            <p class="user-nickname" id="user-menu-target-nickname">{{userMessage.nickname}}</p>
                             </div>
                             <dl class="menu-list" v-show="userMenuShow">
                                 <dd><a href="javascript:void(0)" @click="logout()">退出登陆</a></dd>
@@ -172,7 +172,17 @@ export default {
         showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
-    }
+    },
+    created() {
+        let body = document.querySelector('body')
+        body.addEventListener('click',(e)=>{        
+        if(e.target.id === 'user-menu-target-img' || e.target.id === 'user-menu-target-nickname'){
+                this.userMenuShow = true
+        }else {
+            this.userMenuShow = false
+        }
+        },false)
+    },
 }
 </script>
 

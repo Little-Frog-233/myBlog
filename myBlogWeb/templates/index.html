@@ -23,7 +23,7 @@
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
         <div id="my-blog-top">
         <my-blog-head :is-login="login" :search="search" :user-message="user_message"></my-blog-head>
-            <div style="background-color: white;" id="my-category">
+            <div style="background-color: white;" id="my-category" class="my-category">
                 <div class="layui-header my-header" style="width: 70%;">
                     <ul class="layui-nav" lay-filter="" style="background-color: white;">
                         <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"

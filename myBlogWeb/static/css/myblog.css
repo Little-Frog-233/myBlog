@@ -44,6 +44,7 @@
 }
 
 .my-top .user-menu{
+    margin-left: 20px;
     background-color: white; 
     display: inline-block;
 }
@@ -71,6 +72,10 @@
 .my-top .user-menu dd{
     padding: 5px;
     text-align: center;
+}
+
+.my-category {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
 }
 
 .my-ul-a {
