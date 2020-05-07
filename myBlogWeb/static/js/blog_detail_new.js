@@ -203,7 +203,7 @@ function postReply(comment_id, content, blog_id, replied_id, replied_user_id) {
         "async": false,
         "headers": { 'X-CSRFToken': csrf_token },
         "success": function success(data) {
-            layer.msg('评论成功');
+            layer.msg('回复成功');
             reply_message = data.data.reply_message;
         }, "error": function error(_error4) {
             if (_error4.responseJSON.message) {
@@ -854,6 +854,7 @@ module.exports = function normalizeComponent (
 //
 //
 //
+//
 
 const { getCookie } = __webpack_require__(2);
 const { checkUser } = __webpack_require__(1);
@@ -972,6 +973,9 @@ const signup_html = `
             $.ajax(op);
             localStorage.removeItem('token');
         },
+        openUserPage() {
+            layer.msg('敬请期待');
+        },
         showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
@@ -980,7 +984,7 @@ const signup_html = `
         let body = document.querySelector('body');
         body.addEventListener('click', e => {
             if (e.target.id === 'user-menu-target-img' || e.target.id === 'user-menu-target-nickname') {
-                this.userMenuShow = true;
+                // this.userMenuShow = true
             } else {
                 this.userMenuShow = false;
             }
@@ -13504,7 +13508,7 @@ if(false) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -13711,11 +13715,54 @@ var render = function() {
                                   attrs: { href: "javascript:void(0)" },
                                   on: {
                                     click: function($event) {
+                                      return _vm.openUserPage()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "i",
+                                    {
+                                      staticClass:
+                                        "iconfont icon-item icon-user-menu",
+                                      staticStyle: {
+                                        "font-size": "16px",
+                                        padding: "0px"
+                                      }
+                                    },
+                                    [_vm._v("")]
+                                  ),
+                                  _vm._v("我的主页")
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("dd", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "javascript:void(0)" },
+                                  on: {
+                                    click: function($event) {
                                       return _vm.logout()
                                     }
                                   }
                                 },
-                                [_vm._v("退出登陆")]
+                                [
+                                  _c(
+                                    "i",
+                                    {
+                                      staticClass:
+                                        "iconfont icon-item icon-user-menu",
+                                      staticStyle: {
+                                        "font-size": "16px",
+                                        padding: "0px"
+                                      }
+                                    },
+                                    [_vm._v("")]
+                                  ),
+                                  _vm._v("退出登陆")
+                                ]
                               )
                             ])
                           ]
@@ -13852,94 +13899,109 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-const { checkUser, postComment } = __webpack_require__(1);
+const { checkUser, postComment, postReply } = __webpack_require__(1);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: "my_blog_comment",
-    // delimiters: ["{[", "]}"],
-    data() {
-        return {
-            commentContent: '',
-            showCommentButton: false
-        };
+  name: "my_blog_comment",
+  // delimiters: ["{[", "]}"],
+  data() {
+    return {
+      commentContent: "",
+      showCommentButton: false
+    };
+  },
+  props: {
+    inputType: {
+      type: String,
+      default: "comment"
     },
-    props: {
-        inputType: {
-            type: String,
-            default: 'comment'
-        },
-        inputPlaceHolder: {
-            type: String,
-            default: '   请输入评论'
-        },
-        blogId: {
-            type: Number,
-            default: 0
-        },
-        commentId: {
-            type: Number,
-            default: 0
-        },
-        repliedId: {
-            default: null
-        },
-        repliedUserId: {
-            default: null
-        }
+    inputPlaceHolder: {
+      type: String,
+      default: "   请输入评论"
     },
-    methods: {
-        showCommentButtonFunc() {
-            this.showCommentButton = true;
-            // if (this.commentContent){
-            // this.showCommentButton = true;
-            // }else{
-            //     this.showCommentButton = false;
-            // }            
-        },
-        closeCommentButtonFunc() {
-            this.showCommentButton = false;
-        },
-        postComment() {
-            if (!this.commentContent) {
-                layer.msg('评论内容不能为空');
-                return;
-            }
-            if (this.commentContent.length > 140) {
-                layer.msg('字数过多');
-                return;
-            }
-            this.closeCommentButtonFunc();
-            if (this.inputType == 'comment') {
-                let comment_message = postComment(this.blogId, this.commentContent);
-                // 发射事件，由父组件接收事件
-                if (comment_message) {
-                    console.log('咻～');
-                    this.$emit('comment-commit', comment_message);
-                }
-            } else if (this.inputType == 'reply') {
-                layer.msg(this.commentContent);
-            }
-            this.commentContent = '';
-        }
+    blogId: {
+      type: Number,
+      default: 0
     },
-    computed: {
-        randomId() {
-            var Num = "";
-            for (var i = 0; i < 6; i++) {
-                Num += Math.floor(Math.random() * 10);
-            }
-            return Num;
-        }
+    commentId: {
+      type: Number,
+      default: 0
     },
-    created() {
-        let body = document.querySelector('body');
-        body.addEventListener('click', e => {
-            if (e.target.id == 'comment-content-input-' + this.randomId || e.target.id == 'comment-content-input-input-' + this.randomId || e.target.id == 'comment-content-button-' + this.randomId) {} else {
-                this.showCommentButton = false;
-            }
-        }, false);
+    repliedId: {
+      default: null
+    },
+    repliedUserId: {
+      default: null
     }
+  },
+  methods: {
+    showCommentButtonFunc() {
+      this.showCommentButton = true;
+      // if (this.commentContent){
+      // this.showCommentButton = true;
+      // }else{
+      //     this.showCommentButton = false;
+      // }
+    },
+    closeCommentButtonFunc() {
+      this.showCommentButton = false;
+    },
+    postComment() {
+      if (!this.commentContent) {
+        layer.msg("评论内容不能为空");
+        return;
+      }
+      if (this.commentContent.length > 140) {
+        layer.msg("字数过多");
+        return;
+      }
+      this.closeCommentButtonFunc();
+      if (this.inputType == "comment") {
+        let comment_message = postComment(this.blogId, this.commentContent);
+        // 发射事件，由父组件接收事件
+        if (comment_message) {
+          console.log("咻～");
+          this.$emit("comment-commit", comment_message);
+        }
+      } else if (this.inputType == "reply") {
+        let reply_message = postReply(this.commentId, this.commentContent, this.blogId, this.repliedId, this.repliedUserId);
+        if (reply_message) {
+          console.log("咻～");
+          this.$emit("reply-commit", reply_message);
+        }
+      }
+      this.commentContent = "";
+    }
+  },
+  computed: {
+    // 生成随机id
+    randomId() {
+      var Num = "";
+      for (var i = 0; i < 6; i++) {
+        Num += Math.floor(Math.random() * 10);
+      }
+      return Num;
+    }
+  },
+  created() {
+    let body = document.querySelector("body");
+    body.addEventListener("click", e => {
+      if (e.target.id == "comment-content-input-" + this.randomId || e.target.id == "comment-content-input-input-" + this.randomId || e.target.id == "comment-content-button-" + this.randomId) {} else {
+        this.showCommentButton = false;
+      }
+    }, false);
+  }
 });
 
 /***/ }),
@@ -14003,6 +14065,51 @@ const { checkUser, postComment } = __webpack_require__(1);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 const { getReplyList, handlePublishTimeDesc } = __webpack_require__(1);
@@ -14011,13 +14118,15 @@ const { getReplyList, handlePublishTimeDesc } = __webpack_require__(1);
   name: "my_blog_reply_list",
   data() {
     return {
-      start: 0,
-      offset: 1,
-      more: true,
-      replyListTemp: []
+      isShowMore: false,
+      showTotal: 2
     };
   },
   props: {
+    isLogin: {
+      type: Number,
+      default: 0
+    },
     blogId: {
       type: Number
     },
@@ -14031,28 +14140,25 @@ const { getReplyList, handlePublishTimeDesc } = __webpack_require__(1);
     },
     replyList: {
       type: Array,
-      dafault: []
+      default: []
+    },
+    replyCount: {
+      type: Number,
+      default: 0
     }
   },
   methods: {
-    getReplies() {
-      if (this.more) {
-        let end = this.start + this.offset;
-        for (let item of this.replyList.slice(this.start, end)) {
-          this.replyListTemp.push(item);
-        }
-        if (end >= this.replyList.length) {
-          this.more = false;
-        }
-        this.start = this.start + this.offset;
+    showMore() {
+      if (this.replyCount - this.showTotal < 10) {
+        this.isShowMore = true;
       }
+    },
+    getRepliesAll() {
+      this.replyListTemp = this.replyList;
     },
     getTime(time) {
       return handlePublishTimeDesc(time);
     }
-  },
-  created() {
-    this.getReplies();
   }
 });
 
@@ -14125,6 +14231,12 @@ var app = new _vue2.default({
             this.comment_count = this.comment_count + 1;
             this.comment_ids.push(content.id);
             this.comment_list.unshift(content);
+        },
+        getReplyCommit: function getReplyCommit(content) {
+            this.comment_count = this.comment_count + 1;
+            this.comment_list[this.comment_reply_id].reply_list.unshift(content);
+            this.comment_list[this.comment_reply_id].reply_count = this.comment_list[this.comment_reply_id].reply_count + 1;
+            this.comment_reply_id = -1;
         },
         getComment: function getComment() {
             if (this.more) {
@@ -14447,7 +14559,7 @@ if(false) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -14639,7 +14751,7 @@ if(false) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -14656,7 +14768,7 @@ var render = function() {
   return _c("div", { staticClass: "comment-reply-list comment-list" }, [
     _c(
       "ul",
-      _vm._l(_vm.replyListTemp, function(item, index) {
+      _vm._l(_vm.replyList.slice(0, _vm.showTotal), function(item, index) {
         return _c("li", { key: item.id, staticClass: "comment-li" }, [
           _c("div", { staticClass: "comment-item" }, [
             _c("div", { staticClass: "comment-head" }, [
@@ -14696,51 +14808,38 @@ var render = function() {
                     [_vm._v(_vm._s(_vm.getTime(item.update_time)))]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "ul",
-                    {
-                      staticClass:
-                        "meta-list content-meta-list comment-meta-list",
-                      staticStyle: { float: "right" }
-                    },
-                    [
-                      _c("li", [
-                        _c(
-                          "i",
-                          {
-                            staticClass: "iconfont icon-item",
-                            staticStyle: {
-                              "font-size": "16px",
-                              padding: "0px"
-                            },
-                            attrs: { title: "点赞" }
-                          },
-                          [_vm._v("" + _vm._s(item.like_count))]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _vm.userMessage.id == item.user_id
-                        ? _c("li", [
-                            _c(
-                              "i",
-                              {
-                                staticClass: "iconfont icon-item",
-                                staticStyle: {
-                                  "font-size": "16px",
-                                  padding: "0px",
-                                  "margin-left": "10px"
-                                },
-                                attrs: { title: "删除" },
-                                on: { click: function($event) {} }
-                              },
-                              [_vm._v("")]
-                            )
-                          ])
-                        : _vm._e()
-                    ]
-                  )
+                  _vm.isLogin == 1
+                    ? _c(
+                        "ul",
+                        {
+                          staticClass:
+                            "meta-list content-meta-list comment-meta-list",
+                          staticStyle: { float: "right" }
+                        },
+                        [
+                          _vm._m(0, true),
+                          _vm._v(" "),
+                          _vm.userMessage.id == item.user_id
+                            ? _c("li", [
+                                _c(
+                                  "i",
+                                  {
+                                    staticClass: "iconfont icon-item",
+                                    staticStyle: {
+                                      "font-size": "16px",
+                                      padding: "0px",
+                                      "margin-left": "10px"
+                                    },
+                                    attrs: { title: "删除" },
+                                    on: { click: function($event) {} }
+                                  },
+                                  [_vm._v("")]
+                                )
+                              ])
+                            : _vm._e()
+                        ]
+                      )
+                    : _vm._e()
                 ]
               )
             ])
@@ -14757,8 +14856,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.more,
-            expression: "more"
+            value: _vm.replyCount > _vm.showTotal && !_vm.isShowMore,
+            expression: "replyCount > showTotal && !isShowMore"
           }
         ],
         staticClass: "show-more"
@@ -14770,21 +14869,133 @@ var render = function() {
             attrs: { href: "javascript:void(0)" },
             on: {
               click: function($event) {
-                return _vm.getReplies()
+                return _vm.showMore()
               }
             }
           },
           [
             _c("h5", { staticStyle: { color: "rgb(138, 154, 169)" } }, [
-              _vm._v("加载更多回复")
+              _vm._v(
+                "展开剩余" + _vm._s(_vm.replyCount - _vm.showTotal) + "条回复"
+              )
             ])
           ]
         )
       ]
-    )
+    ),
+    _vm._v(" "),
+    _vm.isShowMore
+      ? _c(
+          "ul",
+          _vm._l(_vm.replyList.slice(_vm.showTotal), function(item, index) {
+            return _c("li", { key: item.id, staticClass: "comment-li" }, [
+              _c("div", { staticClass: "comment-item" }, [
+                _c("div", { staticClass: "comment-head" }, [
+                  _c("img", {
+                    staticClass: "user-picture",
+                    attrs: {
+                      src: "/show/logouser/" + item.user_picture,
+                      alt: ""
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "comment-reply-content" }, [
+                  _c("div", { staticStyle: { "font-size": "13px" } }, [
+                    _vm._v(
+                      "\n            " +
+                        _vm._s(item.user_nickname) +
+                        "\n            "
+                    ),
+                    item.user_admin == 1
+                      ? _c("p", [_vm._v("(作者)")])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { "margin-top": "10px" } }, [
+                    _vm._v(_vm._s(item.content))
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticStyle: { "margin-top": "20px", color: "#8a9aa9" } },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "font-size": "12px",
+                            display: "inline-block",
+                            float: "left"
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.getTime(item.update_time)))]
+                      ),
+                      _vm._v(" "),
+                      _vm.isLogin == 1
+                        ? _c(
+                            "ul",
+                            {
+                              staticClass:
+                                "meta-list content-meta-list comment-meta-list",
+                              staticStyle: { float: "right" }
+                            },
+                            [
+                              _vm._m(1, true),
+                              _vm._v(" "),
+                              _vm.userMessage.id == item.user_id
+                                ? _c("li", [
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass: "iconfont icon-item",
+                                        staticStyle: {
+                                          "font-size": "16px",
+                                          padding: "0px",
+                                          "margin-left": "10px"
+                                        },
+                                        attrs: { title: "删除" },
+                                        on: { click: function($event) {} }
+                                      },
+                                      [_vm._v("")]
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]
+                          )
+                        : _vm._e()
+                    ]
+                  )
+                ])
+              ])
+            ])
+          }),
+          0
+        )
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", [
+      _c(
+        "i",
+        {
+          staticClass: "iconfont icon-item",
+          staticStyle: {
+            "font-size": "16px",
+            padding: "0px",
+            "margin-left": "10px"
+          },
+          attrs: { title: "回复" }
+        },
+        [_vm._v("")]
+      )
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

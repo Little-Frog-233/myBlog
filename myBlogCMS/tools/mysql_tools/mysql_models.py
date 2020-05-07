@@ -604,7 +604,6 @@ class mysqlModel:
         except Exception as e:
             msg = 'On line {} - {}'.format(sys.exc_info()[2].tb_lineno, e)
             log('mysqlModel.getReplyList').logger.error(msg)
-            self.db.rollback()
             return False
     
     def deleteReply(self, reply_id, comment_id, user_id, manager_id, blog_id):

@@ -203,7 +203,7 @@ function postReply(comment_id, content, blog_id, replied_id, replied_user_id) {
         "async": false,
         "headers": { 'X-CSRFToken': csrf_token },
         "success": function success(data) {
-            layer.msg('评论成功');
+            layer.msg('回复成功');
             reply_message = data.data.reply_message;
         }, "error": function error(_error4) {
             if (_error4.responseJSON.message) {
@@ -854,6 +854,7 @@ module.exports = function normalizeComponent (
 //
 //
 //
+//
 
 const { getCookie } = __webpack_require__(2);
 const { checkUser } = __webpack_require__(1);
@@ -972,6 +973,9 @@ const signup_html = `
             $.ajax(op);
             localStorage.removeItem('token');
         },
+        openUserPage() {
+            layer.msg('敬请期待');
+        },
         showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
@@ -980,7 +984,7 @@ const signup_html = `
         let body = document.querySelector('body');
         body.addEventListener('click', e => {
             if (e.target.id === 'user-menu-target-img' || e.target.id === 'user-menu-target-nickname') {
-                this.userMenuShow = true;
+                // this.userMenuShow = true
             } else {
                 this.userMenuShow = false;
             }
@@ -13504,7 +13508,7 @@ if(false) {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -13711,11 +13715,54 @@ var render = function() {
                                   attrs: { href: "javascript:void(0)" },
                                   on: {
                                     click: function($event) {
+                                      return _vm.openUserPage()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "i",
+                                    {
+                                      staticClass:
+                                        "iconfont icon-item icon-user-menu",
+                                      staticStyle: {
+                                        "font-size": "16px",
+                                        padding: "0px"
+                                      }
+                                    },
+                                    [_vm._v("")]
+                                  ),
+                                  _vm._v("我的主页")
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("dd", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "javascript:void(0)" },
+                                  on: {
+                                    click: function($event) {
                                       return _vm.logout()
                                     }
                                   }
                                 },
-                                [_vm._v("退出登陆")]
+                                [
+                                  _c(
+                                    "i",
+                                    {
+                                      staticClass:
+                                        "iconfont icon-item icon-user-menu",
+                                      staticStyle: {
+                                        "font-size": "16px",
+                                        padding: "0px"
+                                      }
+                                    },
+                                    [_vm._v("")]
+                                  ),
+                                  _vm._v("退出登陆")
+                                ]
                               )
                             ])
                           ]

@@ -382,7 +382,11 @@ class ReplyList(Resource):
         content = args['content']
         blog_id = args['blog_id']
         replied_id = args['replied_id']
+        if not replied_id:
+            replied_id = None
         replied_user_id = args['replied_user_id']
+        if not replied_user_id:
+            replied_user_id = None
         user_message = cache.get(token)
         if user_message is None:
             return {'status_code': 400, 'message': '登陆已过期'}, 400
@@ -414,4 +418,11 @@ class ReplyList(Resource):
         '''
         删除回复
         '''
-        pass
+        if 'manager_id' not in session:
+            return {'status_code': 400, 'message': 'illegal request'}, 400
+        manager_id = session['manager_id']
+        parser = reqparse.RequestParser()
+        parser.add_argument('reply_id', type=int)
+        parser.add_argument('comment_id', type=int)
+        parser.add_argument('blog_id', type=int)
+

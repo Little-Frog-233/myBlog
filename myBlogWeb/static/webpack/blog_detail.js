@@ -40,6 +40,12 @@ const app = new Vue({
             this.comment_ids.push(content.id);
             this.comment_list.unshift(content);
         },
+        getReplyCommit(content){
+            this.comment_count = this.comment_count + 1;
+            this.comment_list[this.comment_reply_id].reply_list.unshift(content);
+            this.comment_list[this.comment_reply_id].reply_count = this.comment_list[this.comment_reply_id].reply_count+1
+            this.comment_reply_id = -1;
+        },
         getComment(){
             if (this.more){
             let comment_data = getCommentList(this.start, this.offset, this.sort_by)

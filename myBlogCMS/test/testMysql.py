@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # print(client.getComments(manager_id=1))
     # print(client.updateBlogCommentCount(manager_id=1, blog_id=7))
     print(client.getReplyList(manager_id=1))
-    print(client.deleteReply(reply_id=4, comment_id=1, user_id=4, manager_id=1, blog_id=2))
+    # print(client.deleteReply(reply_id=4, comment_id=1, user_id=4, manager_id=1, blog_id=2))
 
 	# print(getCategoryList(user_id=1))
 	# print(updateAllCategories(user_id=1))

@@ -102,11 +102,11 @@
                                                             {[getTime(item.update_time)]}
                                                         </div>
                                                         <ul class="meta-list content-meta-list comment-meta-list"
-                                                            style="float: right;">
-                                                            <li>
+                                                            style="float: right;" v-if="isLogin==1">
+                                                            <!-- <li>
                                                                 <i title="点赞" class="iconfont icon-item"
                                                                     style="font-size: 16px;padding: 0px;">{[item.like_count]}</i>
-                                                            </li>
+                                                            </li> -->
                                                             <li>
                                                                 <a href="javascript:void(0)"
                                                                     @click="showCommentReplyInput(index)">
@@ -128,11 +128,15 @@
                                                         <my-blog-comment :blog-id="blogId"
                                                             v-on:comment-commit="getCommentCommit"
                                                             :input-place-holder="'   回复' + item.nickname"
-                                                            :input-type="'reply'"></my-blog-comment>
+                                                            :input-type="'reply'"
+                                                            :comment-id="item.id"
+                                                            v-on:reply-commit="getReplyCommit"></my-blog-comment>
                                                     </div>
                                                     <my-blog-reply-list :comment-id="item.id"
                                                         :user-message="user_message" :blog-id="blogId"
-                                                        :reply-list="item.reply_list" v-if="item.reply_count>0">
+                                                        :reply-list="item.reply_list" :is-login="isLogin"
+                                                        :reply-count="item.reply_count" 
+                                                        v-if="item.reply_count>0">
                                                     </my-blog-reply-list>
                                                 </div>
                                             </div>

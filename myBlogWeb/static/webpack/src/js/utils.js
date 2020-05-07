@@ -103,7 +103,7 @@ function postReply(comment_id, content, blog_id, replied_id, replied_user_id){
         "async": false,
         "headers": { 'X-CSRFToken': csrf_token },
         "success": function(data){
-            layer.msg('评论成功');
+            layer.msg('回复成功');
             reply_message = data.data.reply_message
         },"error": function(error){
             if (error.responseJSON.message){

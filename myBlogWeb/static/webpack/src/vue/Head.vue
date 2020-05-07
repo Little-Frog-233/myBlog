@@ -36,7 +36,8 @@
                             <p class="user-nickname" id="user-menu-target-nickname">{{userMessage.nickname}}</p>
                             </div>
                             <dl class="menu-list" v-show="userMenuShow">
-                                <dd><a href="javascript:void(0)" @click="logout()">退出登陆</a></dd>
+                                <dd><a href="javascript:void(0)" @click="openUserPage()"><i class="iconfont icon-item icon-user-menu" style="font-size: 16px;padding: 0px;">&#xeb9e;</i>我的主页</a></dd>
+                                <dd><a href="javascript:void(0)" @click="logout()"><i class="iconfont icon-item icon-user-menu" style="font-size: 16px;padding: 0px;">&#xe669;</i>退出登陆</a></dd>
                             </dl>
                         </div>
                         </a>
@@ -169,6 +170,9 @@ export default {
             $.ajax(op);
             localStorage.removeItem('token')
         },
+        openUserPage(){
+            layer.msg('敬请期待')
+        },
         showUserMenu() {
             this.userMenuShow = !this.userMenuShow;
         }
@@ -177,7 +181,7 @@ export default {
         let body = document.querySelector('body')
         body.addEventListener('click',(e)=>{        
         if(e.target.id === 'user-menu-target-img' || e.target.id === 'user-menu-target-nickname'){
-                this.userMenuShow = true
+                // this.userMenuShow = true
         }else {
             this.userMenuShow = false
         }
