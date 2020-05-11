@@ -129,7 +129,7 @@ const app = new Vue({
             if (bottomOfWindow && isLoading == false) {
                 isLoading = true
                 this.showLoading = true
-                this.getBlogList(), 5000;
+                this.getBlogList()
                 this.showLoading = false
                 isLoading = false
             }}
