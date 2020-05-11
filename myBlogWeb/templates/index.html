@@ -28,7 +28,7 @@
                     <ul class="layui-nav" lay-filter="" style="background-color: white;">
                         <li class="layui-nav-item" :class="getCategoryClass('')"><a @click="changeNowCategory('')"
                                 href="javascript:void(0)">全部</a></li>
-                        <li v-for="item in categories" class="layui-nav-item"><a href="javascript:void(0)"
+                        <li v-for="item in categories" class="layui-nav-item" :class="getCategoryClass(item)"><a href="javascript:void(0)"
                                 @click="changeNowCategory(item)">{[item]}</a></li>
                     </ul>
                 </div>

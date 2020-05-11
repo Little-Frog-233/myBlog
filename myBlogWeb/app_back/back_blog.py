@@ -422,7 +422,24 @@ class ReplyList(Resource):
             return {'status_code': 400, 'message': 'illegal request'}, 400
         manager_id = session['manager_id']
         parser = reqparse.RequestParser()
+        parser.add_argument('token')
         parser.add_argument('reply_id', type=int)
         parser.add_argument('comment_id', type=int)
         parser.add_argument('blog_id', type=int)
-
+        args = parser.parse_args()
+        token = args['token']
+        reply_id = args['reply_id']
+        comment_id = args['comment_id']
+        blog_id = args['blog_id']
+        if not token:
+            return {'status_code': 400, 'message': 'bad requests'}, 400
+        cache.delete(('blog_id_%s' % blog_id))  ###清除blog的缓存
+        user_message = cache.get(token)
+        if user_message is None:
+            return {'status_code': 400, 'message': '登陆已过期'}, 400
+        user_id = user_message['id']
+        if deleteReply(reply_id=reply_id, comment_id=comment_id, user_id=user_id, manager_id=manager_id, blog_id=blog_id):
+            cache.delete('blog_id_%s_comment' % blog_id)
+            return {'status_code': 200, 'message': '删除成功'}
+        return {'status_code': 400, 'message': '删除失败'}, 400
+        

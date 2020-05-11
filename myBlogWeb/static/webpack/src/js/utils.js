@@ -117,6 +117,32 @@ function postReply(comment_id, content, blog_id, replied_id, replied_user_id){
     return reply_message;
 }
 
+function deleteReply(reply_id, comment_id, blog_id){
+    const csrf_token = getCookie('csrf_token');
+    const token = localStorage.getItem('token');
+    let op = {
+        "method": "delete",
+        "url": "/api/restful/reply_list/",
+        "data": {
+            "token": token,
+            "reply_id": reply_id,
+            "comment_id": comment_id,
+            "blog_id": blog_id
+        },
+        "headers": { 'X-CSRFToken': csrf_token },
+        "success": function(data){
+            layer.msg('删除成功');
+        },"error": function(error){
+            if (error.responseJSON.message){
+                layer.msg(error.responseJSON.message)
+                }else{
+                    layer.msg('发生错误，请稍后重试')
+                }
+        }
+    };
+    $.ajax(op);
+}
+
 function getReplyList(comment_id, start, offset, order_by){
     let reply_data = {};
     let op = {
@@ -234,6 +260,7 @@ module.exports = {
     checkUser,
     getUserMessage,
     getReplyList,
+    deleteReply,
     GetQueryValue,
     slowScroll,
     postComment,

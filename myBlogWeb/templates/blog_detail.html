@@ -24,7 +24,9 @@
 <body>
     <div id="top"></div>
     <div id="app" style="background-color: #f4f5f5;" v-cloak>
+        <div id="my-blog-top">
         <my-blog-head :is-login="isLogin" :search="search" :user-message="user_message"></my-blog-head>
+        </div>
         <div class="my-blog" style="margin-top: 2px;">
             <div class="div-inline article-utils" id='article-utils'>
                 <ul>
@@ -135,7 +137,8 @@
                                                     <my-blog-reply-list :comment-id="item.id"
                                                         :user-message="user_message" :blog-id="blogId"
                                                         :reply-list="item.reply_list" :is-login="isLogin"
-                                                        :reply-count="item.reply_count" 
+                                                        :reply-count="item.reply_count"
+                                                        v-on:reply-delete="getDeleteReplyCommit" 
                                                         v-if="item.reply_count>0">
                                                     </my-blog-reply-list>
                                                 </div>

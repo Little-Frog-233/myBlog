@@ -64,13 +64,12 @@ const app = new Vue({
             return handlePublishTimeDesc(time)
         },
         deleteCommentFunc(index, comment_id){
-            if (deleteComment(this.blogId, comment_id)){
-                this.start = this.start - 1;
-                this.comment_count = this.comment_count - 1
-                this.comment_list.splice(index, 1)
-                if (this.comment_list.length == 0){
-                    this.getComment();
-                }
+            deleteComment(this.blogId, comment_id);
+            this.start = this.start - 1;
+            this.comment_count = this.comment_count - 1
+            this.comment_list.splice(index, 1)
+            if (this.comment_list.length == 0){
+                this.getComment();
             }
         },
         showCommentReplyInput(index){
@@ -79,6 +78,18 @@ const app = new Vue({
                 return
             }
             this.comment_reply_id = index
+        },
+        getDeleteReplyCommit(content){
+           for(let index in this.comment_list){
+               if (this.comment_list[index].id == content.comment_id){
+                   for (let reply_index in this.comment_list[index].reply_list){
+                       if (this.comment_list[index].reply_list[reply_index].id == content.reply_id){
+                        this.comment_list[index].reply_list.splice(reply_index, 1)
+                        this.comment_list[index].reply_count = this.comment_list[index].reply_count -1
+                       }
+                   }
+               }
+           }
         }
     },
     components: {
@@ -146,7 +157,6 @@ function getBlog(blog_id) {
 
 
 function deleteComment(blog_id, comment_id){
-    let res = false;
     const csrf_token = getCookie('csrf_token');
     const token = localStorage.getItem('token');
     if (!token){
@@ -160,11 +170,9 @@ function deleteComment(blog_id, comment_id){
             "blog_id": blog_id,
             "comment_id": comment_id
         },
-        "async": false,
         "headers": { 'X-CSRFToken': csrf_token },
         "success": function(data){
             layer.msg('删除成功')
-            res = true;
         },"error": function(error){
             if (error.responseJSON.message){
                 layer.msg(error.responseJSON.message)
@@ -174,7 +182,6 @@ function deleteComment(blog_id, comment_id){
         }
     };
     $.ajax(op);
-    return res
 }
 
 function makeToc(html) {

@@ -135,6 +135,7 @@
 
 .my-blog section {
     /* width: 700px; */
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
     background-color: white;
     margin:0 auto;
     /* margin-right: 500px; */
@@ -341,6 +342,7 @@
     margin-top: 20px;
     background-color: #fafbfc;
     margin-bottom: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 }
 
 .my-blog .comment-item .comment-reply-content{

@@ -27,7 +27,14 @@ module.exports = {
         alias: {'vue': 'vue/dist/vue.js'}
     },
     plugins: [
-        // new uglifyJsPlugin()
+        new uglifyJsPlugin({
+            uglifyOptions: {
+                compress: {
+                    warnings: false,
+                    drop_console: true
+                }
+            }
+        })
       ],
     module: {
         rules: [

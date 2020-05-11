@@ -25,19 +25,22 @@
                   >{{item.like_count}}</i>
                 </li> -->
                 <li>
+                    <a href="javascript:void(0)" @click="showReplyReplyInput">
                   <i
                     class="iconfont icon-item"
                     title="回复"
                     style="font-size: 16px;padding: 0px;margin-left: 10px;"
                   >&#xe8b4;</i>
+                  </a>
                 </li>
                 <li v-if="userMessage.id == item.user_id">
+                    <a @click="deleteReplyFunc(item.id)" href="javascript:void(0)">
                   <i
                     class="iconfont icon-item"
                     title="删除"
                     style="font-size: 16px;padding: 0px;margin-left: 10px;"
-                    @click
                   >&#xe8b6;</i>
+                    </a>
                 </li>
               </ul>
             </div>
@@ -75,19 +78,22 @@
                   >{{item.like_count}}</i>
                 </li> -->
                 <li>
+                    <a @click="showReplyReplyInput()" href="javascript:void(0)">
                   <i
                     class="iconfont icon-item"
                     title="回复"
                     style="font-size: 16px;padding: 0px;margin-left: 10px;"
                   >&#xe8b4;</i>
+                    </a>
                 </li>
                 <li v-if="userMessage.id == item.user_id">
+                <a @click="deleteReplyFunc(item.id)" href="javascript:void(0)">
                   <i
                     class="iconfont icon-item"
                     title="删除"
                     style="font-size: 16px;padding: 0px;margin-left: 10px;"
-                    @click
                   >&#xe8b6;</i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -100,7 +106,7 @@
 
 <script>
 import my_blog_comment from "./Comment.vue";
-const { getReplyList, handlePublishTimeDesc } = require("../js/utils.js");
+const { getReplyList, handlePublishTimeDesc, deleteReply } = require("../js/utils.js");
 
 export default {
   name: "my_blog_reply_list",
@@ -146,6 +152,17 @@ export default {
     },
     getTime(time) {
       return handlePublishTimeDesc(time);
+    },
+    showReplyReplyInput(){
+        layer.msg('功能暂未开放')
+    },
+    deleteReplyFunc(reply_id){
+        let reply_delete_message = {
+            "reply_id": reply_id,
+            "comment_id": this.commentId
+        }
+        deleteReply(reply_id, this.commentId, this.blogId)
+        this.$emit("reply-delete", reply_delete_message);
     }
   },
 };

@@ -18,6 +18,7 @@ const app = new Vue({
         sort_by: 'read_count',
         elFix: '#menu-right',
         search: GetQueryValue('search'),
+        isSearched: true,
         searchBarFixed: false, //是否要固定单位
         oldScrollTop: 70, //记录固定单位的初始高度,
         showLoading: false,
@@ -84,7 +85,7 @@ const app = new Vue({
             }
 
             if (this.more) {
-                let blog_data = getBlogDataFunc(this.start, this.offset, this.now_category, this.now_tag, this.sort_by, this.search);
+                let blog_data = getBlogDataFunc(this.start, this.offset, this.now_category, this.now_tag, this.sort_by, this.search, this.isSearched);
                 this.start = this.start + this.offset;
                 this.more = blog_data.more;
                 for (let item of blog_data.blog_list) {
@@ -141,6 +142,9 @@ const app = new Vue({
         // 在页面挂载前就发起请求
         this.checkLogin();
         this.getBlogList();
+        if (this.search){
+            this.isSearched = false
+        }
     },
     mounted() {
         // 挂载以后发起请求
@@ -196,7 +200,7 @@ function getTag(category) {
     return tag
 }
 
-function getBlogDataFunc(start, offset, category, tag, sort_by, search) {
+function getBlogDataFunc(start, offset, category, tag, sort_by, search, isSearched) {
     let blog_data = {};
     const op = {
         'method': 'get',
@@ -214,7 +218,9 @@ function getBlogDataFunc(start, offset, category, tag, sort_by, search) {
             blog_data['blog_list'] = data.blog_list;
             blog_data['more'] = data.more;
             if(search){
+                if (isSearched){
                 layer.msg('为您搜索到' + data.total + '条博客');
+                }
             }
         }, 'error': function (error) {
             console.log(error.responseJSON);
