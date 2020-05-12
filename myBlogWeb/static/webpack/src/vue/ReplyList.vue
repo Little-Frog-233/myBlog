@@ -153,7 +153,7 @@ export default {
   data() {
     return {
       isShowMore: false,
-      showTotal: 2,
+      showTotal: 5,
       isShowReplyCommentInput: -1
     };
   },
