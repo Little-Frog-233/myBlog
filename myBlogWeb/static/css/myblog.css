@@ -299,7 +299,8 @@
     float: left;
 }
 .my-blog .comment-input input{
-    width: 500px;
+    /* width: 500px; */
+    width: 100%;
 }
 
 .my-blog .comment-list{
@@ -358,4 +359,5 @@
 .my-blog .reply-input {
     display: flex;
     margin-bottom: 10px;
+    width: 100%;
 }

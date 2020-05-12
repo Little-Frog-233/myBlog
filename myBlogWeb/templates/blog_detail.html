@@ -75,12 +75,12 @@
                             <div class="anchor" id="comment-title-anchor"></div>
                             <h3 id="comment-title" style="font-size: 18px;">评论</h2>
                                 <div class="comment-block" v-if="isLogin==1">
-                                    <div style="margin-left: 50px;margin-bottom: 10px;">
+                                    <div style="margin-left: 50px;margin-bottom: 10px;width: 100%;">
                                         <div class="comment-user-head">
                                             <img :src="'/show/logouser/' + user_message.picture" class="user-picture"
                                                 alt="">
                                         </div>
-                                        <my-blog-comment :blog-id="blogId" v-on:comment-commit="getCommentCommit">
+                                        <my-blog-comment :blog-id="blogId" v-on:comment-commit="getCommentCommit" style="width: 80%;">
                                         </my-blog-comment>
                                     </div>
                                 </div>
@@ -128,16 +128,18 @@
                                                     <br>
                                                     <div class="reply-input" v-show="comment_reply_id == index">
                                                         <my-blog-comment :blog-id="blogId"
-                                                            v-on:comment-commit="getCommentCommit"
                                                             :input-place-holder="'   回复' + item.nickname"
                                                             :input-type="'reply'"
                                                             :comment-id="item.id"
-                                                            v-on:reply-commit="getReplyCommit"></my-blog-comment>
+                                                            v-on:reply-commit="getReplyCommit" style="width: 100%;"></my-blog-comment>
                                                     </div>
                                                     <my-blog-reply-list :comment-id="item.id"
                                                         :user-message="user_message" :blog-id="blogId"
                                                         :reply-list="item.reply_list" :is-login="isLogin"
                                                         :reply-count="item.reply_count"
+                                                        :reply-list-id="index"
+                                                        :now-reply-list-id="nowReplyId"
+                                                        v-on:now-reply-id="getNowReplyId"
                                                         v-on:reply-delete="getDeleteReplyCommit" 
                                                         v-if="item.reply_count>0">
                                                     </my-blog-reply-list>

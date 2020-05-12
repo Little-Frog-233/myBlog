@@ -31,7 +31,8 @@ module.exports = {
             uglifyOptions: {
                 compress: {
                     warnings: false,
-                    drop_console: true
+                    drop_console: true,
+                    drop_debugger: true,
                 }
             }
         })

@@ -21,7 +21,8 @@ const app = new Vue({
         isLogin: 0,
         user_message: {},
         blogId: Number(blog_id),
-        comment_reply_id: -1
+        comment_reply_id: -1,
+        nowReplyId: -1
     },
     methods: {
         checkLogin(){
@@ -75,9 +76,11 @@ const app = new Vue({
         showCommentReplyInput(index){
             if (this.comment_reply_id == index){
                 this.comment_reply_id  = -1;
+                this.nowReplyId = -1;
                 return
             }
-            this.comment_reply_id = index
+            this.comment_reply_id = index;
+            this.nowReplyId = -1;
         },
         getDeleteReplyCommit(content){
            for(let index in this.comment_list){
@@ -90,6 +93,9 @@ const app = new Vue({
                    }
                }
            }
+        },
+        getNowReplyId(now_reply_id){
+            this.nowReplyId = now_reply_id
         }
     },
     components: {
