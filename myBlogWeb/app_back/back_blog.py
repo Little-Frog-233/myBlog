@@ -7,6 +7,7 @@ blog.api
 comment.api
 所有post方法都需要token验证登陆身份
 '''
+import time
 import os
 import configparser
 import json
@@ -129,7 +130,11 @@ class BlogList(Resource):
         parser.add_argument('start', type=int)
         parser.add_argument('offset', type=int, default=10)
         parser.add_argument('search', type=str)
+        parser.add_argument('sleep', type=int, default=0)
         args = parser.parse_args()
+        sleep_time = args['sleep']
+        if sleep_time:
+            time.sleep(sleep_time)
         category = args['category']
         tag = args['tag']
         sort_by = args['sort_by']
