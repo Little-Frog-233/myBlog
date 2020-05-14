@@ -66,6 +66,13 @@ def check_csrf():
 	# if '/api/upload/panther_znanalysis/png_csv/' not in path_url:
 	# 	csrf.protect()
 
+@app.after_request
+def cors(environ):
+    environ.headers['Access-Control-Allow-Origin']='*'
+    environ.headers['Access-Control-Allow-Method']='*'
+    environ.headers['Access-Control-Allow-Headers']='x-requested-with,content-type'
+    return environ
+
 ########################注册Restful Api###########################
 from app_back.back_blog import *
 from app_back.back_user import *
