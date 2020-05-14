@@ -9,7 +9,8 @@ from datetime import timedelta
 from tools.mysql_tools.mysql_tools import *
 from tools.other_tools.des_tools import des_encrypt, des_descrypt
 from flask import session, request
-from flask_restful import Resource, reqparse, abort
+from app_back.back_resource import NewResource as Resource
+from flask_restful import reqparse, abort
 from app import app, cache
 
 class User(Resource):
