@@ -13,7 +13,7 @@ const app = new Vue({
         now_tag: '',
         blog_lists: [],
         start: 0,
-        offset: 2,
+        offset: 3,
         more: true,
         sort_by: 'read_count',
         elFix: '#menu-right',
